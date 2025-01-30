@@ -1,5 +1,6 @@
 """Customer-specific dependencies"""
 from fastapi import Depends
+from src.api.dependencies import get_db_session, get_mongo_db
 from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from src.domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent
 from src.domain.customers.events.handlers.CustomerRegisteredHandlers import (
@@ -14,18 +15,16 @@ from src.infrastructure.customers.services.AuditService import AuditService
 from src.api.dependencies import get_base_event_dispatcher
 
 # Create singleton instances
-# TODO: THIS IS ONLY BECAUSE THE REPOSITORIES ARE IN-MEMORY FOR TESTING PURPOSES
+# TODO: THIS IS ONLY BECAUSE THE SERVICES ARE IN-MEMORY FOR TESTING PURPOSES
 # TODO: IN A REAL APP, WE WOULDNT MAKE THEM SINGLETONS
-_write_repository = CustomerWriteRepository()
-_read_repository = CustomerReadRepository()
 _email_service = EmailService()
 _audit_service = AuditService()
 
-def get_customer_write_repository():
-    return _write_repository
+def get_customer_write_repository(session = Depends(get_db_session)):
+    return CustomerWriteRepository(session)
 
-def get_customer_read_repository():
-    return _read_repository
+def get_customer_read_repository(db = Depends(get_mongo_db)):
+    return CustomerReadRepository(db)
 
 def get_email_service():
     return _email_service

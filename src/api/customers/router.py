@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, HTTPException, Depends
 
 from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
@@ -15,6 +16,7 @@ from .dependencies import (
 from src.application.customers.queries.GetCustomerProfileQuery import GetCustomerProfileQuery
 from src.application.customers.queries.GetCustomerProfileHandler import GetCustomerProfileHandler
 
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/customers",
@@ -32,6 +34,8 @@ async def register_customer(
         customer = await handler.handle(command)
         return customer
     except Exception as e:
+        import traceback
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/profile/{email}")
