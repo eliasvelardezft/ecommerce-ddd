@@ -14,7 +14,10 @@ from src.infrastructure.core.persistence.base import BaseModel
 
 
 # MongoDB client for read model
-mongo_client = AsyncIOMotorClient(settings.mongo_url)
+mongo_client = AsyncIOMotorClient(
+    settings.mongo_url,
+    uuidRepresentation="standard"
+)
 mongo_db = mongo_client[settings.mongo_db]
 
 # SQLite engine for write model

@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from src.infrastructure.core.settings import settings
 from src.api.customers.router import router as customer_router
+from src.api.orders.router import router as order_router
 from src.api.dependencies import init_db
 
 # Configure logging
@@ -35,3 +36,4 @@ async def root():
 
 # Register routers
 app.include_router(customer_router)
+app.include_router(order_router)

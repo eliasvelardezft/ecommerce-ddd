@@ -1,10 +1,13 @@
+import logging
 from typing import List, Optional
+from uuid import UUID
+
 from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
 from src.domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
 from motor.motor_asyncio import AsyncIOMotorDatabase
-import logging
 
 logger = logging.getLogger(__name__)
+
 
 class CustomerReadRepository(ICustomerReadRepository):
     """Repository for read operations (queries) on Customer data"""
@@ -14,15 +17,26 @@ class CustomerReadRepository(ICustomerReadRepository):
         self._collection = database.customer_profiles
         logger.info("Initialized CustomerReadRepository")
 
-    async def get_customer_profile(self, email: str) -> Optional[CustomerProfileDTO]:
+    async def get_customer_profile_by_email(self, email: str) -> Optional[CustomerProfileDTO]:
         """Get customer profile by email"""
-        logger.info("[Read] Fetching profile for: %s", email)
+        logger.info("[Read] Fetching profile by email for: %s", email)
         doc = await self._collection.find_one({"email": email})
         if not doc:
-            logger.info("[Read] Profile not found for: %s", email)
+            logger.error("[Read] Profile not found for: %s", email)
             return None
             
         logger.info(f"Customer profile found for email: {email}")
+        return CustomerProfileDTO(**doc)
+
+    async def get_customer_profile_by_id(self, id: UUID) -> Optional[CustomerProfileDTO]:
+        """Get customer profile by id"""
+        logger.info("[Read] Fetching profile by id for: %s", id)
+        doc = await self._collection.find_one({"_id": str(id)})
+        if not doc:
+            logger.error("[Read] Profile not found for: %s", id)
+            return None
+        
+        logger.info(f"Customer profile found for id: {id}")
         return CustomerProfileDTO(**doc)
 
     async def get_all_profiles(self) -> List[CustomerProfileDTO]:

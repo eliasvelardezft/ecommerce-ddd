@@ -1,35 +1,42 @@
 from datetime import datetime
 import logging
+from typing import Union
 
 from src.domain.core.events.handlers.DomainEventHandler import DomainEventHandler
 from src.domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent
+from src.domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
 from src.infrastructure.customers.services.EmailService import EmailService
 from src.infrastructure.customers.services.AuditService import AuditService
-from src.infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
 from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
+from src.domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
 
 logger = logging.getLogger(__name__)
 
-class UpdateReadModelHandler(DomainEventHandler[CustomerRegisteredEvent]):
-    """Updates the read model when a customer is registered"""
-    
-    def __init__(self, read_repository: CustomerReadRepository):
+class UpdateReadModelHandler:
+    def __init__(self, read_repository: ICustomerReadRepository):
         self._read_repository = read_repository
 
-    async def handle(self, event: CustomerRegisteredEvent) -> None:
-        logger.info("[Event] Updating read model for customer: %s", event.email)
-        customer_profile = CustomerProfileDTO(
-            id=event.aggregate_id,
-            name=event.name,
-            email=event.email,
-            created_at=datetime.now(),
-            total_orders=0,
-            last_order_date=None,
-            favorite_products=[],
-            loyalty_tier="NEW"
-        )
+    async def handle(self, event: Union[CustomerRegisteredEvent, OrderPlacedEvent]) -> None:
+        if isinstance(event, CustomerRegisteredEvent):
+            # Handle new customer registration
+            customer_profile = CustomerProfileDTO(
+                id=event.aggregate_id,
+                name=event.name,
+                email=event.email,
+                created_at=datetime.now(),
+                total_orders=0
+            )
+        elif isinstance(event, OrderPlacedEvent):
+            # Handle order placed
+            profile = await self._read_repository.get_customer_profile_by_id(id=event.customer_id)
+            if not profile:
+                logger.error(f"Customer profile not found for ID: {event.customer_id}")
+                return
+                
+            profile.total_orders += 1
+            customer_profile = profile
+
         await self._read_repository.update_read_model(customer_profile)
-        logger.info(f"Read model updated for customer: {event.email}")
 
 class SendWelcomeEmailHandler(DomainEventHandler[CustomerRegisteredEvent]):
     def __init__(self, email_service: EmailService):

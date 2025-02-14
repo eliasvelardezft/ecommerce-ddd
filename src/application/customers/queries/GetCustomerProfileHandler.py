@@ -9,4 +9,4 @@ class GetCustomerProfileHandler:
         self._repository = read_repository
 
     async def handle(self, query: GetCustomerProfileQuery) -> Optional[CustomerProfileDTO]:
-        return await self._repository.get_customer_profile(query.email)
+        return await self._repository.get_customer_profile_by_email(query.email)
