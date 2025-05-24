@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Dict, Any
-from .Message import Message
 
-class DomainEvent(Message):
+
+class DomainEvent:
     def __init__(self, aggregate_id: str):
         super().__init__()
         self.aggregate_id = aggregate_id
@@ -14,4 +14,4 @@ class DomainEvent(Message):
             "aggregate_id": self.aggregate_id,
             "occurred_on": self.occurred_on.isoformat()
         })
-        return base_dict 
+        return base_dict

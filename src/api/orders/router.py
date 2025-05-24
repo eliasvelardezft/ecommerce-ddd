@@ -3,17 +3,16 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Depends
 
+from api.dependencies import get_event_dispatcher
 from src.api.orders.dependencies import (
     get_order_write_repository,
     get_order_read_repository,
-    get_order_event_dispatcher,
 )
 from src.application.orders.commands.PlaceOrderCommand import PlaceOrderCommand
 from src.application.orders.commands.PlaceOrderHandler import PlaceOrderHandler
 from src.application.orders.queries.GetOrderDetailsQuery import GetOrderDetailsQuery
 from src.application.orders.queries.GetOrderDetailsHandler import GetOrderDetailsHandler
 from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from src.domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
 from src.domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
 from src.domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
 
@@ -29,7 +28,7 @@ router = APIRouter(
 async def place_order(
     command: PlaceOrderCommand,
     repository: IOrderWriteRepository = Depends(get_order_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_order_event_dispatcher)
+    event_dispatcher: DomainEventDispatcher = Depends(get_event_dispatcher)
 ):
     logger.info("[post router] place_order router")
 

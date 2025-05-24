@@ -1,13 +1,10 @@
 import re
 from datetime import datetime
-from typing import AsyncGenerator
 
 from sqlalchemy import Column, DateTime, event, inspect
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Mapped
 
-from src.infrastructure.core.settings import settings
 
 def camel_to_snake(name):
     name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)

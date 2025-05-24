@@ -1,5 +1,4 @@
 from src.domain.customers.Customer import Customer
-from src.domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent
 from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from .RegisterCustomerCommand import RegisterCustomerCommand
 from src.infrastructure.customers.persistence.CustomerWriteRepository import CustomerWriteRepository

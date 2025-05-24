@@ -1,20 +1,19 @@
 import logging
 from fastapi import APIRouter, HTTPException, Depends
 
-from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from src.domain.customers.repositories.ICustomerWriteRepository import ICustomerWriteRepository
-from src.domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
-from src.domain.customers.Customer import Customer
-from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
-from src.application.customers.commands.RegisterCustomerCommand import RegisterCustomerCommand
-from src.application.customers.commands.RegisterCustomerHandler import RegisterCustomerHandler
+from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.customers.repositories.ICustomerWriteRepository import ICustomerWriteRepository
+from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
+from application.customers.commands.RegisterCustomerCommand import RegisterCustomerCommand
+from application.customers.commands.RegisterCustomerHandler import RegisterCustomerHandler
 from .dependencies import (
     get_customer_write_repository,
     get_customer_read_repository,
-    get_customer_event_dispatcher
+    get_event_dispatcher
 )
-from src.application.customers.queries.GetCustomerProfileQuery import GetCustomerProfileQuery
-from src.application.customers.queries.GetCustomerProfileHandler import GetCustomerProfileHandler
+from application.customers.queries.GetCustomerProfileQuery import GetCustomerProfileQuery
+from application.customers.queries.GetCustomerProfileHandler import GetCustomerProfileHandler
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ router = APIRouter(
 async def register_customer(
     command: RegisterCustomerCommand,
     repository: ICustomerWriteRepository = Depends(get_customer_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_customer_event_dispatcher)
+    event_dispatcher: DomainEventDispatcher = Depends(get_event_dispatcher)
 ):
     handler = RegisterCustomerHandler(repository, event_dispatcher)
     try:

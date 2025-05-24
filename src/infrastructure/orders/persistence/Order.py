@@ -1,7 +1,6 @@
-from sqlalchemy import Column, String, Float, Integer, ForeignKey, Enum as SQLEnum
+from sqlalchemy import ForeignKey, Enum as SQLEnum
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from uuid import UUID
-from datetime import datetime
 from src.infrastructure.core.persistence.base import BaseModel
 from src.domain.orders.models.OrderStatus import OrderStatus
 

@@ -1,6 +1,5 @@
 from datetime import datetime
 from uuid import UUID, uuid4
-from typing import Dict, Any
 import json
 
 from src.domain.core.events.DomainEvent import DomainEvent

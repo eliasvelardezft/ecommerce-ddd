@@ -1,11 +1,9 @@
 import logging
 from uuid import uuid4
 
-from src.domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
 from .PlaceOrderCommand import PlaceOrderCommand
 from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from src.domain.orders.models.Order import Order
-from src.domain.orders.models.OrderItem import OrderItem
 from src.infrastructure.orders.persistence import OrderWriteRepository 
 
 

@@ -1,10 +1,8 @@
 from datetime import datetime
 import logging
-from typing import Union
 
 from src.domain.core.events.handlers.DomainEventHandler import DomainEventHandler
 from src.domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent
-from src.domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
 from src.infrastructure.customers.services.EmailService import EmailService
 from src.infrastructure.customers.services.AuditService import AuditService
 from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
@@ -12,33 +10,25 @@ from src.domain.customers.repositories.ICustomerReadRepository import ICustomerR
 
 logger = logging.getLogger(__name__)
 
-class UpdateReadModelHandler:
+
+class UpdateReadModelOnCustomerRegisteredEvent(DomainEventHandler[CustomerRegisteredEvent]):
     def __init__(self, read_repository: ICustomerReadRepository):
         self._read_repository = read_repository
 
-    async def handle(self, event: Union[CustomerRegisteredEvent, OrderPlacedEvent]) -> None:
-        if isinstance(event, CustomerRegisteredEvent):
-            # Handle new customer registration
-            customer_profile = CustomerProfileDTO(
-                id=event.aggregate_id,
-                name=event.name,
-                email=event.email,
-                created_at=datetime.now(),
-                total_orders=0
-            )
-        elif isinstance(event, OrderPlacedEvent):
-            # Handle order placed
-            profile = await self._read_repository.get_customer_profile_by_id(id=event.customer_id)
-            if not profile:
-                logger.error(f"Customer profile not found for ID: {event.customer_id}")
-                return
-                
-            profile.total_orders += 1
-            customer_profile = profile
+    async def handle(self, event: CustomerRegisteredEvent) -> None:
+        # Handle new customer registration
+        customer_profile = CustomerProfileDTO(
+            id=event.aggregate_id,
+            name=event.name,
+            email=event.email,
+            created_at=datetime.now(),
+            total_orders=0
+        )
 
         await self._read_repository.update_read_model(customer_profile)
 
-class SendWelcomeEmailHandler(DomainEventHandler[CustomerRegisteredEvent]):
+
+class SendWelcomeEmailOnCustomerRegisteredEvent(DomainEventHandler[CustomerRegisteredEvent]):
     def __init__(self, email_service: EmailService):
         self._email_service = email_service
 
@@ -50,7 +40,7 @@ class SendWelcomeEmailHandler(DomainEventHandler[CustomerRegisteredEvent]):
         )
         logger.info(f"Welcome email sent to: {event.email}")
 
-class AuditNewCustomerHandler(DomainEventHandler[CustomerRegisteredEvent]):
+class AuditNewCustomerOnCustomerRegisteredEvent(DomainEventHandler[CustomerRegisteredEvent]):
     def __init__(self, audit_service: AuditService):
         self._audit_service = audit_service
 

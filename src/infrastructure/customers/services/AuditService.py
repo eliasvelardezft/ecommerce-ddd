@@ -1,6 +1,5 @@
 import logging
 
-from src.domain.customers.Customer import Customer
 
 
 logger = logging.getLogger(__name__)
