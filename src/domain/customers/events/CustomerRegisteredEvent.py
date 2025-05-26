@@ -1,4 +1,4 @@
-from src.domain.core.events.DomainEvent import DomainEvent
+from domain.core.events.DomainEvent import DomainEvent
 from typing import Dict, Any
 
 class CustomerRegisteredEvent(DomainEvent):

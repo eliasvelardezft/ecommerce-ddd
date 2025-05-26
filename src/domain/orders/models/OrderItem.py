@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from src.domain.core.ValueObject import ValueObject
+from domain.core.ValueObject import ValueObject
 
 
 @dataclass

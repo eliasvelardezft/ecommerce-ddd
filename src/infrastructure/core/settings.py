@@ -1,7 +1,8 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 import logging
 import colorlog
+
 
 class Settings(BaseSettings):
     # API Settings
@@ -16,9 +17,11 @@ class Settings(BaseSettings):
     mongo_url: str
     mongo_db: str
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=False,
+        extra='ignore'
+    )
 
 @lru_cache()
 def get_settings() -> Settings:
@@ -27,7 +30,7 @@ def get_settings() -> Settings:
 settings = get_settings()
 
 # Disable MongoDB logs
-logging.getLogger("pymongo").setLevel(logging.WARNING)
+logging.getLogger("pymongo").setLevel(logging.ERROR)
 logging.getLogger("motor").setLevel(logging.WARNING)
 logging.getLogger("asyncio").setLevel(logging.WARNING)
 

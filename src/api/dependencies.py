@@ -3,12 +3,13 @@ from fastapi import Request
 from motor.motor_asyncio import AsyncIOMotorClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from src.infrastructure.core.settings import settings
+from infrastructure.core.settings import settings
 from typing import AsyncGenerator
 
-from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from src.domain.core.events.EventStore import EventStore
-from src.infrastructure.core.persistence.base import BaseModel
+from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.core.events.EventStore import EventStore
+from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
+from infrastructure.core.persistence.base import BaseModel
 
 
 # MongoDB client for read model
@@ -45,9 +46,19 @@ async def init_db():
 def get_mongo_db():
     return mongo_db
 
-def get_event_store():
+def get_event_store(request: Request) -> EventStore:
+    if hasattr(request.app.state, 'event_store'):
+        return request.app.state.event_store
     return EventStore()
 
-def get_event_dispatcher(request: Request) -> DomainEventDispatcher:
-    """Get the configured event dispatcher from app state"""
-    return request.app.state.event_dispatcher
+def get_domain_event_dispatcher(request: Request) -> DomainEventDispatcher:
+    """Get the configured DomainEventDispatcher from app state."""
+    if not hasattr(request.app.state, 'domain_event_dispatcher'):
+        raise RuntimeError("DomainEventDispatcher not found in application state. Ensure it is initialized during startup.")
+    return request.app.state.domain_event_dispatcher
+
+def get_order_integration_event_publisher(request: Request) -> OrderIntegrationEventPublisher:
+    """Get the configured OrderIntegrationEventPublisher from app state."""
+    if not hasattr(request.app.state, 'order_integration_event_publisher'):
+        raise RuntimeError("OrderIntegrationEventPublisher not found in application state. Ensure it is initialized during startup.")
+    return request.app.state.order_integration_event_publisher

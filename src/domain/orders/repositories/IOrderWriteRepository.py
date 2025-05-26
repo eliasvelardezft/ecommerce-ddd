@@ -1,7 +1,7 @@
 from abc import ABC
 from uuid import UUID
 
-from src.domain.orders.models.Order import Order
+from domain.orders.models.Order import Order
 
 
 class IOrderWriteRepository(ABC):

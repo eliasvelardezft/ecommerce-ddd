@@ -1,8 +1,8 @@
 import logging
 from typing import List, Optional
 
-from src.domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
-from src.domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
+from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
+from domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 

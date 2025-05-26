@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
-from src.domain.orders.models.OrderItem import OrderItem
+from domain.orders.models.OrderItem import OrderItem
 
 
 class PlaceOrderCommand(BaseModel):

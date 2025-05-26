@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 import json
 
-from src.domain.core.events.DomainEvent import DomainEvent
+from domain.core.events.DomainEvent import DomainEvent
 
 
 class StoredEvent:

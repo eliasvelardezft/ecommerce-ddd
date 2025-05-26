@@ -1,7 +1,7 @@
 """Customer-specific dependencies"""
 from fastapi import Depends
 
-from api.dependencies import get_db_session, get_mongo_db, get_event_dispatcher
+from api.dependencies import get_db_session, get_mongo_db, get_domain_event_dispatcher
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from infrastructure.customers.persistence.CustomerWriteRepository import CustomerWriteRepository
 from infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
@@ -28,7 +28,7 @@ def get_audit_service():
     return _audit_service
 
 def get_customer_event_dispatcher(
-    dispatcher: DomainEventDispatcher = Depends(get_event_dispatcher),
+    dispatcher: DomainEventDispatcher = Depends(get_domain_event_dispatcher),
 ) -> DomainEventDispatcher:
     """Returns the configured event dispatcher from app state"""
     return dispatcher

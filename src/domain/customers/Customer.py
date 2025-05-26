@@ -1,6 +1,6 @@
 from uuid import UUID
 from datetime import datetime
-from src.domain.core.AggregateRoot import AggregateRoot
+from domain.core.AggregateRoot import AggregateRoot
 from .events.CustomerRegisteredEvent import CustomerRegisteredEvent
 
 class Customer(AggregateRoot):

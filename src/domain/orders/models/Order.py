@@ -2,14 +2,14 @@ from datetime import datetime
 from typing import List
 from uuid import UUID
 
-from src.domain.core.AggregateRoot import AggregateRoot
-from src.domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
-from src.domain.orders.events.OrderProcessingEvent import OrderProcessingEvent
-from src.domain.orders.events.OrderCompletedEvent import OrderCompletedEvent
-from src.domain.orders.events.OrderCancelledEvent import OrderCancelledEvent
-from src.domain.orders.exceptions import OrderValidationException
-from src.domain.orders.models.OrderItem import OrderItem
-from src.domain.orders.models.OrderStatus import OrderStatus
+from domain.core.AggregateRoot import AggregateRoot
+from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
+from domain.orders.events.OrderProcessingEvent import OrderProcessingEvent
+from domain.orders.events.OrderCompletedEvent import OrderCompletedEvent
+from domain.orders.events.OrderCancelledEvent import OrderCancelledEvent
+from domain.orders.exceptions import OrderValidationException
+from domain.orders.models.OrderItem import OrderItem
+from domain.orders.models.OrderStatus import OrderStatus
 
 
 class Order(AggregateRoot):

@@ -1,23 +1,66 @@
-from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from src.domain.core.events.EventStore import EventStore
-from src.domain.core.events.handlers.EventStoreHandler import EventStoreHandler
+import logging
+from domain.core.events.DomainEvent import DomainEvent
+from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from infrastructure.core.events.integration_event_dispatcher import IntegrationEventDispatcher
+from domain.core.events.EventStore import EventStore
+from domain.core.events.handlers.EventStoreHandler import EventStoreHandler
 from .registry import register_customer_event_handlers, register_order_event_handlers
 
+logger = logging.getLogger(__name__)
 
-def configure_dispatcher(container):
-    """Create and configure the domain event dispatcher with all handlers"""
-    # Create dispatcher
-    dispatcher = DomainEventDispatcher()
+def create_domain_event_dispatcher(container: dict) -> DomainEventDispatcher:
+    """
+    Creates the DomainEventDispatcher and registers core, non-domain-specific handlers
+    like the EventStoreHandler.
+    """
+    logger.info("[Bootstrap] Creating DomainEventDispatcher...")
+    domain_event_dispatcher = DomainEventDispatcher()
+    logger.info("[Bootstrap] DomainEventDispatcher instantiated.")
+
+    # Register a generic EventStoreHandler for all internal domain events if EventStore is configured.
+    # This is typically for event sourcing persistence.
+    event_store = container.get("event_store")
+    if event_store:
+        # Assuming DomainEventDispatcher.register_handler can take the base DomainEvent class
+        # to catch all derived domain events for the store.
+        domain_event_dispatcher.register_handler(
+            DomainEvent, # Register for the base DomainEvent type
+            EventStoreHandler(event_store)
+        )
+        logger.info("[Bootstrap] EventStoreHandler registered with DomainEventDispatcher.")
+    else:
+        logger.warning("[Bootstrap] EventStore not found in container. EventStoreHandler not registered for DomainEventDispatcher.")
+    return domain_event_dispatcher
+
+def create_integration_event_dispatcher() -> IntegrationEventDispatcher:
+    """
+    Creates the IntegrationEventDispatcher.
+    """
+    logger.info("[Bootstrap] Creating IntegrationEventDispatcher...")
+    integration_event_dispatcher = IntegrationEventDispatcher()
+    logger.info("[Bootstrap] IntegrationEventDispatcher instantiated.")
+    return integration_event_dispatcher
+
+def register_all_event_handlers(
+    domain_event_dispatcher: DomainEventDispatcher,
+    integration_event_dispatcher: IntegrationEventDispatcher,
+    container: dict
+) -> None:
+    """
+    Registers all domain-specific and integration event handlers with their respective dispatchers
+    using the functions from the registry.
+    """
+    logger.info("[Bootstrap] Registering all application event handlers from registry...")
     
-    # Register event store handler for all events
-    event_store = container.get("event_store", EventStore())
-    dispatcher.register_handler(
-        "DomainEvent",  # Base event type
-        EventStoreHandler(event_store)
+    register_customer_event_handlers(
+        domain_event_dispatcher=domain_event_dispatcher,
+        integration_event_dispatcher=integration_event_dispatcher,
+        container=container
     )
     
-    # Register domain-specific handlers
-    register_customer_event_handlers(dispatcher, container)
-    register_order_event_handlers(dispatcher, container)
-    
-    return dispatcher
+    register_order_event_handlers(
+        domain_event_dispatcher=domain_event_dispatcher,
+        integration_event_dispatcher=integration_event_dispatcher, # Now passed here
+        container=container
+    )
+    logger.info("[Bootstrap] All application event handlers registered.")

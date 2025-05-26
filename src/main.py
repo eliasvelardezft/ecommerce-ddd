@@ -1,72 +1,95 @@
 import logging
-from contextlib import asynccontextmanager
+
+# --- Import and Setup Structured Logging --- 
+from infrastructure.core.logging_config import setup_logging
+setup_logging() # Call this early to configure logging for the entire application
+# --- End Logging Setup ---
+
 from fastapi import FastAPI
-from src.infrastructure.core.settings import settings
-from src.api.customers.router import router as customer_router
-from src.api.orders.router import router as order_router
-from src.api.dependencies import init_db, get_mongo_db, EventStore
-from src.infrastructure.customers.services.EmailService import EmailService
-from src.infrastructure.customers.services.AuditService import AuditService
-from src.infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
-from src.infrastructure.orders.persistence.OrderReadRepository import OrderReadRepository
+from contextlib import asynccontextmanager
 
-# Import the event bootstrap
-from src.infrastructure.core.events.bootstrap import configure_dispatcher
-
-# Configure logging
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+from infrastructure.core.settings import settings
+from api.customers.router import router as customer_router
+from api.orders.router import router as order_router
+from api.dependencies import init_db, get_mongo_db
+from infrastructure.customers.services.EmailService import EmailService
+from infrastructure.customers.services.AuditService import AuditService
+from infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
+from infrastructure.orders.persistence.OrderReadRepository import OrderReadRepository
+from domain.core.events.EventStore import EventStore
+from infrastructure.core.events.bootstrap import (
+    create_domain_event_dispatcher,
+    create_integration_event_dispatcher,
+    register_all_event_handlers
 )
+from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
 
-# Enable SQLAlchemy logging
-logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+# Standard logger for this file, will now use the Rich setup configured by setup_logging()
+logger = logging.getLogger(__name__) 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize database
+    logger.info("Application lifespan startup...")
     await init_db()
-    
-    # Create service instances
+    logger.info("Databases initialized.")
+
+    mongo_database = get_mongo_db()
+    logger.info("MongoDB connection established.")
+
     email_service = EmailService()
     audit_service = AuditService()
-    mongo_database = get_mongo_db()
-    
-    # Create repositories
     customer_read_repo = CustomerReadRepository(mongo_database)
     order_read_repo = OrderReadRepository(mongo_database)
-    
-    # Create a container for dependencies
-    container = {
+    event_store = EventStore()
+    logger.info("Core services and repositories instantiated.")
+
+    event_handler_dependencies = {
         "customer_read_repository": customer_read_repo,
         "order_read_repository": order_read_repo,
         "email_service": email_service,
         "audit_service": audit_service,
-        "event_store": EventStore()
+        "event_store": event_store, 
     }
-    
-    # Configure event dispatcher
-    event_dispatcher = configure_dispatcher(container)
-    
-    # Make it available through app state
-    app.state.event_dispatcher = event_dispatcher
-    
+
+    domain_event_dispatcher = create_domain_event_dispatcher(event_handler_dependencies)
+    logger.info("DomainEventDispatcher created and core handlers registered.")
+
+    integration_event_dispatcher = create_integration_event_dispatcher()
+    logger.info("IntegrationEventDispatcher created.")
+
+    register_all_event_handlers(
+        domain_event_dispatcher,
+        integration_event_dispatcher,
+        event_handler_dependencies
+    )
+    logger.info("All application event handlers registered.")
+
+    order_integration_publisher = OrderIntegrationEventPublisher(integration_event_dispatcher)
+    logger.info("OrderIntegrationEventPublisher instantiated.")
+
+    app.state.domain_event_dispatcher = domain_event_dispatcher
+    app.state.integration_event_dispatcher = integration_event_dispatcher
+    app.state.order_integration_event_publisher = order_integration_publisher
+    logger.info("Event dispatchers and publishers added to app.state.")
+
     yield
+    logger.info("Application lifespan shutdown...")
 
 app = FastAPI(
     title=settings.api_title,
     version=settings.api_version,
     debug=settings.api_debug,
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 @app.get("/")
 async def root():
     return {
-        "message": "Welcome to the DDD E-Commerce API",
-        "version": "1.0.0"
+        "message": f"Welcome to {settings.api_title}",
+        "version": settings.api_version
     }
 
-# Register routers
-app.include_router(customer_router)
-app.include_router(order_router)
+app.include_router(customer_router, prefix="/api")
+app.include_router(order_router, prefix="/api")
+
+logger.info(f"{settings.api_title} application startup complete.")

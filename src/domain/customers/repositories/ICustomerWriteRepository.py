@@ -1,7 +1,7 @@
 from abc import ABC
 from uuid import UUID
 
-from src.domain.customers.Customer import Customer
+from domain.customers.Customer import Customer
 
 
 class ICustomerWriteRepository(ABC):

@@ -1,7 +1,7 @@
-from src.domain.customers.Customer import Customer
-from src.domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.customers.Customer import Customer
+from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from .RegisterCustomerCommand import RegisterCustomerCommand
-from src.infrastructure.customers.persistence.CustomerWriteRepository import CustomerWriteRepository
+from infrastructure.customers.persistence.CustomerWriteRepository import CustomerWriteRepository
 import logging
 from uuid import uuid4
 

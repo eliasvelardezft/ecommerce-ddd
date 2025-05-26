@@ -1,7 +1,7 @@
 from abc import ABC
 from typing import List
 from uuid import UUID
-from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
+from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
 
 
 class ICustomerReadRepository(ABC):

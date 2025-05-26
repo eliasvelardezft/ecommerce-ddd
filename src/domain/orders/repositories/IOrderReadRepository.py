@@ -2,7 +2,7 @@ from abc import ABC
 from typing import List
 from uuid import UUID
 
-from src.domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
+from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
 
 
 class IOrderReadRepository(ABC):

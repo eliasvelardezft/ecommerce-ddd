@@ -2,8 +2,8 @@ from typing import Optional
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from src.domain.customers.Customer import Customer
-from src.domain.customers.repositories.ICustomerWriteRepository import ICustomerWriteRepository
+from domain.customers.Customer import Customer
+from domain.customers.repositories.ICustomerWriteRepository import ICustomerWriteRepository
 from .Customer import CustomerSQL
 import logging
 

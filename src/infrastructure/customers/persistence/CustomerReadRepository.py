@@ -2,8 +2,8 @@ import logging
 from typing import List, Optional
 from uuid import UUID
 
-from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
-from src.domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
+from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
+from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 logger = logging.getLogger(__name__)

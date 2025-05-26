@@ -9,8 +9,8 @@ from application.customers.commands.RegisterCustomerHandler import RegisterCusto
 from .dependencies import (
     get_customer_write_repository,
     get_customer_read_repository,
-    get_event_dispatcher
 )
+from api.dependencies import get_domain_event_dispatcher
 from application.customers.queries.GetCustomerProfileQuery import GetCustomerProfileQuery
 from application.customers.queries.GetCustomerProfileHandler import GetCustomerProfileHandler
 
@@ -26,7 +26,7 @@ router = APIRouter(
 async def register_customer(
     command: RegisterCustomerCommand,
     repository: ICustomerWriteRepository = Depends(get_customer_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_event_dispatcher)
+    event_dispatcher: DomainEventDispatcher = Depends(get_domain_event_dispatcher)
 ):
     handler = RegisterCustomerHandler(repository, event_dispatcher)
     try:

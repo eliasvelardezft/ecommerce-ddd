@@ -1,7 +1,7 @@
-from src.domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
-from src.domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
-from src.domain.orders.models.OrderStatus import OrderStatus
-from src.domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
+from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
+from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
+from domain.orders.models.OrderStatus import OrderStatus
+from domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
 
 import logging
 

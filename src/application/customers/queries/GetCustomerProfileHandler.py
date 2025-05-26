@@ -1,7 +1,7 @@
 from typing import Optional
 from .GetCustomerProfileQuery import GetCustomerProfileQuery
-from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
-from src.infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
+from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
+from infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
 
 
 class GetCustomerProfileHandler:

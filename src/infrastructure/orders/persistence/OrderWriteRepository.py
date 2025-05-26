@@ -5,9 +5,9 @@ from uuid import UUID, uuid4
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from src.domain.orders.models.Order import Order
-from src.domain.orders.models.Order import OrderItem
-from src.domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
+from domain.orders.models.Order import Order
+from domain.orders.models.Order import OrderItem
+from domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
 from .Order import OrderSQL, OrderItemSQL
 
 

@@ -1,12 +1,12 @@
 from datetime import datetime
 import logging
 
-from src.domain.core.events.handlers.DomainEventHandler import DomainEventHandler
-from src.domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent
-from src.infrastructure.customers.services.EmailService import EmailService
-from src.infrastructure.customers.services.AuditService import AuditService
-from src.domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
-from src.domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
+from domain.core.events.handlers.DomainEventHandler import DomainEventHandler
+from domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent
+from infrastructure.customers.services.EmailService import EmailService
+from infrastructure.customers.services.AuditService import AuditService
+from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
+from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
 
 logger = logging.getLogger(__name__)
 
