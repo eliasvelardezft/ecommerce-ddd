@@ -6,3 +6,4 @@ sqlalchemy
 aiosqlite
 motor
 colorlog==6.9.0
+rich==14.0.0

@@ -1,0 +1,81 @@
+# Git files
+.git
+.gitignore
+
+# Docker files
+Dockerfile
+docker-compose.yml
+# .dockerignore # This file itself
+
+# Python virtual environment
+.venv
+venv
+ENV
+env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE / Editor specific files
+.vscode/
+.idea/
+*.project
+*.iml
+*.DS_Store
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Local SQLite database file (if not in a subdirectory already ignored)
+# *.db
+# *.sqlite
+# *.sqlite3
+
+# Secrets / Local config (ensure these are not committed)
+# .env
+
+# Poetry files (if not needed in the image, e.g. if using requirements.txt)
+# poetry.lock # We copy this in the Dockerfile, so we might not need to ignore it here.
+# pyproject.toml # Same as above.
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python stuff
+*.cover
+nosetests.xml
+coverage.xml
+
+# Build artifacts
+.coverage.*
+
+# Virtual environment
+.venv/
+ENV/
+
+# IDE and project files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Local data and configs not for image
+.env
+./db/ # If db is mounted as a volume, don't copy local dev db into image
+
+# Documentation / Misc
+README.md
+Makefile

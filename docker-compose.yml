@@ -1,0 +1,37 @@
+services:
+  app:
+    container_name: ecommerce
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DEV=true
+    ports:
+      - "8008:8008"
+    volumes:
+      - ./src:/src  # Mount src for live reload in development
+      - ./db:/db    # Mount local db directory for SQLite persistence
+    env_file:
+      - ./.env
+    depends_on:
+      - mongo
+    command: uvicorn main:app --reload --host 0.0.0.0 --port 8008
+
+  mongo:
+    container_name: ecommerce-mongo
+    image: mongo:latest # Or a specific version like mongo:5.0
+    ports:
+      - "27017:27017" # Expose MongoDB to the host for direct access if needed
+    volumes:
+      - mongo_data:/data/db # Persist MongoDB data
+    environment:
+      - MONGO_INITDB_DATABASE=ecommerce # Optional: create a database on init
+    # You can add MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD here
+    # if your application requires immediate authentication to MongoDB.
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=example
+
+volumes:
+  mongo_data: # Defines the named volume for MongoDB data
+  # app_db_data: # If you were using a named volume for SQLite instead of host mount 
