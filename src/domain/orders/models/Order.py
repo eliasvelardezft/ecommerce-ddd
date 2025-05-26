@@ -50,8 +50,7 @@ class Order(AggregateRoot):
             OrderPlacedEvent(
                 aggregate_id=order.id,
                 customer_id=order.customer_id,
-                total_amount=order.total_amount,
-                items_count=len(items)
+                items=items
             )
         )
 

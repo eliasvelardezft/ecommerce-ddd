@@ -1,6 +1,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 import json
+from fastapi.encoders import jsonable_encoder
 
 from domain.core.events.DomainEvent import DomainEvent
 
@@ -24,6 +25,6 @@ class StoredEvent:
     def from_domain_event(cls, event: 'DomainEvent') -> 'StoredEvent':
         return cls(
             event_type=event.__class__.__name__,
-            data=json.dumps(event.to_dict()),
+            data=json.dumps(jsonable_encoder(event.to_dict())),
             aggregate_id=event.aggregate_id
         )

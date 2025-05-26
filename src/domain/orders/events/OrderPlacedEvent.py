@@ -13,16 +13,18 @@ class OrderPlacedEvent(DomainEvent):
         aggregate_id: UUID,
         customer_id: UUID,
         items: List[OrderItem],
-        total_amount: float,
     ):
         super().__init__(aggregate_id=str(aggregate_id))
         self.customer_id: UUID = customer_id
         self.items: List[OrderItem] = items
-        self.total_amount: float = total_amount
 
     @property
     def items_count(self) -> int:
         return len(self.items)
+
+    @property
+    def total_amount(self) -> float:
+        return sum(item.unit_price * item.quantity for item in self.items)
 
     def to_dict(self) -> Dict[str, Any]:
         base_dict = super().to_dict()

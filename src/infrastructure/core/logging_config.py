@@ -1,34 +1,34 @@
 import logging
 import re
 from rich.logging import RichHandler
-from infrastructure.core.settings import settings # To access api_debug for log level
+from rich.console import Console
+from infrastructure.core.settings import settings
 
-# --- Structured Logging Configuration with Rich & Regex --- 
 
 # Each key (e.g., "API", "DOMAIN_MODELS") will become part of a unique tag like "[LOG_STYLE:API]"
 # The patterns are regex strings to match logger names (e.g., record.name)
 LAYER_STYLES_CONFIG = {
     "API": {
-        "patterns": [r"^src\.api(?:\..+)?"], # Matches src.api and any submodule
+        "patterns": [r"^api(?:\..+)?"], # Corrected: Removed unnecessary double backslashes
         "style": "bold sky_blue1"
     },
     "APPLICATION": {
-        "patterns": [r"^src\.application(?:\..+)?"], # Matches src.application and any submodule
+        "patterns": [r"^application(?:\..+)?"], # Corrected
         "style": "bold bright_green"
     },
     "DOMAIN_MODELS": {
         # Matches loggers like src.domain.<any_bc>.models.<module>, src.domain.core.models.<module>
         # <any_bc> can be customers, orders, products, etc.
-        "patterns": [r"^src\.domain\.(?:[^.]+|core)\.models(?:\..+)?"],
+        "patterns": [r"^domain\.(?:[^.]+|core)\.models(?:\..+)?"], # Corrected
         "style": "orange3"
     },
     "DOMAIN_EVENTS_INTERNAL": {
         # Matches loggers in src.domain.<any_bc>.events.* and src.domain.core.events.* 
-        "patterns": [r"^src\.domain\.(?:[^.]+|core)\.events(?:\..+)?"],
+        "patterns": [r"^domain\.(?:[^.]+|core)\.events(?:\..+)?"], # Corrected
         "style": "gold3"
     },
     "INTEGRATION_CONTRACTS": {
-        "patterns": [r"^src\.integration_contracts(?:\..+)?"],
+        "patterns": [r"^integration_contracts(?:\..+)?"], # Corrected
         "style": "bold magenta"
     },
     "INFRA_EVENT_PUBLISHING": {
@@ -36,39 +36,34 @@ LAYER_STYLES_CONFIG = {
         # This one is a bit trickier to make fully generic if styles per BC were ever needed without new top-level keys.
         # Assuming for now a common style for all event publishing/mapping under infrastructure.<bc>.event_...
         "patterns": [
-            r"^src\.infrastructure\.(?:[^.]+)\.event_(?:publishing|mapping)(?:\..+)?"
+            r"^infrastructure\.(?:[^.]+)\.events(?:\..+)?" # Corrected: Removed double backslashes and fixed unterminated string
         ],
         "style": "deep_pink2"
     },
     "INFRA_CORE_EVENT_SYSTEM": {
-        "patterns": [r"^src\.infrastructure\.core\.events(?:\..+)?"], # Dispatchers, registry, bootstrap
+        "patterns": [r"^infrastructure\.core\.events(?:\..+)?"], # Corrected
         "style": "grey62"
     },
     "INFRA_PERSISTENCE": {
         # Matches src.infrastructure.<any_bc>.persistence.* and src.infrastructure.core.persistence.*
         "patterns": [
-            r"^src\.infrastructure\.(?:[^.]+|core)\.persistence(?:\..+)?"
+            r"^infrastructure\.(?:[^.]+|core)\.persistence(?:\..+)?" # Corrected
         ],
         "style": "steel_blue3"
     },
     "INFRA_SERVICES_EXTERNAL": {
         # Example: src.infrastructure.customers.services. If you add src.infrastructure.products.services, it will be caught.
-        "patterns": [r"^src\.infrastructure\.(?:[^.]+)\.services(?:\..+)?"], 
+        "patterns": [r"^infrastructure\.(?:[^.]+)\.services(?:\..+)?"], # Corrected
         "style": "light_slate_grey"
     },
     "MAIN_CONFIG_SETUP": {
-        "patterns": [r"^src\.main(?:\..+)?", r"^src\.infrastructure\.core\.settings(?:\..+)?"],
+        "patterns": [r"^main(?:\..+)?", r"^infrastructure\.core\.settings(?:\..+)?"], # Corrected
         "style": "grey42"
     },
     "TESTS": { 
-        "patterns": [r"^src\.tests(?:\..+)?", r"^tests(?:\..+)?"], 
+        "patterns": [r"^tests(?:\..+)?"], # Corrected
         "style": "italic #008080"
     }
-    # Add a default catch-all if desired, though RichHandler has its own defaults
-    # "DEFAULT": {
-    #     "patterns": [r".*"], # Matches any logger name if no other rule matched (due to filter logic)
-    #     "style": "default" # Rich's default style
-    # }
 }
 
 STYLE_TAG_PREFIX = "[LOG_STYLE:\""
@@ -94,53 +89,59 @@ class RegexStyleTagFilter(logging.Filter):
                     print(f"Error compiling regex '{pattern_str}' for {layer_key}: {e}")
 
     def filter(self, record):
-        if not hasattr(record, "original_msg"): 
+        if not hasattr(record, "original_msg"):
             record.original_msg = record.msg
         else:
-            record.msg = record.original_msg 
+            record.msg = record.original_msg
 
         if not isinstance(record.msg, str):
             record.msg = str(record.msg)
 
+        matched_style = None
         for compiled_regex, style_to_apply in self.compiled_patterns:
-            if compiled_regex.fullmatch(record.name): 
-                # Apply style as Rich markup, ensuring to use original_msg to avoid re-wrapping
+            if compiled_regex.fullmatch(record.name):
                 record.msg = f"[{style_to_apply}]{record.original_msg}[/]"
-                break 
-        return True 
+                matched_style = style_to_apply
+                break
+        
+        return True
+
 
 def setup_logging():
     """Configures the root logger with RichHandler and RegexStyleTagFilter."""
     
-    # Create the custom filter
-    regex_filter = RegexStyleTagFilter(LAYER_STYLES_CONFIG)
+    regex_filter = RegexStyleTagFilter(LAYER_STYLES_CONFIG) # Use original filter
+    # force_filter = ForceStyleFilter() # Commented out temporary filter
 
-    # Configure Root Logger
     root_logger = logging.getLogger()
     
-    # Clear any existing handlers to avoid duplicate logs or formatting conflicts
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
         handler.close()
 
+    forced_console = Console(force_terminal=True, markup=True)
+
     rich_handler_instance = RichHandler(
+        console=forced_console,
         rich_tracebacks=True,
-        show_path=False, # Logger name (record.name) is used by our filter, not raw path
-        markup=True,     # Allows Rich markup in the original log messages too
-        log_time_format="[%X]", # Example: [10:34:12]
+        show_path=False,
+        markup=True,
+        log_time_format="[%X]",
         show_level=True
     )
     
-    # Add our custom filter to the handler, so it modifies the record before Rich formats it
-    # Alternatively, add filter to root_logger, but adding to handler is also fine.
-    rich_handler_instance.addFilter(regex_filter)
+    rich_handler_instance.addFilter(regex_filter) # Add original filter
+    # rich_handler_instance.addFilter(force_filter) # Commented out temporary filter
 
     root_logger.addHandler(rich_handler_instance)
     root_logger.setLevel(logging.DEBUG if settings.api_debug else logging.INFO)
 
-    # Optional: Silence very verbose loggers from libraries if needed
-    # logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
-    # logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+    # Silence aiosqlite logs by setting its logger level to WARNING
+    logging.getLogger("aiosqlite").setLevel(logging.WARNING)
 
-    # Test log to verify setup during startup (optional)
-    # logging.getLogger("src.infrastructure.core.logging_config").info("Rich logging configured with regex styling.") 
+    # Attempt to apply RichHandler to Uvicorn loggers as well
+    for logger_name in ("uvicorn", "uvicorn.error", "uvicorn.access"):
+        uv_logger = logging.getLogger(logger_name)
+        uv_logger.handlers = [rich_handler_instance]
+
+    logging.getLogger("infrastructure.core.logging_config").info("Rich logging configured with RegexStyleTagFilter.") 

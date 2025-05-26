@@ -31,28 +31,16 @@ class UpdateCustomerOnOrderPlacedHandler:
             
             # Fetch the customer - using read repo as this handler typically updates a read model
             # or performs actions that don't belong in the customer aggregate's transactional boundary.
-            customer = await self._customer_read_repository.find_by_id(customer_id) # Assuming find_by_id
+            customer = await self._customer_read_repository.get_customer_profile_by_id(customer_id) # Assuming find_by_id
             
             if customer:
                 logger.info(f"[UpdateCustomerOnOrderPlacedHandler] Updating customer {customer_id} based on order {event.order_id}.")
                 # Example: Increment order count or update last order date.
                 # This is a placeholder for actual logic.
                 # For a read model, you might directly update a document.
-                # customer.increment_total_orders()
-                # customer.last_order_date = event.order_date 
-                # await self._customer_read_repository.update(customer) # Or save, depending on repo
-                
-                # For now, just log
-                logger.debug(f"[UpdateCustomerOnOrderPlacedHandler] Placeholder: Customer {customer_id} would be updated here.")
-                
-                # Simulate a potential update for logging
-                # This part is highly dependent on your CustomerReadModel structure and repository methods
-                # For example, if your read model is a dict and your repo supports direct updates:
-                # update_data = {"last_order_placed_at": event.order_date, "$inc": {"order_count": 1}}
-                # await self._customer_read_repository.update_one(
-                #    {"_id": customer_id}, 
-                #    update_data
-                # )
+                customer.total_orders += 1
+                customer.last_order_date = event.occurred_on 
+                await self._customer_read_repository.update_read_model(customer) # Or save, depending on repo
 
             else:
                 logger.warning(f"[UpdateCustomerOnOrderPlacedHandler] Customer with ID {customer_id} not found. Cannot update.")
