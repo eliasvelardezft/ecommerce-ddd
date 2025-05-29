@@ -52,7 +52,13 @@ async def place_order(
         )
         raise HTTPException(status_code=400, detail={"message": "Error placing order", "error_details": str(e)})
 
-    return {"message": "Order placed successfully", "order_id": order.id, "customer_id": order.customer_id, "total_amount": order.total_amount}
+    return {
+        "message": "Order placed successfully", 
+        "order_id": order.id, 
+        "customer_id": order.customer_id, 
+        "total_amount": order.total_amount,
+        "shipping_details": order.shipping_details.model_dump()
+    }
 
 
 @router.get("/{id}/details")

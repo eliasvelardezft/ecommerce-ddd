@@ -10,6 +10,7 @@ from domain.orders.events.OrderCancelledEvent import OrderCancelledEvent
 from domain.orders.exceptions import OrderValidationException
 from domain.orders.models.OrderItem import OrderItem
 from domain.orders.models.OrderStatus import OrderStatus
+from domain.orders.value_objects.ShippingDetails import ShippingDetails
 
 
 class Order(AggregateRoot):
@@ -18,11 +19,13 @@ class Order(AggregateRoot):
         id: UUID,
         customer_id: UUID,
         items: List[OrderItem],
+        shipping_details: ShippingDetails,
     ):
         super().__init__()
         self.id = id
         self.items = items
         self.customer_id = customer_id
+        self.shipping_details = shipping_details
         self.created_at = datetime.now()
         self.updated_at = None
         self.status = OrderStatus.DRAFT
@@ -35,7 +38,8 @@ class Order(AggregateRoot):
     def create(
         id: UUID,
         customer_id: UUID,
-        items: List[OrderItem]
+        items: List[OrderItem],
+        shipping_details: ShippingDetails,
     ) -> "Order":
         if not items:
             raise OrderValidationException("order has no items")
@@ -44,13 +48,19 @@ class Order(AggregateRoot):
             id=id,
             customer_id=customer_id,
             items=items,
+            shipping_details=shipping_details,
         )
 
         order.add_domain_event(
             OrderPlacedEvent(
                 aggregate_id=order.id,
                 customer_id=order.customer_id,
-                items=items
+                order_number=str(order.id),
+                items_data=[item.model_dump() for item in items],
+                total_amount_str=f"{order.total_amount:.2f}",
+                currency="USD",
+                shipping_details_data=order.shipping_details.model_dump(),
+                status=order.status.value
             )
         )
 

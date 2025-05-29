@@ -1,6 +1,6 @@
 from typing import Dict, Any, List
 from uuid import UUID
-from datetime import datetime, timezone
+from datetime import datetime
 
 from domain.core.events.DomainEvent import DomainEvent
 from domain.orders.models.OrderItem import OrderItem
@@ -12,25 +12,36 @@ class OrderPlacedEvent(DomainEvent):
         self,
         aggregate_id: UUID,
         customer_id: UUID,
-        items: List[OrderItem],
+        order_number: str,
+        items_data: List[Dict[str, Any]],
+        total_amount_str: str,
+        currency: str,
+        shipping_details_data: Dict[str, Any],
+        status: str,
     ):
         super().__init__(aggregate_id=str(aggregate_id))
         self.customer_id: UUID = customer_id
-        self.items: List[OrderItem] = items
+        self.order_number: str = order_number
+        self.items_data: list[dict[str, Any]] = items_data
+        self.total_amount_str: str = total_amount_str
+        self.currency: str = currency
+        self.shipping_details_data: Dict[str, Any] = shipping_details_data
+        self.status: str = status
 
     @property
     def items_count(self) -> int:
-        return len(self.items)
-
-    @property
-    def total_amount(self) -> float:
-        return sum(item.unit_price * item.quantity for item in self.items)
+        return len(self.items_data)
 
     def to_dict(self) -> Dict[str, Any]:
         base_dict = super().to_dict()
         base_dict.update({
-            "customer_id": self.customer_id,
-            "total_amount": self.total_amount,
+            "customer_id": str(self.customer_id),
+            "order_number": self.order_number,
+            "items_data": self.items_data,
+            "total_amount_str": self.total_amount_str,
+            "currency": self.currency,
+            "shipping_details_data": self.shipping_details_data,
+            "status": self.status,
             "items_count": self.items_count
         })
         return base_dict

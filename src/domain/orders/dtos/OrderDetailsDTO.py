@@ -3,6 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
+from domain.orders.value_objects.ShippingDetails import ShippingDetails
+
 
 class OrderItemDTO(BaseModel):
     product_name: str
@@ -19,3 +21,4 @@ class OrderDetailsDTO(BaseModel):
     total_amount: float
     created_at: datetime
     status: str
+    shipping_details: ShippingDetails
