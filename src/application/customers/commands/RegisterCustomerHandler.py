@@ -1,11 +1,13 @@
+import logging
+
 from domain.customers.Customer import Customer
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from .RegisterCustomerCommand import RegisterCustomerCommand
 from infrastructure.customers.persistence.CustomerWriteRepository import CustomerWriteRepository
-import logging
-from uuid import uuid4
+
 
 logger = logging.getLogger(__name__)
+
 
 class RegisterCustomerHandler:
     def __init__(
@@ -21,7 +23,6 @@ class RegisterCustomerHandler:
         
         # Create customer using factory method
         customer = Customer.create(
-            id=uuid4(),
             name=command.name,
             email=command.email
         )

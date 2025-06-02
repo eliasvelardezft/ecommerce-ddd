@@ -43,7 +43,7 @@ class Order(AggregateRoot):
 
     def __init__(
         self,
-        id: UUID,
+        _id: UUID,
         customer_id: UUID,
         items: List[OrderItem], # List of Pydantic OrderItem models
         shipping_details: ShippingDetails,
@@ -57,8 +57,8 @@ class Order(AggregateRoot):
         updated_at: Optional[datetime] = None,
         tracking_number: Optional[str] = None,
     ):
-        super().__init__(id) # Pass ID to AggregateRoot
-        self.id = id
+        super().__init__()
+        self.id = _id
         self.customer_id = customer_id
         
         if not currency or len(currency) != 3:
@@ -179,7 +179,7 @@ class Order(AggregateRoot):
             ))
 
         order = cls(
-            id=instance_id,
+            _id=instance_id,
             customer_id=customer_id,
             items=processed_order_items,
             shipping_details=shipping_details_obj,

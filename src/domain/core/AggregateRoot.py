@@ -1,9 +1,8 @@
 from typing import List
 from .events.DomainEvent import DomainEvent
-from .Entity import Entity
 
 
-class AggregateRoot(Entity):
+class AggregateRoot:
     def __init__(self):
         self._domain_events: List[DomainEvent] = []
 
