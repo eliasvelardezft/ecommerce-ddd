@@ -38,6 +38,19 @@ from domain.customers.events.handlers.integration.order_placed_handlers import (
     UpdateCustomerOnOrderPlaced # Renamed for clarity and to expect a contract
 )
 
+# Import internal Product domain events
+from domain.products.events.ProductCreatedEvent import ProductCreatedEvent as InternalProductCreatedEvent
+from domain.products.events.ProductStockUpdatedEvent import ProductStockUpdatedEvent as InternalProductStockUpdatedEvent
+from domain.products.events.ProductPriceUpdatedEvent import ProductPriceUpdatedEvent as InternalProductPriceUpdatedEvent
+from domain.products.events.ProductActivatedEvent import ProductActivatedEvent as InternalProductActivatedEvent
+from domain.products.events.ProductDeactivatedEvent import ProductDeactivatedEvent as InternalProductDeactivatedEvent
+
+# Import internal Product handlers
+from domain.products.events.handlers.product_created_handlers import UpdateProductOnProductCreated
+from domain.products.events.handlers.product_stock_updated_handlers import UpdateProductOnProductStockUpdated
+from domain.products.events.handlers.product_price_updated_handlers import UpdateProductOnProductPriceUpdated
+from domain.products.events.handlers.product_activated_handlers import UpdateProductOnProductActivated
+from domain.products.events.handlers.product_deactivated_handlers import UpdateProductOnProductDeactivated
 
 logger = logging.getLogger(__name__)
 
@@ -136,3 +149,64 @@ def register_order_event_handlers(
     #         UpdateOrderOnCustomerVerifiedHandler(container.get("some_order_dependency"))
     #     )
     #     logger.info("[Registry] Integration event handlers for Order domain registered with IntegrationEventDispatcher (if any).")
+
+def register_product_event_handlers(
+    domain_event_dispatcher: DomainEventDispatcher,
+    # integration_event_dispatcher: IntegrationEventDispatcher, # If/when products have integration events
+    container: dict
+) -> None:
+    logger.info("[Registry] Registering Product event handlers...")
+    product_read_repo = container.get("product_read_repository") # Assuming this key
+
+    domain_event_dispatcher.register_handler(
+        InternalProductCreatedEvent,
+        UpdateProductOnProductCreated(product_read_repo)
+    )
+    domain_event_dispatcher.register_handler(
+        InternalProductStockUpdatedEvent,
+        UpdateProductOnProductStockUpdated(product_read_repo)
+    )
+    domain_event_dispatcher.register_handler(
+        InternalProductPriceUpdatedEvent,
+        UpdateProductOnProductPriceUpdated(product_read_repo)
+    )
+    domain_event_dispatcher.register_handler(
+        InternalProductActivatedEvent,
+        UpdateProductOnProductActivated(product_read_repo)
+    )
+    domain_event_dispatcher.register_handler(
+        InternalProductDeactivatedEvent,
+        UpdateProductOnProductDeactivated(product_read_repo)
+    )
+    logger.info("[Registry] Internal Product event handlers registered with DomainEventDispatcher.")
+
+
+def register_all_event_handlers(
+    domain_event_dispatcher: DomainEventDispatcher,
+    integration_event_dispatcher: IntegrationEventDispatcher,
+    container: dict
+) -> None:
+    """
+    Registers all domain-specific and integration event handlers with their respective dispatchers
+    using the functions from the registry.
+    """
+    logger.info("[Bootstrap] Registering all application event handlers from registry...")
+    
+    register_customer_event_handlers(
+        domain_event_dispatcher=domain_event_dispatcher,
+        integration_event_dispatcher=integration_event_dispatcher,
+        container=container
+    )
+    
+    register_order_event_handlers(
+        domain_event_dispatcher=domain_event_dispatcher,
+        integration_event_dispatcher=integration_event_dispatcher, # Now passed here
+        container=container
+    )
+
+    register_product_event_handlers( # Add this call
+        domain_event_dispatcher=domain_event_dispatcher,
+        container=container
+    )
+    
+    logger.info("[Bootstrap] All application event handlers registered.")
