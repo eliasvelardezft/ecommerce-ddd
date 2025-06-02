@@ -7,7 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class UpdateReadModelHandler:
+class UpdateOrderOnOrderPlaced:
     def __init__(self, read_repository: IOrderReadRepository):
         self._read_repository = read_repository
 

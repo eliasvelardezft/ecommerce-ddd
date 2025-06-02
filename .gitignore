@@ -174,3 +174,5 @@ cython_debug/
 # SQLite database
 *.db
 sql_app.db
+
+/uncommit

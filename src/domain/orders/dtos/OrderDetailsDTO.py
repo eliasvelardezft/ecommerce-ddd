@@ -1,5 +1,6 @@
 from datetime import datetime
 from uuid import UUID
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -21,4 +22,6 @@ class OrderDetailsDTO(BaseModel):
     total_amount: float
     created_at: datetime
     status: str
-    shipping_details: ShippingDetails
+    shipping_details: Optional[ShippingDetails] = None
+    tracking_number: Optional[str] = None
+    cancellation_reason: Optional[str] = None

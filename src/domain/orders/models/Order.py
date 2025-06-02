@@ -268,19 +268,45 @@ class Order(AggregateRoot):
             raise OrderValidationException(f"Can only process DRAFT orders. Current status: {self.status.value}")
         self.status = OrderStatus.PROCESSING
         self.updated_at = datetime.now(timezone.utc)
-        # self.add_domain_event(OrderProcessingEvent(aggregate_id=self.id, status=self.status.value))
+        self.add_domain_event(OrderProcessingEvent(
+            aggregate_id=self.id,
+            order_number=self.order_number,
+            customer_id=self.customer_id,
+            status=self.status.value,
+            total_amount_str=str(self.total_amount),
+            currency=self.currency
+        ))
 
-    def cancel_order(self): # Renamed from original 'cancelled'
+    def cancel_order(self, cancellation_reason: Optional[str] = None): # Added reason parameter
         # More complex cancellation rules will apply when OrderStatus is fully updated
         if self.status not in [OrderStatus.DRAFT, OrderStatus.PROCESSING]:
             raise OrderValidationException(f"Cannot cancel order in status {self.status.value}.")
         self.status = OrderStatus.CANCELLED
         self.updated_at = datetime.now(timezone.utc)
-        # self.add_domain_event(OrderCancelledEvent(aggregate_id=self.id, reason=...))
+        self.add_domain_event(OrderCancelledEvent(
+            aggregate_id=self.id,
+            order_number=self.order_number,
+            customer_id=self.customer_id,
+            status=self.status.value,
+            total_amount_str=str(self.total_amount),
+            currency=self.currency,
+            cancellation_reason=cancellation_reason
+        ))
 
-    def complete_order(self): # Renamed from original 'completed'
+    def complete_order(self, tracking_number: Optional[str] = None): # Added tracking_number parameter
         if self.status != OrderStatus.PROCESSING:
             raise OrderValidationException(f"Cannot complete order in status {self.status.value}. Must be PROCESSING.")
         self.status = OrderStatus.COMPLETED
         self.updated_at = datetime.now(timezone.utc)
-        # self.add_domain_event(OrderCompletedEvent(aggregate_id=self.id))
+        # Update tracking number if provided
+        if tracking_number:
+            self.tracking_number = tracking_number
+        self.add_domain_event(OrderCompletedEvent(
+            aggregate_id=self.id,
+            order_number=self.order_number,
+            customer_id=self.customer_id,
+            status=self.status.value,
+            total_amount_str=str(self.total_amount),
+            currency=self.currency,
+            tracking_number=self.tracking_number
+        ))

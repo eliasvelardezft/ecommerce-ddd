@@ -5,6 +5,9 @@ from infrastructure.core.events.integration_event_dispatcher import IntegrationE
 # Import internal domain events
 from domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent as InternalCustomerRegisteredEvent
 from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent as InternalOrderPlacedEvent
+from domain.orders.events.OrderProcessingEvent import OrderProcessingEvent as InternalOrderProcessingEvent
+from domain.orders.events.OrderCompletedEvent import OrderCompletedEvent as InternalOrderCompletedEvent
+from domain.orders.events.OrderCancelledEvent import OrderCancelledEvent as InternalOrderCancelledEvent
 
 # Import public event contracts
 from integration_contracts.events.order.order_placed import OrderPlacedEventContractV1
@@ -16,13 +19,23 @@ from domain.customers.events.handlers.customer_registered_handlers import (
     SendWelcomeEmailOnCustomerRegisteredEvent as CustomerSendWelcomeEmailHandler,
     AuditNewCustomerOnCustomerRegisteredEvent
 )
-from domain.orders.events.handlers.OrderPlacedHandlers import (
-    UpdateReadModelHandler as OrderUpdateReadModelHandler
+from domain.orders.events.handlers.order_placed_handlers import (
+    UpdateOrderOnOrderPlacedHandler as OrderUpdateReadModelHandler
+)
+# Added imports for new handlers
+from domain.orders.events.handlers.order_processing_handlers import (
+    UpdateOrderOnOrderProcessing
+)
+from domain.orders.events.handlers.order_completed_handlers import (
+    UpdateOrderOnOrderCompleted
+)
+from domain.orders.events.handlers.order_cancelled_handlers import (
+    UpdateOrderOnOrderCancelled
 )
 
 # Import integration handlers (cross-BC, listen to public contracts)
-from domain.customers.events.handlers.integration.OrderPlacedHandlers import (
-    UpdateCustomerOnOrderPlacedHandler # Renamed for clarity and to expect a contract
+from domain.customers.events.handlers.integration.order_placed_handlers import (
+    UpdateCustomerOnOrderPlaced # Renamed for clarity and to expect a contract
 )
 
 
@@ -63,10 +76,10 @@ def register_customer_event_handlers(
 
     # 2. Register handlers for PUBLIC INTEGRATION event contracts consumed by Customer domain
     # These handlers are within the Customer BC but react to public events from OTHER BCs (e.g., Orders).
-    # The handler 'UpdateCustomerOnOrderPlacedHandler' now expects 'OrderPlacedEventContractV1'.
+    # The handler 'UpdateCustomerOnOrderPlaced' now expects 'OrderPlacedEventContractV1'.
     integration_event_dispatcher.register_handler(
         OrderPlacedEventContractV1, # Subscribes to the public contract
-        UpdateCustomerOnOrderPlacedHandler(customer_read_repo) # This handler must be updated to expect the contract
+        UpdateCustomerOnOrderPlaced(customer_read_repo) # This handler must be updated to expect the contract
     )
     logger.info("[Registry] Integration event handlers for Customer domain registered with IntegrationEventDispatcher.")
 
@@ -91,6 +104,23 @@ def register_order_event_handlers(
         InternalOrderPlacedEvent,
         OrderUpdateReadModelHandler(order_read_repo)
     )
+    
+    # Register lifecycle event handlers
+    domain_event_dispatcher.register_handler(
+        InternalOrderProcessingEvent,
+        UpdateOrderOnOrderProcessing(order_read_repo)
+    )
+    
+    domain_event_dispatcher.register_handler(
+        InternalOrderCompletedEvent,
+        UpdateOrderOnOrderCompleted(order_read_repo)
+    )
+    
+    domain_event_dispatcher.register_handler(
+        InternalOrderCancelledEvent,
+        UpdateOrderOnOrderCancelled(order_read_repo)
+    )
+    
     logger.info("[Registry] Internal Order event handlers registered with DomainEventDispatcher.")
 
     # 2. (Example) Register handlers for PUBLIC INTEGRATION event contracts consumed by Order domain
