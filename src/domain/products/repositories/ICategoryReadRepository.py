@@ -6,8 +6,11 @@ from domain.products.dtos.CategoryDetailsDTO import CategoryDetailsDTO
 
 class ICategoryReadRepository(ABC):
     @abstractmethod
-    async def get_category(self, category_id: UUID) -> Optional[CategoryDetailsDTO]:
-        """Retrieves category details by its ID."""
+    async def get_category(self, category_id: UUID, recursive: bool = False) -> Optional[CategoryDetailsDTO]:
+        """Retrieves category details by its ID.
+        If recursive is True, attempts to load all descendant children.
+        Otherwise, may load direct children or none, depending on implementation.
+        """
         raise NotImplementedError
 
     @abstractmethod

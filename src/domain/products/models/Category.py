@@ -22,6 +22,8 @@ class Category(AggregateRoot):
         name: str,
         description: Optional[str] = None,
         parent_category_id: Optional[UUID] = None,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None
     ):
         super().__init__()
         self.id = _id
@@ -30,8 +32,8 @@ class Category(AggregateRoot):
         self.parent_category_id = parent_category_id
         
         current_time = datetime.now()
-        self.created_at = current_time
-        self.updated_at = current_time
+        self.created_at = created_at if created_at is not None else current_time
+        self.updated_at = updated_at if updated_at is not None else self.created_at
 
         if not name:
             raise ValueError("Category name cannot be empty.")
