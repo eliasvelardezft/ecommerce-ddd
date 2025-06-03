@@ -52,6 +52,16 @@ from domain.products.events.handlers.product_price_updated_handlers import Updat
 from domain.products.events.handlers.product_activated_handlers import UpdateProductOnProductActivated
 from domain.products.events.handlers.product_deactivated_handlers import UpdateProductOnProductDeactivated
 
+# Import internal Category domain events
+from domain.products.events.CategoryCreatedEvent import CategoryCreatedEvent as InternalCategoryCreatedEvent
+from domain.products.events.CategoryDetailsUpdatedEvent import CategoryDetailsUpdatedEvent as InternalCategoryDetailsUpdatedEvent
+from domain.products.events.CategoryParentChangedEvent import CategoryParentChangedEvent as InternalCategoryParentChangedEvent
+
+# Import internal Category handlers
+from domain.products.events.handlers.category_created_handlers import UpdateCategoryOnCategoryCreated
+from domain.products.events.handlers.category_details_updated_handlers import UpdateCategoryOnCategoryDetailsUpdated
+from domain.products.events.handlers.category_parent_changed_handlers import UpdateCategoryOnCategoryParentChanged
+
 logger = logging.getLogger(__name__)
 
 def register_customer_event_handlers(
@@ -180,6 +190,26 @@ def register_product_event_handlers(
     )
     logger.info("[Registry] Internal Product event handlers registered with DomainEventDispatcher.")
 
+def register_category_event_handlers(
+    domain_event_dispatcher: DomainEventDispatcher,
+    container: dict
+) -> None:
+    logger.info("[Registry] Registering Category event handlers...")
+    category_read_repo = container.get("category_read_repository") # Assuming this key
+
+    domain_event_dispatcher.register_handler(
+        InternalCategoryCreatedEvent,
+        UpdateCategoryOnCategoryCreated(category_read_repo)
+    )
+    domain_event_dispatcher.register_handler(
+        InternalCategoryDetailsUpdatedEvent,
+        UpdateCategoryOnCategoryDetailsUpdated(category_read_repo)
+    )
+    domain_event_dispatcher.register_handler(
+        InternalCategoryParentChangedEvent,
+        UpdateCategoryOnCategoryParentChanged(category_read_repo)
+    )
+    logger.info("[Registry] Internal Category event handlers registered with DomainEventDispatcher.")
 
 def register_all_event_handlers(
     domain_event_dispatcher: DomainEventDispatcher,
@@ -205,6 +235,11 @@ def register_all_event_handlers(
     )
 
     register_product_event_handlers( # Add this call
+        domain_event_dispatcher=domain_event_dispatcher,
+        container=container
+    )
+    
+    register_category_event_handlers( # Add this call
         domain_event_dispatcher=domain_event_dispatcher,
         container=container
     )

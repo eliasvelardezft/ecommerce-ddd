@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field, AnyHttpUrl
+from typing import Optional
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class ImageUrl(BaseModel):
-    url: AnyHttpUrl
-    alt_text: str = Field(min_length=1, max_length=255)
+    """Represents a URL for a product image, with optional alt text."""
+    url: HttpUrl = Field(..., description="The full URL of the image.")
+    alt_text: Optional[str] = Field(None, description="Alternative text for the image, for accessibility.")

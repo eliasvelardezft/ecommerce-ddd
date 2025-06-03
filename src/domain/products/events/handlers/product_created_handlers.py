@@ -34,7 +34,7 @@ class UpdateProductOnProductCreated:
             price_amount=event.price_amount,
             price_currency=event.price_currency,
             category_id=event.category_id,
-            attributes=event.attributes,
+            attributes=attributes,
             image_url=image_url,
             created_at=event.occurred_on,
             updated_at=event.occurred_on # Initially, updated_at is same as created_at

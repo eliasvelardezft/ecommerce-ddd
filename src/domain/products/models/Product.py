@@ -43,7 +43,7 @@ class Product(AggregateRoot):
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None,
     ):
-        super().__init__(_id)
+        super().__init__()
         self.id = _id
         self.name = name
         self.description = description
@@ -95,6 +95,7 @@ class Product(AggregateRoot):
             category_id=product.category_id,
             image_url=product.image_url.url if product.image_url else None,
             image_alt_text=product.image_url.alt_text if product.image_url else None,
+            attributes=[attribute.model_dump() for attribute in product.attributes],
         ))
         return product
 

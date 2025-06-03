@@ -11,7 +11,7 @@ class IProductReadRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_all_product(self) -> List[ProductDetailsDTO]:
+    async def get_all_products(self) -> List[ProductDetailsDTO]:
         raise NotImplementedError
 
     @abstractmethod
