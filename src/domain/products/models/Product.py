@@ -17,7 +17,7 @@ from domain.products.value_objects.Attribute import Attribute
 class Product(AggregateRoot):
     id: UUID
     name: str
-    description: str
+    description: Optional[str] = None
     sku: str
     active: bool
     stock_quantity: int
@@ -32,10 +32,10 @@ class Product(AggregateRoot):
         self,
         _id: UUID,
         name: str,
-        description: str,
         sku: str,
         category_id: UUID,
         price: Money,
+        description: Optional[str] = None,
         active: bool = True,
         stock_quantity: int = 0,
         attributes: Optional[List[Attribute]] = None,
@@ -61,14 +61,14 @@ class Product(AggregateRoot):
     def create(
         cls,
         name: str,
-        description: str,
         sku: str,
         category_id: UUID,
         price: Money,
         active: bool = True,
         stock_quantity: int = 0,
-        attributes: Optional[List[Attribute]] = None,
         image_url: Optional[ImageUrl] = None,
+        attributes: Optional[List[Attribute]] = None,
+        description: Optional[str] = None,
     ) -> 'Product':
         _id = uuid4()
         product = cls(

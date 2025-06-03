@@ -96,7 +96,7 @@ Based on the domain model and the MVP use case ("customer sees products and make
 
 *   **Product Management (Admin/Internal):**
     *   `CreateProductCommand`:
-        *   Payload: `name`, `description`, `price_amount`, `price_currency`, `category_id`, `sku`, `image_urls`, `stock_quantity`, `attributes`.
+        *   Payload: `name`, `description`, `price_amount`, `price_currency`, `category_id`, `sku`, `image_url`, `stock_quantity`, `attributes`.
         *   Outcome: A new product is created. `ProductCreatedEvent` is raised.
     *   `UpdateProductCommand`:
         *   Payload: `product_id`, plus any fields that can be updated.
