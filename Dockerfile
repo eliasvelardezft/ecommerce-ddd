@@ -26,7 +26,6 @@ RUN if [ "$DEV" = "true" ]; then poetry install --no-root; else poetry install -
 # Copy the application source code
 # This copies the content of ./src from the host to /src in the container
 COPY ./src/. ./
-COPY test_rich_color.py /src/test_rich_color.py
 
 EXPOSE 8008
 

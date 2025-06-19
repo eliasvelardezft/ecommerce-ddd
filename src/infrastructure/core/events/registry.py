@@ -20,7 +20,7 @@ from domain.customers.events.handlers.customer_registered_handlers import (
     AuditNewCustomerOnCustomerRegisteredEvent
 )
 from domain.orders.events.handlers.order_placed_handlers import (
-    UpdateOrderOnOrderPlacedHandler as OrderUpdateReadModelHandler
+    UpdateOrderOnOrderPlaced as OrderUpdateReadModelHandler
 )
 # Added imports for new handlers
 from domain.orders.events.handlers.order_processing_handlers import (

@@ -13,13 +13,13 @@ class UpdateCategoryDetailsHandler:
         category_write_repository: ICategoryWriteRepository,
         domain_event_dispatcher: DomainEventDispatcher
     ):
-        self._category_write_repository = category_write_repository
+        self._repository = category_write_repository
         self._domain_event_dispatcher = domain_event_dispatcher
 
     async def handle(self, command: UpdateCategoryDetailsCommand) -> None:
         logger.info(f"Handling UpdateCategoryDetailsCommand for category ID: {command.category_id}")
 
-        category = await self._category_write_repository.get_by_id(command.category_id)
+        category = await self._repository.get_by_id(command.category_id)
         if not category:
             logger.error(f"Category with ID {command.category_id} not found for details update.")
             raise ValueError(f"Category with ID {command.category_id} not found.")
@@ -30,7 +30,7 @@ class UpdateCategoryDetailsHandler:
         )
 
         if category.domain_events:
-            await self._category_write_repository.save(category)
+            await self._repository.save(category)
             logger.info(f"Category {category.id} details updated successfully.")
             
             await self._domain_event_dispatcher.dispatch_events(category.domain_events)

@@ -5,7 +5,7 @@ from domain.core.events.DomainEventDispatcher import DomainEventDispatcher # Ass
 from domain.core.value_objects.Money import Money # Import Money VO
 from domain.products.models.Product import Product
 from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
-from domain.products.repositories.ICategoryReadRepository import ICategoryReadRepository # To validate category
+from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository # To validate category
 from .CreateProductCommand import CreateProductCommand
 
 
@@ -15,18 +15,18 @@ class CreateProductHandler:
     def __init__(
         self,
         product_write_repository: IProductWriteRepository,
-        category_read_repository: ICategoryReadRepository,
+        category_write_repository: ICategoryWriteRepository,
         domain_event_dispatcher: DomainEventDispatcher # For explicit dispatch, or handled by UoW
     ):
         self._product_write_repository = product_write_repository
-        self._category_read_repository = category_read_repository
+        self._category_write_repository = category_write_repository
         self._domain_event_dispatcher = domain_event_dispatcher
 
     async def handle(self, command: CreateProductCommand) -> UUID:
         logger.info(f"Handling CreateProductCommand for SKU: {command.sku}")
 
         # 1. Validate category_id (optional, but good practice in handler)
-        category = await self._category_read_repository.get_category(command.category_id)
+        category = await self._category_write_repository.get_by_id(command.category_id)
         if not category:
             logger.error(f"Category with ID {command.category_id} not found.")
             raise ValueError(f"Category with ID {command.category_id} not found.")
