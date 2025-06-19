@@ -57,4 +57,4 @@ class CreateProductHandler:
         logger.info(f"Dispatched {len(product.domain_events)} domain events for product {product.id}.")
         product.clear_domain_events()
 
-        return product.id
+        return product

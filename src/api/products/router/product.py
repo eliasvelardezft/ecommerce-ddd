@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
+from domain.products.repositories.IProductReadRepository import IProductReadRepository
 from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
 
 # Product Commands and Handlers
@@ -28,6 +29,7 @@ from api.products.dependencies import (
     get_product_write_repository,
     get_products_event_dispatcher,
     get_category_write_repository,
+    get_product_read_repository,
 )
 
 logger = logging.getLogger(__name__)
@@ -72,11 +74,11 @@ async def create_product(
 @router.get("/{product_id}")
 async def get_product(
     product_id: UUID,
-    repository: IProductWriteRepository = Depends(get_product_write_repository)
+    repository: IProductReadRepository = Depends(get_product_read_repository)
 ):
     """Get product by ID"""
     logger.info(f"Fetching product {product_id}")
-    query = GetProductByIdQuery(product_id)
+    query = GetProductByIdQuery(product_id=product_id)
     handler = GetProductByIdHandler(repository)
     try:
         product = await handler.handle(query)
@@ -91,7 +93,7 @@ async def get_product(
 
 @router.get("/")
 async def list_active_products(
-    repository: IProductWriteRepository = Depends(get_product_write_repository)
+    repository: IProductReadRepository = Depends(get_product_read_repository)
 ):
     """List all active products"""
     logger.info("Fetching active products list")

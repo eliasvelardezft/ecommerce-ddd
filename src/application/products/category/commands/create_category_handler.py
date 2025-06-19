@@ -44,4 +44,4 @@ class CreateCategoryHandler:
         logger.info(f"Dispatched {len(category.domain_events)} domain events for category {category.id}.")
         category.clear_domain_events()
 
-        return category.id 
+        return category

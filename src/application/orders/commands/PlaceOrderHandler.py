@@ -2,7 +2,7 @@ import logging
 from uuid import uuid4
 
 from domain.orders.models.Order import Order
-from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent as InternalOrderPlacedEvent
+from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
 from domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class PlaceOrderHandler:
+    integration_events = [OrderPlacedEvent]
+
     def __init__(
         self,
         write_repository: IOrderWriteRepository,
@@ -44,13 +46,14 @@ class PlaceOrderHandler:
         await self._repository.save(order)
         logger.info(f"[PlaceOrderHandler] Order {order.id} saved to write repository.")
 
-        for internal_event in order.domain_events:
-            logger.debug(f"[PlaceOrderHandler] Dispatching internal event: {internal_event.__class__.__name__}")
-            await self._domain_event_dispatcher.dispatch(internal_event)
+        # Dispatch all domain events using the new method
+        await self._domain_event_dispatcher.dispatch_events(order.domain_events)
+        logger.info(f"[PlaceOrderHandler] Dispatched {len(order.domain_events)} domain events for order {order.id}.")
 
+        # Publish integration events for specific internal events
         for internal_event in order.domain_events:
-            if isinstance(internal_event, InternalOrderPlacedEvent):
-                logger.info(f"[PlaceOrderHandler] Publishing InternalOrderPlacedEvent as a public contract for order {order.id}.")
+            if internal_event.__class__ in self.integration_events:
+                logger.info(f"[PlaceOrderHandler] Publishing {internal_event.__class__.__name__} as a public contract for order {order.id}.")
                 await self._integration_event_publisher.publish(internal_event)
 
         order.clear_domain_events()

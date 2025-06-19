@@ -40,27 +40,3 @@ def create_integration_event_dispatcher() -> IntegrationEventDispatcher:
     integration_event_dispatcher = IntegrationEventDispatcher()
     logger.info("[Bootstrap] IntegrationEventDispatcher instantiated.")
     return integration_event_dispatcher
-
-def register_all_event_handlers(
-    domain_event_dispatcher: DomainEventDispatcher,
-    integration_event_dispatcher: IntegrationEventDispatcher,
-    container: dict
-) -> None:
-    """
-    Registers all domain-specific and integration event handlers with their respective dispatchers
-    using the functions from the registry.
-    """
-    logger.info("[Bootstrap] Registering all application event handlers from registry...")
-    
-    register_customer_event_handlers(
-        domain_event_dispatcher=domain_event_dispatcher,
-        integration_event_dispatcher=integration_event_dispatcher,
-        container=container
-    )
-    
-    register_order_event_handlers(
-        domain_event_dispatcher=domain_event_dispatcher,
-        integration_event_dispatcher=integration_event_dispatcher, # Now passed here
-        container=container
-    )
-    logger.info("[Bootstrap] All application event handlers registered.")

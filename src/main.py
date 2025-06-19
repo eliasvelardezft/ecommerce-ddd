@@ -24,8 +24,8 @@ from domain.core.events.EventStore import EventStore
 from infrastructure.core.events.bootstrap import (
     create_domain_event_dispatcher,
     create_integration_event_dispatcher,
-    register_all_event_handlers
 )
+from infrastructure.core.events.registry import register_all_event_handlers
 from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
 
 # Standard logger for this file, will now use the Rich setup configured by setup_logging()

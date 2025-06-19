@@ -31,10 +31,9 @@ class RegisterCustomerHandler:
         await self._repository.save(customer)
         logger.info(f"Customer saved to write repository: {customer.id}")
 
-        # Dispatch all domain events
-        for event in customer.domain_events:
-            logger.info("[Command] Dispatching event %s", event.__class__.__name__)
-            await self._event_dispatcher.dispatch(event)
+        # Dispatch all domain events using the new method
+        await self._event_dispatcher.dispatch_events(customer.domain_events)
+        logger.info(f"[Command] Dispatched {len(customer.domain_events)} domain events for customer {customer.id}")
         
         # Clear events after dispatching
         customer.clear_domain_events()

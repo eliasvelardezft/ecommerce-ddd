@@ -8,13 +8,13 @@ from .ListActiveProductsQuery import ListActiveProductsQuery
 logger = logging.getLogger(__name__)
 
 class ListActiveProductsHandler:
-    def __init__(self, product_read_repository: IProductReadRepository):
-        self._product_read_repository = product_read_repository
+    def __init__(self, repository: IProductReadRepository):
+        self._repository = repository
 
     async def handle(self, query: ListActiveProductsQuery) -> List[ProductDetailsDTO]:
         logger.info("Handling ListActiveProductsQuery")
         
-        active_products = await self._product_read_repository.list_active_products(query.category_id)
+        active_products = await self._repository.list_active_products(query.category_id)
         
         logger.info(f"Retrieved {len(active_products)} active products.")
         return active_products

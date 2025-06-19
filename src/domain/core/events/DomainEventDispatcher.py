@@ -66,6 +66,12 @@ class DomainEventDispatcher:
         if event_type not in self._handlers and (event_type is not DomainEvent or DomainEvent not in self._handlers):
             logger.debug(f"[DomainEventDispatcher] No specific or base handlers registered for internal event '{event_type.__name__}'")
 
+    async def dispatch_events(self, events: List[DomainEvent]) -> None:
+        """Dispatch a list of domain events to all registered handlers."""
+        logger.info(f"[DomainEventDispatcher] Dispatching {len(events)} domain events")
+        for event in events:
+            await self.dispatch(event)
+
     def clear(self) -> None:
         """Clear all registered internal handlers."""
         self._handlers.clear() 

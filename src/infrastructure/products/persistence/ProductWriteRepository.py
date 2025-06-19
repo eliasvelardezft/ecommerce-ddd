@@ -49,7 +49,7 @@ class ProductWriteRepository(IProductWriteRepository):
             price_amount=float(product.price.amount), # SQLAlchemy Numeric might prefer float or Decimal
             price_currency=product.price.currency,
             category_id=product.category_id,
-            image_url_url=product.image_url.url if product.image_url else None,
+            image_url_url=str(product.image_url.url) if product.image_url else None,
             image_alt_text=product.image_url.alt_text if product.image_url else None,
             attributes=db_attributes_sql, # Assign list of new AttributeSQL instances
             created_at=product.created_at,
@@ -70,7 +70,7 @@ class ProductWriteRepository(IProductWriteRepository):
         existing_db_product.category_id = product.category_id
         
         if product.image_url:
-            existing_db_product.image_url_url = product.image_url.url
+            existing_db_product.image_url_url = str(product.image_url.url)
             existing_db_product.image_alt_text = product.image_url.alt_text
         else:
             existing_db_product.image_url_url = None

@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
+from domain.products.repositories.ICategoryReadRepository import ICategoryReadRepository
 
 # Category Commands and Handlers
 from application.products.category.commands.CreateCategoryCommand import CreateCategoryCommand
@@ -21,6 +22,7 @@ from application.products.category.queries.list_categories_handler import ListCa
 
 from api.products.dependencies import (
     get_category_write_repository,
+    get_category_read_repository,
     get_products_event_dispatcher,
 )
 
@@ -56,11 +58,11 @@ async def create_category(
 @router.get("/{category_id}")
 async def get_category(
     category_id: UUID,
-    repository: ICategoryWriteRepository = Depends(get_category_write_repository)
+    repository: ICategoryReadRepository = Depends(get_category_read_repository)
 ):
     """Get category by ID"""
     logger.info(f"Fetching category {category_id}")
-    query = GetCategoryDetailsQuery(category_id)
+    query = GetCategoryDetailsQuery(category_id=category_id)
     handler = GetCategoryDetailsHandler(repository)
     try:
         category = await handler.handle(query)
@@ -76,7 +78,7 @@ async def get_category(
 @router.get("/")
 async def list_categories(
     include_parent_id: bool = None,
-    repository: ICategoryWriteRepository = Depends(get_category_write_repository)
+    repository: ICategoryReadRepository = Depends(get_category_read_repository)
 ):
     """List categories with optional filtering"""
     logger.info("Fetching categories list")

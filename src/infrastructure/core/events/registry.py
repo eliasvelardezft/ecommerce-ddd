@@ -234,12 +234,12 @@ def register_all_event_handlers(
         container=container
     )
 
-    register_product_event_handlers( # Add this call
+    register_product_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
         container=container
     )
     
-    register_category_event_handlers( # Add this call
+    register_category_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
         container=container
     )

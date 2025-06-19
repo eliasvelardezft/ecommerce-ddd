@@ -54,6 +54,11 @@ class CategoryWriteRepository(ICategoryWriteRepository):
         
         try:
             await self._session.commit()
+
+            category = await self.get_by_id(category.id)        
+            print(category)
+
+
             logger.info(f"Successfully saved (upserted) category {category.id}.")
         except Exception as e:
             logger.error(f"Error saving (upserting) category {category.id}: {e}")
@@ -66,7 +71,7 @@ class CategoryWriteRepository(ICategoryWriteRepository):
         result = await self._session.execute(
             select(CategorySQL).where(CategorySQL.id == category_id)
         )
-        db_category: Optional[CategorySQL] = result.scalar_one_or_none()
+        db_category: Optional[CategorySQL] = result.unique().scalar_one_or_none()
 
         if not db_category:
             logger.debug(f"Category with ID {category_id} not found in the database.")
