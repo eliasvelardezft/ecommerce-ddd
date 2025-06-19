@@ -1,15 +1,21 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from uuid import UUID
+from typing import Optional
 
 from domain.products.models.Product import Product
 
 
 class IProductWriteRepository(ABC):
-    async def save(self, product: Product) -> Product:
+    @abstractmethod
+    async def save(self, product: Product) -> None:
+        """Persists a product, creating it if new or updating if existing."""
         raise NotImplementedError
 
-    async def delete(self, product: Product) -> None:
+    @abstractmethod
+    async def delete(self, id: UUID) -> None:
         raise NotImplementedError
 
-    async def get_by_id(self, id: UUID) -> Product:
+    @abstractmethod
+    async def get_by_id(self, product_id: UUID) -> Optional[Product]:
+        """Retrieves a product by its ID, potentially for updates or checks."""
         raise NotImplementedError

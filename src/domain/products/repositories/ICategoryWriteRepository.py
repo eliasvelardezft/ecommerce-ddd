@@ -1,15 +1,16 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
+from typing import Optional
 
 from domain.products.models.Category import Category
 
 class ICategoryWriteRepository(ABC):
     @abstractmethod
     async def save(self, category: Category) -> None:
-        """Persists a new category or updates an existing one."""
+        """Persists a category, creating it if new or updating if existing."""
         raise NotImplementedError
 
     @abstractmethod
-    async def get_by_id(self, category_id: UUID) -> Category | None:
-        """Retrieves a category by its ID, needed for updates."""
+    async def get_by_id(self, category_id: UUID) -> Optional[Category]:
+        """Retrieves a category by its ID, potentially for updates or checks."""
         raise NotImplementedError
