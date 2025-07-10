@@ -3,6 +3,7 @@
 SHELL := /bin/bash
 COMPOSE_PROJECT_NAME ?= ecommerce_ddd
 CONTAINER_NAME = ecommerce
+POSTGRES_CONTAINER_NAME = ecommerce-postgres
 
 # Ensure this path matches the location of your main FastAPI app
 APP_MODULE ?= src.main:app
@@ -99,3 +100,16 @@ seed-data:
 	@echo "Example (assuming you have a script src/scripts/seed.py):"
 	@echo "  docker compose -p $(COMPOSE_PROJECT_NAME) exec app python src/scripts/seed.py"
 	# docker compose -p $(COMPOSE_PROJECT_NAME) exec app python src/scripts/seed.py
+
+psql:
+	docker exec -it $(POSTGRES_CONTAINER_NAME) psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)
+
+check-migrations:
+	docker exec -it $(CONTAINER_NAME) alembic check
+
+generate-migration:
+	@read -p "Enter migration message: " message; \
+	docker exec -it $(CONTAINER_NAME) alembic revision --autogenerate -m "$$message"
+
+migrate:
+	docker exec -it $(CONTAINER_NAME) alembic upgrade head
