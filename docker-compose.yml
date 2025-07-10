@@ -10,12 +10,34 @@ services:
       - "8008:8008"
     volumes:
       - ./src:/src  # Mount src for live reload in development
-      - ./db:/db    # Mount local db directory for SQLite persistence
+      - ./db:/db    # Mount local db directory for SQLite persistence (legacy)
     env_file:
       - ./.env
     depends_on:
-      - mongo
+      postgres:
+        # condition: service_healthy
+        condition: service_started
+      mongo:
+        condition: service_started
     command: uvicorn main:app --reload --host 0.0.0.0 --port 8008
+
+  postgres:
+    container_name: ecommerce-postgres
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432" # Expose PostgreSQL to the host for direct access
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    # healthcheck:
+    #   test: ["CMD-SHELL", "pg_isready -U ecommerce_user -d ecommerce_ddd"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 30s
 
   mongo:
     container_name: ecommerce-mongo
@@ -33,5 +55,6 @@ services:
     #   - MONGO_INITDB_ROOT_PASSWORD=example
 
 volumes:
+  postgres_data: # PostgreSQL data persistence
   mongo_data: # Defines the named volume for MongoDB data
   # app_db_data: # If you were using a named volume for SQLite instead of host mount 

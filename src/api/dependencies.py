@@ -19,8 +19,15 @@ mongo_client = AsyncIOMotorClient(
 )
 mongo_db = mongo_client[settings.mongo_db]
 
-# SQLite engine for write model
-write_engine = create_async_engine(settings.sqlite_url)
+# PostgreSQL engine for write model
+write_engine = create_async_engine(
+    settings.postgres_url,
+    echo=settings.api_debug,  # Log SQL queries in debug mode
+    pool_size=10,            # Connection pool size
+    max_overflow=20,         # Additional connections beyond pool_size
+    pool_pre_ping=True,      # Validate connections before use
+    pool_recycle=3600        # Recycle connections after 1 hour
+)
 AsyncSessionLocal = sessionmaker(
     write_engine, 
     class_=AsyncSession, 
