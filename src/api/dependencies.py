@@ -1,5 +1,5 @@
 """Core/infrastructure dependencies"""
-from fastapi import Request
+from fastapi import Request, Depends
 from motor.motor_asyncio import AsyncIOMotorClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
@@ -9,6 +9,9 @@ from typing import AsyncGenerator
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.core.events.EventStore import EventStore
 from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
+from infrastructure.core.events.integration_event_dispatcher import IntegrationEventDispatcher
+from infrastructure.core.events.bootstrap import create_domain_event_dispatcher, create_integration_event_dispatcher
+from infrastructure.core.events.registry import register_all_event_handlers
 from infrastructure.core.persistence.base import BaseModel
 
 
@@ -45,27 +48,53 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
         finally:
             await session.close()
 
-
-async def init_db():
-    async with write_engine.begin() as conn:
-        await conn.run_sync(BaseModel.metadata.create_all)
-
 def get_mongo_db():
     return mongo_db
 
-def get_event_store(request: Request) -> EventStore:
-    if hasattr(request.app.state, 'event_store'):
-        return request.app.state.event_store
+# Event System Dependencies
+def get_domain_event_dispatcher(mongo_db = Depends(get_mongo_db)) -> DomainEventDispatcher:
+    """Create a fresh DomainEventDispatcher with all handlers registered."""
+    from infrastructure.customers.services.EmailService import EmailService
+    from infrastructure.customers.services.AuditService import AuditService
+    from infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
+    from infrastructure.orders.persistence.OrderReadRepository import OrderReadRepository
+    from infrastructure.products.persistence.ProductReadRepository import ProductReadRepository
+    from infrastructure.products.persistence.CategoryReadRepository import CategoryReadRepository
+    
+    # Create event handler dependencies using injected mongo_db
+    event_handler_dependencies = {
+        "customer_read_repository": CustomerReadRepository(mongo_db),
+        "order_read_repository": OrderReadRepository(mongo_db),
+        "product_read_repository": ProductReadRepository(mongo_db),
+        "category_read_repository": CategoryReadRepository(mongo_db),
+        "email_service": EmailService(),
+        "audit_service": AuditService(),
+        "event_store": EventStore(),
+    }
+    
+    # Create and configure domain event dispatcher
+    domain_event_dispatcher = create_domain_event_dispatcher(event_handler_dependencies)
+    
+    # Register all event handlers
+    integration_event_dispatcher = get_integration_event_dispatcher()
+    register_all_event_handlers(
+        domain_event_dispatcher,
+        integration_event_dispatcher,
+        event_handler_dependencies
+    )
+    
+    return domain_event_dispatcher
+
+def get_integration_event_dispatcher() -> IntegrationEventDispatcher:
+    """Create a fresh IntegrationEventDispatcher."""
+    return create_integration_event_dispatcher()
+
+def get_order_integration_event_publisher(
+    integration_dispatcher: IntegrationEventDispatcher = Depends(get_integration_event_dispatcher)
+) -> OrderIntegrationEventPublisher:
+    """Create a fresh OrderIntegrationEventPublisher."""
+    return OrderIntegrationEventPublisher(integration_dispatcher)
+
+def get_event_store() -> EventStore:
+    """Create a fresh EventStore instance."""
     return EventStore()
-
-def get_domain_event_dispatcher(request: Request) -> DomainEventDispatcher:
-    """Get the configured DomainEventDispatcher from app state."""
-    if not hasattr(request.app.state, 'domain_event_dispatcher'):
-        raise RuntimeError("DomainEventDispatcher not found in application state. Ensure it is initialized during startup.")
-    return request.app.state.domain_event_dispatcher
-
-def get_order_integration_event_publisher(request: Request) -> OrderIntegrationEventPublisher:
-    """Get the configured OrderIntegrationEventPublisher from app state."""
-    if not hasattr(request.app.state, 'order_integration_event_publisher'):
-        raise RuntimeError("OrderIntegrationEventPublisher not found in application state. Ensure it is initialized during startup.")
-    return request.app.state.order_integration_event_publisher
