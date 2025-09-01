@@ -1,6 +1,5 @@
 import logging
 from decimal import Decimal  # For price conversion
-from typing import List, Optional
 from uuid import uuid4  # Import uuid4 for AttributeSQL IDs
 
 from sqlalchemy import select

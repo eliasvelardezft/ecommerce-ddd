@@ -1,7 +1,6 @@
 import logging
 from uuid import UUID
 
-from domain.products.dtos.CategoryDetailsDTO import CategoryDetailsDTO
 from domain.products.events.CategoryDetailsUpdatedEvent import (
     CategoryDetailsUpdatedEvent,
 )

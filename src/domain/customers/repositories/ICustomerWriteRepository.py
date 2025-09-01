@@ -1,5 +1,4 @@
 from abc import ABC
-from typing import Optional
 
 from domain.core.value_objects.EntityId import EntityId
 from domain.customers.Customer import Customer

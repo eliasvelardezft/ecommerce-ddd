@@ -1,6 +1,5 @@
-from typing import List, Optional
 
-from sqlalchemy import Column, ForeignKey, String, Text
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.core.persistence.base import BaseModel

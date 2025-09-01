@@ -1,5 +1,4 @@
 from decimal import Decimal
-from typing import List, Optional
 from uuid import UUID
 
 from domain.core.events.DomainEvent import DomainEvent

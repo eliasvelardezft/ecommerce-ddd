@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from domain.products.dtos.ProductDetailsDTO import ProductDetailsDTO
 from domain.products.repositories.IProductReadRepository import (

@@ -1,4 +1,3 @@
-from typing import Optional
 
 from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
 from infrastructure.customers.persistence.CustomerReadRepository import (

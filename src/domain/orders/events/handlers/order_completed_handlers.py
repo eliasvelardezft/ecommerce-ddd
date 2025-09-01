@@ -1,7 +1,6 @@
 import logging
 from uuid import UUID
 
-from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
 from domain.orders.events.OrderCompletedEvent import OrderCompletedEvent
 from domain.orders.repositories.IOrderReadRepository import (
     IOrderReadRepository,

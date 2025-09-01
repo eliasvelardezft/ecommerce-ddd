@@ -1,6 +1,6 @@
 # src/infrastructure/core/events/integration_event_dispatcher.py
 import logging
-from typing import Any, Callable, Dict, List, Type
+from typing import Any
 
 from pydantic import (
     BaseModel as PydanticBaseModel,  # Integration events are Pydantic models

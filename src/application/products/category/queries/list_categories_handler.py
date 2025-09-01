@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from domain.products.dtos.CategoryDetailsDTO import CategoryDetailsDTO
 from domain.products.repositories.ICategoryReadRepository import (

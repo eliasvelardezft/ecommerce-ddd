@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from domain.core.events.DomainEvent import DomainEvent
 

@@ -11,16 +11,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 # Import our settings and base model
 from infrastructure.core.persistence.base import BaseModel
 from infrastructure.core.settings import settings
-from infrastructure.customers.persistence.Customer import CustomerSQL
-from infrastructure.orders.persistence.Order import OrderItemSQL, OrderSQL
-from infrastructure.products.persistence.Category import CategorySQL
 
 # Import all SQLAlchemy models to ensure they're registered with metadata
 # This follows your DDD bounded context structure
-from infrastructure.products.persistence.Product import (
-    AttributeSQL,
-    ProductSQL,
-)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -1,8 +1,7 @@
 import logging
-from typing import Any, Callable, Dict, List, Type
+from typing import Any
 
 from .DomainEvent import DomainEvent
-from .handlers.DomainEventHandler import DomainEventHandler
 
 logger = logging.getLogger(__name__)
 

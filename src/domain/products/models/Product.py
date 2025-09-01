@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Any, Dict, List, Optional
 
 from domain.core.AggregateRoot import AggregateRoot
 from domain.core.value_objects.EntityId import EntityId

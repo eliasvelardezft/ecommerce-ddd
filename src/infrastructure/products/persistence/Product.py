@@ -1,8 +1,6 @@
-from typing import List, Optional
 
 from sqlalchemy import (
     Boolean,
-    Column,
     ForeignKey,
     Integer,
     Numeric,

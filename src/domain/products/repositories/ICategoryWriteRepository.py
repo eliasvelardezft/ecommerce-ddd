@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Category import Category

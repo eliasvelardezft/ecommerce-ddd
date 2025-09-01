@@ -1,5 +1,4 @@
 import logging
-from typing import List, Optional
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 

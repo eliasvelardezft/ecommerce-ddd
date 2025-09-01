@@ -1,4 +1,3 @@
-from typing import List
 
 from .DomainEvent import DomainEvent
 from .StoredEvent import StoredEvent

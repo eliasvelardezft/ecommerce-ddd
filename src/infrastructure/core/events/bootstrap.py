@@ -2,16 +2,11 @@ import logging
 
 from domain.core.events.DomainEvent import DomainEvent
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from domain.core.events.EventStore import EventStore
 from domain.core.events.handlers.EventStoreHandler import EventStoreHandler
 from infrastructure.core.events.integration_event_dispatcher import (
     IntegrationEventDispatcher,
 )
 
-from .registry import (
-    register_customer_event_handlers,
-    register_order_event_handlers,
-)
 
 logger = logging.getLogger(__name__)
 

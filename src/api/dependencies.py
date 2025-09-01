@@ -1,7 +1,7 @@
 """Core/infrastructure dependencies"""
 from typing import AsyncGenerator
 
-from fastapi import Depends, Request
+from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,7 +16,6 @@ from infrastructure.core.events.integration_event_dispatcher import (
     IntegrationEventDispatcher,
 )
 from infrastructure.core.events.registry import register_all_event_handlers
-from infrastructure.core.persistence.base import BaseModel
 from infrastructure.core.settings import settings
 from infrastructure.orders.events.OrderIntegrationPublisher import (
     OrderIntegrationEventPublisher,

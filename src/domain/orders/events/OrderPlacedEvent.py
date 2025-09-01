@@ -1,10 +1,8 @@
-from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any
 from uuid import UUID
 
 from domain.core.events.DomainEvent import DomainEvent
 from domain.core.value_objects.Money import Money
-from domain.orders.models.OrderItem import OrderItem
 
 
 class OrderPlacedEvent(DomainEvent):

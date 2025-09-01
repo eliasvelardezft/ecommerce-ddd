@@ -2,7 +2,6 @@ import random
 import string
 from datetime import datetime, timezone
 from decimal import Decimal
-from typing import List, Optional
 
 from domain.core.AggregateRoot import AggregateRoot
 from domain.core.value_objects.EntityId import EntityId

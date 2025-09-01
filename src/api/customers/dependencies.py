@@ -3,10 +3,8 @@ from fastapi import Depends
 
 from api.dependencies import (
     get_db_session,
-    get_domain_event_dispatcher,
     get_mongo_db,
 )
-from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from infrastructure.customers.persistence.CustomerReadRepository import (
     CustomerReadRepository,
 )

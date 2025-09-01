@@ -1,6 +1,5 @@
 from decimal import ROUND_HALF_UP, Decimal
 from functools import total_ordering
-from typing import Union
 
 
 @total_ordering

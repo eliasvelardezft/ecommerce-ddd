@@ -1,5 +1,4 @@
 from abc import ABC
-from typing import List
 from uuid import UUID
 
 from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
