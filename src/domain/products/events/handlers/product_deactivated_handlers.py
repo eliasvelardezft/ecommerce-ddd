@@ -21,4 +21,4 @@ class UpdateProductOnProductDeactivated:
             await self._read_repository.update_read_model(product_dto)
             logger.info(f"Successfully deactivated product {event.aggregate_id}")
         else:
-            logger.warning(f"ProductDetailsDTO not found for product ID {event.aggregate_id} during deactivation.") 
+            logger.warning(f"ProductDetailsDTO not found for product ID {event.aggregate_id} during deactivation.")

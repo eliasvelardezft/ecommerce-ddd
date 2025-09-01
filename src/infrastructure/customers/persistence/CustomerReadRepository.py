@@ -49,7 +49,7 @@ class CustomerReadRepository(ICustomerReadRepository):
         Update the read model when changes occur
         This would be called by event handlers
         """
-        logger.info("[Read] Current views before update: %s", 
+        logger.info("[Read] Current views before update: %s",
                    [doc["email"] async for doc in self._collection.find()])
         
         await self._collection.update_one(
@@ -58,5 +58,5 @@ class CustomerReadRepository(ICustomerReadRepository):
             upsert=True
         )
         
-        logger.info("[Read] Current views after update: %s", 
+        logger.info("[Read] Current views after update: %s",
                    [doc["email"] async for doc in self._collection.find()])

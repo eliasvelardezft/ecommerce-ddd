@@ -34,7 +34,7 @@ class ProductWriteRepository(IProductWriteRepository):
             db_attributes_sql.append(
                 AttributeSQL(
                     id=uuid4(), # New UUID for each AttributeSQL primary key
-                    name=attr_domain.name, 
+                    name=attr_domain.name,
                     value=attr_domain.value
                     # product_id is set by relationship when ProductSQL is created
                 )
@@ -79,7 +79,7 @@ class ProductWriteRepository(IProductWriteRepository):
 
         # Attribute handling: clear and re-add for simplicity with new UUIDs for AttributeSQL PKs
         # This leverages cascade="all, delete-orphan" on the ProductSQL.attributes relationship
-        existing_db_product.attributes.clear() 
+        existing_db_product.attributes.clear()
         for attr_domain in product.attributes:
             existing_db_product.attributes.append(
                 AttributeSQL(
@@ -97,7 +97,7 @@ class ProductWriteRepository(IProductWriteRepository):
 
         # Eager load attributes when checking for existing product to avoid separate queries if updating attributes
         existing_db_product = await self._session.get(
-            ProductSQL, 
+            ProductSQL,
             str(product.id),
             options=[selectinload(ProductSQL.attributes)]
         )

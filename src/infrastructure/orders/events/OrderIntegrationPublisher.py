@@ -87,4 +87,4 @@ class OrderIntegrationEventPublisher:
             logger.debug(
                 f"[OrderIntegrationEventPublisher] No mapper registered for internal event type {internal_event_type.__name__}. "
                 f"Public contract not published. This might be intended if the event is internal-only."
-            ) 
+            )

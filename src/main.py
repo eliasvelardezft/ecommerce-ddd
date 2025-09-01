@@ -1,6 +1,6 @@
 import logging
 
-# --- Import and Setup Structured Logging --- 
+# --- Import and Setup Structured Logging ---
 from infrastructure.core.logging_config import setup_logging
 setup_logging() # Call this early to configure logging for the entire application
 # --- End Logging Setup ---
@@ -15,7 +15,7 @@ from api.products.router.product import router as product_router
 # Removed complex lifespan dependencies - these will become regular FastAPI dependencies
 
 # Standard logger for this file, will now use the Rich setup configured by setup_logging()
-logger = logging.getLogger(__name__) 
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title=settings.api_title,

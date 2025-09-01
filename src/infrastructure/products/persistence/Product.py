@@ -24,9 +24,9 @@ class ProductSQL(BaseModel):
     image_alt_text: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
     attributes: Mapped[List["AttributeSQL"]] = relationship(
-        "AttributeSQL", 
-        back_populates="product", 
-        cascade="all, delete-orphan", 
+        "AttributeSQL",
+        back_populates="product",
+        cascade="all, delete-orphan",
         lazy="joined"
     )
 

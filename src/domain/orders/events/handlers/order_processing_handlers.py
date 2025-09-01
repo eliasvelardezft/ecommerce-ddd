@@ -24,4 +24,4 @@ class UpdateOrderOnOrderProcessing:
             await self._read_repository.update_read_model(order_dto)
             logger.info(f"[UpdateOrderOnOrderProcessingHandler] Successfully updated read model for order {event.order_number}.")
         else:
-            logger.warning(f"[UpdateOrderOnOrderProcessingHandler] OrderDetailsDTO not found for order ID {event.aggregate_id}. Cannot update read model.") 
+            logger.warning(f"[UpdateOrderOnOrderProcessingHandler] OrderDetailsDTO not found for order ID {event.aggregate_id}. Cannot update read model.")

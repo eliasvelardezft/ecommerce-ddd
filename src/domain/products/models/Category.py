@@ -95,7 +95,7 @@ class Category(AggregateRoot):
             ))
 
     def change_parent(
-        self, 
+        self,
         new_parent_category_id: Optional[EntityId]
     ) -> None:
         if self.parent_category_id == new_parent_category_id:

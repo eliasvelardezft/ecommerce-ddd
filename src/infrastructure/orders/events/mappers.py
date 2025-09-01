@@ -3,7 +3,7 @@ from integration_contracts.events.order.order_placed import OrderPlacedEventCont
 # Import other internal events and their contract DTOs as needed
 
 # For Pydantic default factories if they are not used directly in the contract DTO
-# import uuid 
+# import uuid
 # from datetime import datetime, timezone
 
 def map_internal_order_placed_to_v1_contract(

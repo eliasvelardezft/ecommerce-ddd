@@ -21,4 +21,4 @@ class GetProductByIdHandler:
             return None
             
         logger.info(f"Successfully retrieved ProductDetailsDTO for ID: {query.product_id}")
-        return product 
+        return product

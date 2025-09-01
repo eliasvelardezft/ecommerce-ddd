@@ -26,4 +26,4 @@ class UpdateCategoryOnCategoryCreated:
         )
         
         await self._read_repository.update_read_model(category_dto)
-        logger.info(f"Successfully created/updated read model for category {event.aggregate_id}") 
+        logger.info(f"Successfully created/updated read model for category {event.aggregate_id}")

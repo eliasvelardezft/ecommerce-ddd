@@ -27,7 +27,7 @@ class BaseModel(Base):
     __abstract__ = True
 
     created_at: Mapped[datetime] = Column(
-        DateTime(timezone=True), 
+        DateTime(timezone=True),
         default=datetime.now()
     )
     updated_at: Mapped[datetime] = Column(

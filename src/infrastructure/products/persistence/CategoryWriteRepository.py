@@ -29,7 +29,7 @@ class CategoryWriteRepository(ICategoryWriteRepository):
             description=category.description,
             parent_category_id=str(category.parent_category_id) if category.parent_category_id else None,
             created_at=category.created_at,
-            updated_at=category.updated_at 
+            updated_at=category.updated_at
         )
         self._session.add(db_category_sql)
         return db_category_sql
@@ -55,7 +55,7 @@ class CategoryWriteRepository(ICategoryWriteRepository):
         try:
             await self._session.commit()
 
-            category = await self.get_by_id(category.id)        
+            category = await self.get_by_id(category.id)
             print(category)
 
 

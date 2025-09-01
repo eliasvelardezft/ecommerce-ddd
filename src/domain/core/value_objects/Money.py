@@ -105,4 +105,4 @@ class Money:
         return self.amount > Decimal(0)
 
     def is_negative(self) -> bool:
-        return self.amount < Decimal(0) 
+        return self.amount < Decimal(0)

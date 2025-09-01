@@ -56,7 +56,7 @@ class CategoryReadRepository(ICategoryReadRepository):
         # If not recursive, we might want to clear children that might have been stored from a previous recursive fetch
         # However, the DTO itself has children. If Mongo stores the full tree, `recursive` flag might be about
         # how deep the _doc_to_dto conversion goes, or a projection in find_one.
-        # For now, _doc_to_dto will hydrate based on what's in the doc. 
+        # For now, _doc_to_dto will hydrate based on what's in the doc.
         # A more sophisticated recursive fetch would build the tree if not stored as such.
         # If `recursive=False` implies only direct children or specific depth, the query/projection would change.
         # Assuming for now that if recursive=False, the stored doc might only have direct children or children_ids.
@@ -102,7 +102,7 @@ class CategoryReadRepository(ICategoryReadRepository):
         logger.debug(f"[ReadRepo] Updating read model for category ID: {category_dto.id}")
         
         # Prepare document for MongoDB
-        # For CategoryDetailsDTO, children is List[CategoryDetailsDTO]. 
+        # For CategoryDetailsDTO, children is List[CategoryDetailsDTO].
         # model_dump will recursively dump them.
         category_doc_for_set = category_dto.model_dump()
 

@@ -23,7 +23,7 @@ LAYER_STYLES_CONFIG = {
         "style": "orange3"
     },
     "DOMAIN_EVENTS_INTERNAL": {
-        # Matches loggers in src.domain.<any_bc>.events.* and src.domain.core.events.* 
+        # Matches loggers in src.domain.<any_bc>.events.* and src.domain.core.events.*
         "patterns": [r"^domain\.(?:[^.]+|core)\.events(?:\..+)?"], # Corrected
         "style": "gold3"
     },
@@ -60,7 +60,7 @@ LAYER_STYLES_CONFIG = {
         "patterns": [r"^main(?:\..+)?", r"^infrastructure\.core\.settings(?:\..+)?"], # Corrected
         "style": "grey42"
     },
-    "TESTS": { 
+    "TESTS": {
         "patterns": [r"^tests(?:\..+)?"], # Corrected
         "style": "italic #008080"
     }
@@ -144,4 +144,4 @@ def setup_logging():
         uv_logger = logging.getLogger(logger_name)
         uv_logger.handlers = [rich_handler_instance]
 
-    logging.getLogger("infrastructure.core.logging_config").info("Rich logging configured with RegexStyleTagFilter.") 
+    logging.getLogger("infrastructure.core.logging_config").info("Rich logging configured with RegexStyleTagFilter.")

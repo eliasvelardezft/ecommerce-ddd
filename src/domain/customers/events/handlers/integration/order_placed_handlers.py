@@ -39,7 +39,7 @@ class UpdateCustomerOnOrderPlaced:
                 # This is a placeholder for actual logic.
                 # For a read model, you might directly update a document.
                 customer.total_orders += 1
-                customer.last_order_date = event.occurred_on 
+                customer.last_order_date = event.occurred_on
                 await self._customer_read_repository.update_read_model(customer) # Or save, depending on repo
 
             else:

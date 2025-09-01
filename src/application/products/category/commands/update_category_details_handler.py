@@ -38,4 +38,4 @@ class UpdateCategoryDetailsHandler:
             logger.info(f"Dispatched {len(category.domain_events)} domain events for category {category.id} after details update.")
             category.clear_domain_events()
         else:
-            logger.info(f"No changes detected for category {command.category_id}. No update performed.") 
+            logger.info(f"No changes detected for category {command.category_id}. No update performed.")

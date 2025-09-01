@@ -60,4 +60,4 @@ class IntegrationEventDispatcher:
     def clear(self) -> None:
         """Clear all registered integration handlers."""
         self._handlers.clear()
-        logger.info("[IntegrationEventDispatcher] All integration handlers cleared.") 
+        logger.info("[IntegrationEventDispatcher] All integration handlers cleared.")

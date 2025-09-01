@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class RegisterCustomerHandler:
     def __init__(
-        self, 
+        self,
         write_repository: CustomerWriteRepository,
         event_dispatcher: DomainEventDispatcher
     ):

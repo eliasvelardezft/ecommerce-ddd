@@ -19,7 +19,7 @@ class UpdateCategoryOnCategoryParentChanged:
             logger.warning(f"CategoryDetailsDTO not found for child category ID {child_category_id}. Aborting.")
             return
         child_category.parent_category_id = event.new_parent_category_id
-        child_category.updated_at = event.updated_at 
+        child_category.updated_at = event.updated_at
         await self._read_repository.update_read_model(child_category)
         logger.info(f"Successfully updated parent_category_id for child category {child_category_id} to {event.new_parent_category_id}")
 

@@ -74,5 +74,5 @@ class DomainEventDispatcher:
 
     def clear(self) -> None:
         """Clear all registered internal handlers."""
-        self._handlers.clear() 
-        logger.info("[DomainEventDispatcher] All internal handlers cleared.") 
+        self._handlers.clear()
+        logger.info("[DomainEventDispatcher] All internal handlers cleared.")

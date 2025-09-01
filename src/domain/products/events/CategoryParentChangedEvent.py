@@ -12,8 +12,8 @@ class CategoryParentChangedEvent(DomainEvent):
     updated_at: datetime
 
     def __init__(
-        self, 
-        aggregate_id: UUID, 
+        self,
+        aggregate_id: UUID,
         new_parent_category_id: Optional[UUID],
         prev_parent_category_id: Optional[UUID],
         updated_at: datetime

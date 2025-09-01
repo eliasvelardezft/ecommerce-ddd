@@ -37,7 +37,7 @@ class PlaceOrderHandler:
 
         order = Order.create(
             customer_id=customer_entity_id,
-            items_data=items_data_list, 
+            items_data=items_data_list,
             shipping_details_data=shipping_details_dict,
             currency=command.currency, # PlaceOrderCommand now has these fields with defaults
             shipping_cost_raw=command.shipping_cost_raw,

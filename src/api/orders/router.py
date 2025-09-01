@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException, Depends
 
 from api.dependencies import (
-    get_domain_event_dispatcher, 
+    get_domain_event_dispatcher,
     get_order_integration_event_publisher
 )
 from api.orders.dependencies import (
@@ -53,7 +53,7 @@ async def place_order(
         raise HTTPException(status_code=400, detail={"message": "Error placing order", "error_details": str(e)})
 
     return {
-        "message": "Order placed successfully", 
+        "message": "Order placed successfully",
         "order_id": str(order.id),  # Convert EntityId to string
         "customer_id": str(order.customer_id),  # Convert EntityId to string
         "total_amount": order.total_amount,

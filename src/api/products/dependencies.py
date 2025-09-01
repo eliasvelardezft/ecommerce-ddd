@@ -25,4 +25,4 @@ def get_products_event_dispatcher(
     dispatcher: DomainEventDispatcher = Depends(get_domain_event_dispatcher),
 ) -> DomainEventDispatcher:
     """Returns the configured event dispatcher from app state"""
-    return dispatcher 
+    return dispatcher
