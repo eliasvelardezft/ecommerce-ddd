@@ -11,8 +11,8 @@ class CategorySQL(BaseModel):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), index=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    parent_category_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("categories.id"), nullable=True, index=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    parent_category_id: Mapped[str | None] = mapped_column(String(36), ForeignKey("categories.id"), nullable=True, index=True)
 
     parent = relationship("CategorySQL", remote_side=[id], back_populates="children", lazy="joined")
     children = relationship("CategorySQL", back_populates="parent", cascade="all, delete-orphan", lazy="joined")

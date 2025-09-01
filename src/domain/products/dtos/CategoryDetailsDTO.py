@@ -7,8 +7,8 @@ from pydantic import BaseModel
 class CategoryDetailsDTO(BaseModel):
     id: str
     name: str
-    description: Optional[str]
-    parent_category_id: Optional[str]
+    description: str | None
+    parent_category_id: str | None
     children_ids: list[str] = []
     children: list["CategoryDetailsDTO"] = []
     created_at: datetime

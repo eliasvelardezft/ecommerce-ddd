@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class ShippingDetails(BaseModel):
     address_line1: Annotated[str, Field(min_length=1, max_length=255)]
-    address_line2: Optional[Annotated[str, Field(max_length=255)]] = None # Optional can wrap Annotated
+    address_line2: Annotated[str, Field(max_length=255)] | None = None # Optional can wrap Annotated
     city: Annotated[str, Field(min_length=1, max_length=100)]
     state_province: Annotated[str, Field(min_length=1, max_length=100)]
     postal_code: Annotated[str, Field(min_length=1, max_length=20)]

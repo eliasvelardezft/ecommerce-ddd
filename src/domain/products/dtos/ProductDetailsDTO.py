@@ -19,6 +19,6 @@ class ProductDetailsDTO(BaseModel):
     price_currency: str
     category_id: str
     attributes: list[Attribute]
-    image_url: Optional[ImageUrl]
+    image_url: ImageUrl | None
     created_at: datetime
     updated_at: datetime

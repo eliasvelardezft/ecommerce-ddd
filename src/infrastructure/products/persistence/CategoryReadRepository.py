@@ -19,7 +19,7 @@ class CategoryReadRepository(ICategoryReadRepository):
         self._collection = self._db.category_details_view
         logger.info(f"Initialized CategoryReadRepository with MongoDB, collection: {self._collection}")
 
-    async def _doc_to_dto(self, doc: dict) -> Optional[CategoryDetailsDTO]:
+    async def _doc_to_dto(self, doc: dict) -> CategoryDetailsDTO | None:
         if not doc:
             return None
         # Ensure _id (or id) from Mongo is converted to string for the DTO
@@ -48,7 +48,7 @@ class CategoryReadRepository(ICategoryReadRepository):
 
         return CategoryDetailsDTO(**doc)
 
-    async def get_category(self, category_id: str, recursive: bool = False) -> Optional[CategoryDetailsDTO]:
+    async def get_category(self, category_id: str, recursive: bool = False) -> CategoryDetailsDTO | None:
         logger.debug(f"[ReadRepo] Fetching category_details by ID: {category_id}, Recursive: {recursive}")
         doc = await self._collection.find_one({"_id": category_id})
         if not doc:

@@ -12,5 +12,5 @@ class IOrderWriteRepository(ABC):
     async def delete(self, order: Order) -> None:
         raise NotImplementedError
 
-    async def get_by_id(self, id: EntityId) -> Optional[Order]:
+    async def get_by_id(self, id: EntityId) -> Order | None:
         raise NotImplementedError

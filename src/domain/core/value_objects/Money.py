@@ -5,7 +5,7 @@ from typing import Union
 
 @total_ordering
 class Money:
-    def __init__(self, amount: Union[str, float, int, Decimal], currency: str):
+    def __init__(self, amount: str | float | int | Decimal, currency: str):
         if currency is None or not isinstance(currency, str) or len(currency) != 3:
             raise ValueError("Currency must be a 3-letter string (e.g., 'USD')")
         self.currency = currency.upper()
@@ -38,7 +38,7 @@ class Money:
             raise ValueError("Cannot subtract Money with different currencies")
         return Money(self.amount - other.amount, self.currency)
 
-    def __mul__(self, factor: Union[int, float, Decimal, str]) -> "Money":
+    def __mul__(self, factor: int | float | Decimal | str) -> "Money":
         if not isinstance(factor, (int, float, Decimal, str)):
             return NotImplemented
         try:
@@ -48,7 +48,7 @@ class Money:
 
         return Money(self.amount * factor_decimal, self.currency)
 
-    def __truediv__(self, divisor: Union[int, float, Decimal, str]) -> "Money":
+    def __truediv__(self, divisor: int | float | Decimal | str) -> "Money":
         if not isinstance(divisor, (int, float, Decimal, str)):
             return NotImplemented
         try:
@@ -60,7 +60,7 @@ class Money:
         return Money(self.amount / divisor_decimal, self.currency)
 
     # For Python 2 compatibility if needed, or explicit integer division
-    def __div__(self, divisor: Union[int, float, Decimal, str]) -> "Money":
+    def __div__(self, divisor: int | float | Decimal | str) -> "Money":
         return self.__truediv__(divisor)
 
     def __eq__(self, other: object) -> bool:

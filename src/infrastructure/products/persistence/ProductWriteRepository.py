@@ -133,7 +133,7 @@ class ProductWriteRepository(IProductWriteRepository):
         else:
             logger.warning(f"Product {product_id} not found in database for deletion.")
 
-    async def get_by_id(self, product_id: EntityId) -> Optional[DomainProduct]:
+    async def get_by_id(self, product_id: EntityId) -> DomainProduct | None:
         logger.debug(f"Fetching product by ID {product_id} from the database.")
 
         result = await self._session.execute(
@@ -144,7 +144,7 @@ class ProductWriteRepository(IProductWriteRepository):
             )
             .where(ProductSQL.id == str(product_id))
         )
-        db_product: Optional[ProductSQL] = result.scalar_one_or_none()
+        db_product: ProductSQL | None = result.scalar_one_or_none()
 
         if not db_product:
             logger.debug(f"Product with ID {product_id} not found.")

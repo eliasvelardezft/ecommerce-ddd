@@ -19,7 +19,7 @@ class OrderReadRepository(IOrderReadRepository):
         self._collection = database.order_details
         logger.info("Initialized OrderReadRepository")
 
-    async def get_order_details(self, id: str) -> Optional[OrderDetailsDTO]:
+    async def get_order_details(self, id: str) -> OrderDetailsDTO | None:
         """Get order details by id"""
         logger.info("[Read] Fetching order details for: %s", id)
         doc = await self._collection.find_one({"_id": str(id)})

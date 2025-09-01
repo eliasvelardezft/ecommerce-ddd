@@ -26,11 +26,11 @@ class Order(AggregateRoot):
     currency: str # e.g., "USD", "EUR"
     shipping_cost: Money
     tax_amount: Money
-    notes: Optional[str]
+    notes: str | None
     status: OrderStatus
     created_at: datetime
-    updated_at: Optional[datetime]
-    tracking_number: Optional[str] = None
+    updated_at: datetime | None
+    tracking_number: str | None = None
 
     @staticmethod
     def _generate_order_number(length: int = 10) -> str:
@@ -48,14 +48,14 @@ class Order(AggregateRoot):
         items: list[OrderItem], # List of Pydantic OrderItem models
         shipping_details: ShippingDetails,
         currency: str = "USD",
-        order_number: Optional[str] = None,
-        shipping_cost_raw: Optional[Decimal] = None,
-        tax_amount_raw: Optional[Decimal] = None,
-        notes: Optional[str] = None,
+        order_number: str | None = None,
+        shipping_cost_raw: Decimal | None = None,
+        tax_amount_raw: Decimal | None = None,
+        notes: str | None = None,
         status: OrderStatus = OrderStatus.DRAFT,
-        created_at: Optional[datetime] = None,
-        updated_at: Optional[datetime] = None,
-        tracking_number: Optional[str] = None,
+        created_at: datetime | None = None,
+        updated_at: datetime | None = None,
+        tracking_number: str | None = None,
     ):
         super().__init__()
         self.id = _id
@@ -140,11 +140,11 @@ class Order(AggregateRoot):
         items_data: list[dict], # Expect list of dicts for OrderItems
         shipping_details_data: dict, # Expect dict for ShippingDetails
         currency: str = "USD",
-        order_id: Optional[EntityId] = None,
-        order_number_override: Optional[str] = None, # Allow overriding generated number if needed
-        shipping_cost_raw: Optional[Decimal] = None, # Renamed
-        tax_amount_raw: Optional[Decimal] = None,    # Renamed
-        notes: Optional[str] = None,
+        order_id: EntityId | None = None,
+        order_number_override: str | None = None, # Allow overriding generated number if needed
+        shipping_cost_raw: Decimal | None = None, # Renamed
+        tax_amount_raw: Decimal | None = None,    # Renamed
+        notes: str | None = None,
     ) -> "Order":
         """Factory method to create a new Order from raw data and raise OrderPlacedEvent."""
         instance_id = order_id if order_id else EntityId.generate()
@@ -275,7 +275,7 @@ class Order(AggregateRoot):
             amount=self.total_amount,
         ))
 
-    def cancel_order(self, cancellation_reason: Optional[str] = None): # Added reason parameter
+    def cancel_order(self, cancellation_reason: str | None = None): # Added reason parameter
         # More complex cancellation rules will apply when OrderStatus is fully updated
         if self.status not in [OrderStatus.DRAFT, OrderStatus.PROCESSING]:
             raise OrderValidationException(f"Cannot cancel order in status {self.status.value}.")
@@ -290,7 +290,7 @@ class Order(AggregateRoot):
             cancellation_reason=cancellation_reason
         ))
 
-    def complete_order(self, tracking_number: Optional[str] = None): # Added tracking_number parameter
+    def complete_order(self, tracking_number: str | None = None): # Added tracking_number parameter
         if self.status != OrderStatus.PROCESSING:
             raise OrderValidationException(f"Cannot complete order in status {self.status.value}. Must be PROCESSING.")
         self.status = OrderStatus.COMPLETED

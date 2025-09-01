@@ -41,7 +41,7 @@ class CustomerWriteRepository(ICustomerWriteRepository):
         self._session.delete(customer)
         await self._session.commit()
 
-    async def get_by_id(self, id: EntityId) -> Optional[Customer]:
+    async def get_by_id(self, id: EntityId) -> Customer | None:
         """
         Note: This is mainly used by command handlers to load an aggregate
         before applying changes

@@ -22,6 +22,6 @@ class OrderDetailsDTO(BaseModel):
     total_amount: float
     created_at: datetime
     status: str
-    shipping_details: Optional[ShippingDetails] = None
-    tracking_number: Optional[str] = None
-    cancellation_reason: Optional[str] = None
+    shipping_details: ShippingDetails | None = None
+    tracking_number: str | None = None
+    cancellation_reason: str | None = None

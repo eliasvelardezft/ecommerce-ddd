@@ -52,7 +52,7 @@ class OrderWriteRepository(IOrderWriteRepository):
 
         return order
 
-    async def get_by_id(self, id: EntityId) -> Optional[Order]:
+    async def get_by_id(self, id: EntityId) -> Order | None:
         """Retrieve an order by ID"""
         result = await self._session.execute(
             select(OrderSQL).where(OrderSQL.id == str(id))

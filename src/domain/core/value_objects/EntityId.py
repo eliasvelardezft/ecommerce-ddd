@@ -9,7 +9,7 @@ class EntityId:
     but provides type safety and validation.
     """
 
-    def __init__(self, value: Optional[str] = None):
+    def __init__(self, value: str | None = None):
         if value is None:
             # Auto-generate UUID string
             self._value = str(uuid4())

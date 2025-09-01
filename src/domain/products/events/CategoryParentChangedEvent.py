@@ -7,15 +7,15 @@ from domain.core.events.DomainEvent import DomainEvent
 
 class CategoryParentChangedEvent(DomainEvent):
     """Event raised when a category's parent is changed."""
-    new_parent_category_id: Optional[UUID]
-    prev_parent_category_id: Optional[UUID]
+    new_parent_category_id: UUID | None
+    prev_parent_category_id: UUID | None
     updated_at: datetime
 
     def __init__(
         self,
         aggregate_id: UUID,
-        new_parent_category_id: Optional[UUID],
-        prev_parent_category_id: Optional[UUID],
+        new_parent_category_id: UUID | None,
+        prev_parent_category_id: UUID | None,
         updated_at: datetime
     ):
         super().__init__(str(aggregate_id))

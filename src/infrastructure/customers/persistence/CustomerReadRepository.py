@@ -20,7 +20,7 @@ class CustomerReadRepository(ICustomerReadRepository):
         self._collection = database.customer_profiles
         logger.info("Initialized CustomerReadRepository")
 
-    async def get_customer_profile_by_email(self, email: str) -> Optional[CustomerProfileDTO]:
+    async def get_customer_profile_by_email(self, email: str) -> CustomerProfileDTO | None:
         """Get customer profile by email"""
         logger.info("[Read] Fetching profile by email for: %s", email)
         doc = await self._collection.find_one({"email": email})
@@ -31,7 +31,7 @@ class CustomerReadRepository(ICustomerReadRepository):
         logger.info(f"Customer profile found for email: {email}")
         return CustomerProfileDTO(**doc)
 
-    async def get_customer_profile_by_id(self, id: EntityId) -> Optional[CustomerProfileDTO]:
+    async def get_customer_profile_by_id(self, id: EntityId) -> CustomerProfileDTO | None:
         """Get customer profile by id"""
         logger.info("[Read] Fetching profile by id for: %s", id)
         doc = await self._collection.find_one({"_id": str(id)})

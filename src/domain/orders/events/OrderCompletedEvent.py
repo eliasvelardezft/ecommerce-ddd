@@ -17,7 +17,7 @@ class OrderCompletedEvent(DomainEvent):
         status: str,
         amount: Money,
         currency: str,
-        tracking_number: Optional[str] = None,
+        tracking_number: str | None = None,
     ):
         super().__init__(aggregate_id=str(aggregate_id))
         self.order_number: str = order_number
@@ -26,7 +26,7 @@ class OrderCompletedEvent(DomainEvent):
         self.total_amount: float = amount.amount
         self.currency: str = amount.currency
         self.currency: str = currency
-        self.tracking_number: Optional[str] = tracking_number
+        self.tracking_number: str | None = tracking_number
 
     def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()

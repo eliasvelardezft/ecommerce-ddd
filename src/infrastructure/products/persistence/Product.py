@@ -20,7 +20,7 @@ class ProductSQL(BaseModel):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), index=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     sku: Mapped[str] = mapped_column(String(100), unique=True, index=True)
     active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
     stock_quantity: Mapped[int] = mapped_column(Integer, default=0)
@@ -31,8 +31,8 @@ class ProductSQL(BaseModel):
     category_id: Mapped[str] = mapped_column(String(36), ForeignKey("categories.id"), index=True)
     category: Mapped["CategorySQL"] = relationship(back_populates="products", lazy="joined")
 
-    image_url_url: Mapped[Optional[str]] = mapped_column(String(2048), nullable=True)
-    image_alt_text: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    image_url_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
+    image_alt_text: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     attributes: Mapped[list["AttributeSQL"]] = relationship(
         "AttributeSQL",

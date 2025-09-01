@@ -16,7 +16,7 @@ class OrderCancelledEvent(DomainEvent):
         customer_id: UUID,
         status: str,
         amount: Money,
-        cancellation_reason: Optional[str] = None,
+        cancellation_reason: str | None = None,
     ):
         super().__init__(aggregate_id=str(aggregate_id))
         self.order_number: str = order_number
@@ -24,7 +24,7 @@ class OrderCancelledEvent(DomainEvent):
         self.status: str = status
         self.total_amount: float = amount.amount
         self.currency: str = amount.currency
-        self.cancellation_reason: Optional[str] = cancellation_reason
+        self.cancellation_reason: str | None = cancellation_reason
 
     def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()

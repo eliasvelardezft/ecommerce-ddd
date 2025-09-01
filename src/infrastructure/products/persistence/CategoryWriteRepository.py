@@ -68,13 +68,13 @@ class CategoryWriteRepository(ICategoryWriteRepository):
             await self._session.rollback()
             raise
 
-    async def get_by_id(self, category_id: EntityId) -> Optional[DomainCategory]:
+    async def get_by_id(self, category_id: EntityId) -> DomainCategory | None:
         logger.debug(f"Fetching category by ID {category_id} from the database.")
 
         result = await self._session.execute(
             select(CategorySQL).where(CategorySQL.id == str(category_id))
         )
-        db_category: Optional[CategorySQL] = result.unique().scalar_one_or_none()
+        db_category: CategorySQL | None = result.unique().scalar_one_or_none()
 
         if not db_category:
             logger.debug(f"Category with ID {category_id} not found in the database.")

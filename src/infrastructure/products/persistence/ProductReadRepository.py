@@ -21,7 +21,7 @@ class ProductReadRepository(IProductReadRepository):
         self._collection = self._db[PRODUCT_DETAILS_COLLECTION]
         logger.info(f"Initialized ProductReadRepository with MongoDB, collection: {PRODUCT_DETAILS_COLLECTION}")
 
-    async def get_product_details_by_id(self, product_id: str) -> Optional[ProductDetailsDTO]:
+    async def get_product_details_by_id(self, product_id: str) -> ProductDetailsDTO | None:
         logger.debug(f"[ReadRepo] Fetching product_details by ID: {product_id}")
         # MongoDB stores IDs as strings
         doc = await self._collection.find_one({"_id": product_id})
@@ -33,7 +33,7 @@ class ProductReadRepository(IProductReadRepository):
             doc["id"] = str(doc["_id"])
         return ProductDetailsDTO(**doc)
 
-    async def list_all_products(self, category_id: Optional[str] = None) -> list[ProductDetailsDTO]:
+    async def list_all_products(self, category_id: str | None = None) -> list[ProductDetailsDTO]:
         query_filter = {}
         if category_id:
             query_filter["category_id"] = category_id  # category_id is already a string
@@ -47,7 +47,7 @@ class ProductReadRepository(IProductReadRepository):
             products.append(ProductDetailsDTO(**doc))
         return products
 
-    async def list_active_products(self, category_id: Optional[str] = None) -> list[ProductDetailsDTO]:
+    async def list_active_products(self, category_id: str | None = None) -> list[ProductDetailsDTO]:
         """List active products, optionally filtered by category."""
         query_filter = {"active": True}
         if category_id:

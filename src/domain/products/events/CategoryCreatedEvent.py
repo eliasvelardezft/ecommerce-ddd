@@ -8,16 +8,16 @@ from domain.core.events.DomainEvent import DomainEvent
 class CategoryCreatedEvent(DomainEvent):
     """Event raised when a new category is created."""
     name: str
-    description: Optional[str]
-    parent_category_id: Optional[UUID]
+    description: str | None
+    parent_category_id: UUID | None
     created_at: datetime
 
     def __init__(
         self,
         aggregate_id: UUID,
         name: str,
-        description: Optional[str],
-        parent_category_id: Optional[UUID],
+        description: str | None,
+        parent_category_id: UUID | None,
         created_at: datetime,
     ):
         super().__init__(str(aggregate_id))

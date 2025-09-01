@@ -22,14 +22,14 @@ from domain.products.value_objects.ImageUrl import ImageUrl
 class Product(AggregateRoot):
     id: EntityId
     name: str
-    description: Optional[str] = None
+    description: str | None = None
     sku: str
     active: bool
     stock_quantity: int
     price: Money
     category_id: EntityId
     attributes: list[Attribute]
-    image_url: Optional[ImageUrl]
+    image_url: ImageUrl | None
     created_at: datetime
     updated_at: datetime
 
@@ -40,13 +40,13 @@ class Product(AggregateRoot):
         sku: str,
         category_id: EntityId,
         price: Money,
-        description: Optional[str] = None,
+        description: str | None = None,
         active: bool = True,
         stock_quantity: int = 0,
-        attributes: Optional[list[Attribute]] = None,
-        image_url: Optional[ImageUrl] = None,
-        created_at: Optional[datetime] = None,
-        updated_at: Optional[datetime] = None,
+        attributes: list[Attribute] | None = None,
+        image_url: ImageUrl | None = None,
+        created_at: datetime | None = None,
+        updated_at: datetime | None = None,
     ):
         super().__init__()
         self.id = _id
@@ -71,9 +71,9 @@ class Product(AggregateRoot):
         price: Money,
         active: bool = True,
         stock_quantity: int = 0,
-        image_url: Optional[ImageUrl] = None,
-        attributes: Optional[list[Attribute]] = None,
-        description: Optional[str] = None,
+        image_url: ImageUrl | None = None,
+        attributes: list[Attribute] | None = None,
+        description: str | None = None,
     ) -> 'Product':
         _id = EntityId.generate()
         product = cls(

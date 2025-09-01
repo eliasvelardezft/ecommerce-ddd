@@ -12,5 +12,5 @@ class ICustomerWriteRepository(ABC):
     async def delete(self, customer: Customer) -> None:
         raise NotImplementedError
 
-    async def get_by_id(self, id: EntityId) -> Optional[Customer]:
+    async def get_by_id(self, id: EntityId) -> Customer | None:
         raise NotImplementedError

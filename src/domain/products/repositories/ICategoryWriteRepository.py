@@ -12,6 +12,6 @@ class ICategoryWriteRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_by_id(self, category_id: EntityId) -> Optional[Category]:
+    async def get_by_id(self, category_id: EntityId) -> Category | None:
         """Retrieves a category by its ID, potentially for updates or checks."""
         raise NotImplementedError

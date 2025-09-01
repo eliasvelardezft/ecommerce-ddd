@@ -10,6 +10,6 @@ class CustomerProfileDTO(BaseModel):
     email: str
     created_at: datetime
     total_orders: int
-    last_order_date: Optional[datetime] = None
+    last_order_date: datetime | None = None
     favorite_products: list[str] = []
     loyalty_tier: str = "Bronze"

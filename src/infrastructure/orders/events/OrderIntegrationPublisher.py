@@ -30,7 +30,7 @@ class OrderIntegrationEventPublisher:
     def __init__(self, integration_event_dispatcher: IntegrationEventDispatcher):
         self._integration_event_dispatcher = integration_event_dispatcher
         # Registry: InternalOrderEventType -> CallableMapperFunction (maps internal to public contract)
-        self._mappers: dict[type[DomainEvent], Callable[[DomainEvent], Optional[PydanticBaseModel]]] = {}
+        self._mappers: dict[type[DomainEvent], Callable[[DomainEvent], PydanticBaseModel | None]] = {}
         self._register_default_mappers()
         logger.info("[OrderIntegrationEventPublisher] Initialized.")
 
@@ -45,7 +45,7 @@ class OrderIntegrationEventPublisher:
     def register_mapper(
         self,
         internal_event_type: type[DomainEvent],
-        mapper_func: Callable[[DomainEvent], Optional[PydanticBaseModel]]
+        mapper_func: Callable[[DomainEvent], PydanticBaseModel | None]
     ) -> None:
         """Allows dynamic registration of mappers if needed (e.g., during bootstrap for plugin-like extensions)."""
         if not issubclass(internal_event_type, DomainEvent):
