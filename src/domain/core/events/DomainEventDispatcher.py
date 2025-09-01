@@ -21,7 +21,7 @@ class DomainEventDispatcher:
         if not issubclass(event_type, DomainEvent):
             logger.error(f"Attempted to register handler for non-DomainEvent type: {event_type.__name__}")
             return
-            
+
         if event_type not in self._handlers:
             self._handlers[event_type] = []
         self._handlers[event_type].append(handler)
@@ -32,7 +32,7 @@ class DomainEventDispatcher:
         """Dispatch an internal domain event to all registered internal handlers."""
         event_type = type(event)
         logger.info(f"[DomainEventDispatcher] Dispatching internal event: {event_type.__name__} (ID: {event.id if hasattr(event, 'id') else 'N/A'})")
-        
+
         # Handlers for the specific event type
         if event_type in self._handlers:
             for handler in self._handlers[event_type]:
@@ -42,7 +42,7 @@ class DomainEventDispatcher:
                     await handler.handle(event) # Assuming handlers have an async 'handle' method
                 except Exception as e:
                     logger.error(f"[DomainEventDispatcher] Error in internal handler '{handler_name}' for event '{event_type.__name__}': {e}", exc_info=True)
-        
+
         # Handlers for the base DomainEvent type (e.g., EventStoreHandler for internal events)
         # This ensures base handlers run for all specific event types, unless event_type is DomainEvent itself.
         if DomainEvent in self._handlers and event_type is not DomainEvent:
@@ -53,7 +53,7 @@ class DomainEventDispatcher:
                     await handler.handle(event)
                 except Exception as e:
                     logger.error(f"[DomainEventDispatcher] Error in base DomainEvent handler '{handler_name}' for event '{event_type.__name__}': {e}", exc_info=True)
-        
+
         # If the event itself is of type DomainEvent (e.g. a generic event was dispatched)
         elif event_type is DomainEvent and DomainEvent in self._handlers:
             for handler in self._handlers[DomainEvent]:
@@ -63,7 +63,7 @@ class DomainEventDispatcher:
                     await handler.handle(event)
                 except Exception as e:
                     logger.error(f"[DomainEventDispatcher] Error in handler '{handler_name}' for generic DomainEvent: {e}", exc_info=True)
-        
+
         if event_type not in self._handlers and (event_type is not DomainEvent or DomainEvent not in self._handlers):
             logger.debug(f"[DomainEventDispatcher] No specific or base handlers registered for internal event '{event_type.__name__}'")
 

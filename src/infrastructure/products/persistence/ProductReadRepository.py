@@ -38,7 +38,7 @@ class ProductReadRepository(IProductReadRepository):
         if category_id:
             query_filter["category_id"] = category_id  # category_id is already a string
         logger.debug(f"[ReadRepo] Listing all product_details with filter: {query_filter}")
-        
+
         cursor = self._collection.find(query_filter)
         products = []
         async for doc in cursor:
@@ -53,7 +53,7 @@ class ProductReadRepository(IProductReadRepository):
         if category_id:
             query_filter["category_id"] = category_id
         logger.debug(f"[ReadRepo] Listing active product_details with filter: {query_filter}")
-        
+
         cursor = self._collection.find(query_filter)
         products = []
         async for doc in cursor:

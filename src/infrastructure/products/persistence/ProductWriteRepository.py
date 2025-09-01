@@ -72,7 +72,7 @@ class ProductWriteRepository(IProductWriteRepository):
         existing_db_product.price_amount = float(product.price.amount) # Ensure type consistency
         existing_db_product.price_currency = product.price.currency
         existing_db_product.category_id = product.category_id
-        
+
         if product.image_url:
             existing_db_product.image_url_url = str(product.image_url.url)
             existing_db_product.image_alt_text = product.image_url.alt_text
@@ -109,7 +109,7 @@ class ProductWriteRepository(IProductWriteRepository):
             await self._update_existing_sql(existing_db_product, product)
         else:
             await self._create_new_sql(product) # Will add to session
-        
+
         try:
             await self._session.commit()
             logger.info(f"Successfully saved (upserted) product {product.id}.")
@@ -117,7 +117,7 @@ class ProductWriteRepository(IProductWriteRepository):
             logger.error(f"Error saving (upserting) product {product.id}: {e}")
             await self._session.rollback()
             raise
-    
+
     async def delete(self, product_id: EntityId) -> None:
         logger.info(f"Attempting to delete product {product_id}.")
         db_product = await self._session.get(ProductSQL, str(product_id))
@@ -135,7 +135,7 @@ class ProductWriteRepository(IProductWriteRepository):
 
     async def get_by_id(self, product_id: EntityId) -> Optional[DomainProduct]:
         logger.debug(f"Fetching product by ID {product_id} from the database.")
-        
+
         result = await self._session.execute(
             select(ProductSQL)
             .options(
@@ -149,16 +149,16 @@ class ProductWriteRepository(IProductWriteRepository):
         if not db_product:
             logger.debug(f"Product with ID {product_id} not found.")
             return None
-        
+
         logger.debug(f"Product {product_id} found, converting to domain model.")
 
         domain_price = Money(amount=Decimal(str(db_product.price_amount)), currency=db_product.price_currency)
-        
+
         domain_image_url = None
         if db_product.image_url_url:
             # Ensure HttpUrl conversion if DomainImageUrl expects it
             domain_image_url = DomainImageUrl(url=str(db_product.image_url_url), alt_text=db_product.image_alt_text)
-            
+
         domain_attributes: list[DomainAttribute] = []
         if db_product.attributes: # Check if attributes were loaded and exist
             for attr_sql in db_product.attributes:

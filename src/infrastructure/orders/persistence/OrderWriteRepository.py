@@ -24,7 +24,7 @@ class OrderWriteRepository(IOrderWriteRepository):
     async def save(self, order: Order) -> Order:
         """Save or update an order"""
         logger.info("[Write] Saving order: %s", order.id)
-        
+
         # Convert domain order to SQL model
         db_order = OrderSQL(
             id=str(order.id),  # Convert EntityId to string
@@ -33,7 +33,7 @@ class OrderWriteRepository(IOrderWriteRepository):
             created_at=order.created_at,
             updated_at=order.updated_at
         )
-        
+
         # Convert domain items to SQL models
         db_order.items = [
             OrderItemSQL(
@@ -45,11 +45,11 @@ class OrderWriteRepository(IOrderWriteRepository):
             )
             for item in order.items
         ]
-        
+
         # Merge or add the order
         db_order = await self._session.merge(db_order)
         await self._session.commit()
-        
+
         return order
 
     async def get_by_id(self, id: EntityId) -> Optional[Order]:
@@ -58,10 +58,10 @@ class OrderWriteRepository(IOrderWriteRepository):
             select(OrderSQL).where(OrderSQL.id == str(id))
         )
         db_order = result.scalar_one_or_none()
-        
+
         if not db_order:
             return None
-            
+
         # Convert SQL model back to domain entity
         order_items = [
             OrderItem(
@@ -71,7 +71,7 @@ class OrderWriteRepository(IOrderWriteRepository):
             )
             for item in db_order.items
         ]
-        
+
         return Order(
             _id=EntityId.from_string(db_order.id),  # Convert string back to EntityId
             customer_id=EntityId.from_string(db_order.customer_id),  # Convert string back to EntityId

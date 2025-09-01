@@ -16,13 +16,13 @@ class UpdateOrderOnOrderCompleted:
 
     async def handle(self, event: OrderCompletedEvent) -> None:
         logger.info(f"[UpdateOrderOnOrderCompletedHandler] Updating read model for order {event.order_number} to status {event.status}")
-        
+
         order_dto = await self._read_repository.get_order_details(id=UUID(event.aggregate_id))
-        
+
         if order_dto:
             order_dto.status = event.status
             order_dto.tracking_number = event.tracking_number
-            
+
             await self._read_repository.update_read_model(order_dto)
             logger.info(f"[UpdateOrderOnOrderCompletedHandler] Successfully updated read model for order {event.order_number}.")
         else:

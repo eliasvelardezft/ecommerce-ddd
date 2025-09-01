@@ -68,7 +68,7 @@ async def get_customer_profile(
     customer = await handler.handle(query)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    
+
     return customer
 
 @router.get("/{customer_id}")

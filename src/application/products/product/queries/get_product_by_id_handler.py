@@ -16,12 +16,12 @@ class GetProductByIdHandler:
 
     async def handle(self, query: GetProductByIdQuery) -> Optional[ProductDetailsDTO]:
         logger.info(f"Handling GetProductByIdQuery for Product ID: {query.product_id}")
-        
+
         product = await self._product_read_repository.get_product_details_by_id(query.product_id)
-        
+
         if not product:
             logger.warning(f"ProductDetailsDTO not found for ID: {query.product_id}")
             return None
-            
+
         logger.info(f"Successfully retrieved ProductDetailsDTO for ID: {query.product_id}")
         return product

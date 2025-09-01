@@ -8,7 +8,7 @@ from infrastructure.core.persistence.base import BaseModel
 
 class CategorySQL(BaseModel):
     __tablename__ = "categories"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), index=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

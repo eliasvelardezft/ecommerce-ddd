@@ -29,12 +29,12 @@ class Customer(AggregateRoot):
             name=name,
             email=email,
         )
-        
+
         # Add domain event when customer is created
         customer.add_domain_event(CustomerRegisteredEvent(
             aggregate_id=str(_id),
             name=name,
             email=email
         ))
-        
+
         return customer

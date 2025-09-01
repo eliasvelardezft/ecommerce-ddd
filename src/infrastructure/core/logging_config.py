@@ -104,18 +104,18 @@ class RegexStyleTagFilter(logging.Filter):
                 record.msg = f"[{style_to_apply}]{record.original_msg}[/]"
                 matched_style = style_to_apply
                 break
-        
+
         return True
 
 
 def setup_logging():
     """Configures the root logger with RichHandler and RegexStyleTagFilter."""
-    
+
     regex_filter = RegexStyleTagFilter(LAYER_STYLES_CONFIG) # Use original filter
     # force_filter = ForceStyleFilter() # Commented out temporary filter
 
     root_logger = logging.getLogger()
-    
+
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
         handler.close()
@@ -130,7 +130,7 @@ def setup_logging():
         log_time_format="[%X]",
         show_level=True
     )
-    
+
     rich_handler_instance.addFilter(regex_filter) # Add original filter
     # rich_handler_instance.addFilter(force_filter) # Commented out temporary filter
 

@@ -36,7 +36,7 @@ class UpdateCategoryDetailsHandler:
         if category.domain_events:
             await self._repository.save(category)
             logger.info(f"Category {category.id} details updated successfully.")
-            
+
             await self._domain_event_dispatcher.dispatch_events(category.domain_events)
             logger.info(f"Dispatched {len(category.domain_events)} domain events for category {category.id} after details update.")
             category.clear_domain_events()

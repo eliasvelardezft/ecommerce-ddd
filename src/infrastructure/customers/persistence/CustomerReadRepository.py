@@ -27,7 +27,7 @@ class CustomerReadRepository(ICustomerReadRepository):
         if not doc:
             logger.error("[Read] Profile not found for: %s", email)
             return None
-            
+
         logger.info(f"Customer profile found for email: {email}")
         return CustomerProfileDTO(**doc)
 
@@ -38,7 +38,7 @@ class CustomerReadRepository(ICustomerReadRepository):
         if not doc:
             logger.error("[Read] Profile not found for: %s", id)
             return None
-        
+
         logger.info(f"Customer profile found for id: {id}")
         return CustomerProfileDTO(**doc)
 
@@ -54,12 +54,12 @@ class CustomerReadRepository(ICustomerReadRepository):
         """
         logger.info("[Read] Current views before update: %s",
                    [doc["email"] async for doc in self._collection.find()])
-        
+
         await self._collection.update_one(
             {"_id": customer.id},
             {"$set": customer.model_dump()},
             upsert=True
         )
-        
+
         logger.info("[Read] Current views after update: %s",
                    [doc["email"] async for doc in self._collection.find()])

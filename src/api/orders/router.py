@@ -87,5 +87,5 @@ async def get_order_details(
             f"[router exception] error with query {query.__dict__}. error: {str(e)}"
         )
         raise HTTPException(status_code=400, detail={"message": "Error getting order details"})
-    
+
     return order_details

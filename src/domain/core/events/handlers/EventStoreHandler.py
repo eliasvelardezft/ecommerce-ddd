@@ -5,7 +5,7 @@ from domain.core.events.handlers.DomainEventHandler import DomainEventHandler
 
 class EventStoreHandler(DomainEventHandler[DomainEvent]):
     """Handler that stores all domain events in the event store"""
-    
+
     def __init__(self, event_store: EventStore):
         self._event_store = event_store
 

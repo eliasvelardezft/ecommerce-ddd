@@ -15,7 +15,7 @@ class Money:
             self._amount = Decimal(str(amount))
         except Exception as e:
             raise ValueError(f"Invalid amount: {amount}. Must be convertible to Decimal.") from e
-        
+
         # Standardize to 2 decimal places for most currencies, can be adjusted
         self._amount = self._amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
@@ -45,7 +45,7 @@ class Money:
             factor_decimal = Decimal(str(factor))
         except Exception as e:
             raise ValueError(f"Invalid multiplication factor: {factor}. Must be numeric.") from e
-        
+
         return Money(self.amount * factor_decimal, self.currency)
 
     def __truediv__(self, divisor: Union[int, float, Decimal, str]) -> "Money":
@@ -74,7 +74,7 @@ class Money:
         if self.currency != other.currency:
             raise ValueError("Cannot compare Money with different currencies")
         return self.amount < other.amount
-    
+
     def __hash__(self):
         return hash((self._amount, self.currency))
 

@@ -62,5 +62,5 @@ class UpdateCategoryOnCategoryParentChanged:
 
         if event.new_parent_category_id:
             await self._update_new_parent_children_ids(child_category_id, event)
-        
+
         logger.info(f"Finished handling CategoryParentChangedEvent for category {child_category_id}")

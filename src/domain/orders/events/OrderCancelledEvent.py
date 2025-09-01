@@ -8,7 +8,7 @@ from domain.core.value_objects.Money import Money
 
 class OrderCancelledEvent(DomainEvent):
     """Domain Event raised when an order is cancelled."""
-    
+
     def __init__(
         self,
         aggregate_id: UUID,

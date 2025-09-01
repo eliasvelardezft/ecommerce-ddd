@@ -18,7 +18,7 @@ class UpdateProductOnProductPriceUpdated:
     async def handle(self, event: ProductPriceUpdatedEvent) -> None:
         logger.info(f"Updating product price on event: {event.aggregate_id}, new price: {event.price.amount} {event.price.currency}")
         product_dto = await self._read_repository.get_product_details(id=UUID(event.aggregate_id))
-        
+
         if product_dto:
             product_dto.price_amount = event.price.amount
             product_dto.price_currency = event.price.currency

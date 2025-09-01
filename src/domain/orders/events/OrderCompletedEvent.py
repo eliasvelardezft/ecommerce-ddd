@@ -8,7 +8,7 @@ from domain.core.value_objects.Money import Money
 
 class OrderCompletedEvent(DomainEvent):
     """Domain Event raised when an order is successfully completed."""
-    
+
     def __init__(
         self,
         aggregate_id: UUID,

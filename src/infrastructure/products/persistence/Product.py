@@ -17,14 +17,14 @@ from infrastructure.core.persistence.base import BaseModel
 
 class ProductSQL(BaseModel):
     __tablename__ = "products"
-    
+
     id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), index=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     sku: Mapped[str] = mapped_column(String(100), unique=True, index=True)
     active: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
     stock_quantity: Mapped[int] = mapped_column(Integer, default=0)
-    
+
     price_amount: Mapped[float] = mapped_column(Numeric(10, 2)) # Stored as Numeric, handled as Decimal in domain
     price_currency: Mapped[str] = mapped_column(String(3))
 

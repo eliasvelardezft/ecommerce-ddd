@@ -75,7 +75,7 @@ def get_domain_event_dispatcher(mongo_db = Depends(get_mongo_db)) -> DomainEvent
     from infrastructure.products.persistence.ProductReadRepository import (
         ProductReadRepository,
     )
-    
+
     # Create event handler dependencies using injected mongo_db
     event_handler_dependencies = {
         "customer_read_repository": CustomerReadRepository(mongo_db),
@@ -86,10 +86,10 @@ def get_domain_event_dispatcher(mongo_db = Depends(get_mongo_db)) -> DomainEvent
         "audit_service": AuditService(),
         "event_store": EventStore(),
     }
-    
+
     # Create and configure domain event dispatcher
     domain_event_dispatcher = create_domain_event_dispatcher(event_handler_dependencies)
-    
+
     # Register all event handlers
     integration_event_dispatcher = get_integration_event_dispatcher()
     register_all_event_handlers(
@@ -97,7 +97,7 @@ def get_domain_event_dispatcher(mongo_db = Depends(get_mongo_db)) -> DomainEvent
         integration_event_dispatcher,
         event_handler_dependencies
     )
-    
+
     return domain_event_dispatcher
 
 def get_integration_event_dispatcher() -> IntegrationEventDispatcher:

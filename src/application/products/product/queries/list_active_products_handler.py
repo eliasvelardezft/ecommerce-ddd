@@ -16,8 +16,8 @@ class ListActiveProductsHandler:
 
     async def handle(self, query: ListActiveProductsQuery) -> list[ProductDetailsDTO]:
         logger.info("Handling ListActiveProductsQuery")
-        
+
         active_products = await self._repository.list_active_products(query.category_id)
-        
+
         logger.info(f"Retrieved {len(active_products)} active products.")
         return active_products

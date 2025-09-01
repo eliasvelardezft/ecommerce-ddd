@@ -25,7 +25,7 @@ class UpdateOrderOnOrderPlaced:
             )
             for item_data in event.items_data
         ]
-        
+
         order_details = OrderDetailsDTO(
             id=str(event.aggregate_id),
             customer_id=str(event.customer_id),

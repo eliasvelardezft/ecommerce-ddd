@@ -35,7 +35,7 @@ class Category(AggregateRoot):
         self.name = name
         self.description = description
         self.parent_category_id = parent_category_id
-        
+
         current_time = datetime.now()
         self.created_at = created_at if created_at is not None else current_time
         self.updated_at = updated_at if updated_at is not None else self.created_at
@@ -82,7 +82,7 @@ class Category(AggregateRoot):
                 raise ValueError("Category name cannot be empty when updating.") # Replace with CategoryDomainException
             self.name = name
             changes["name"] = name
-        
+
         if description is not None:
             if self.description != description:
                  self.description = description
@@ -90,7 +90,7 @@ class Category(AggregateRoot):
         elif description is None and self.description is not None: # If None is passed to clear existing description
             self.description = None
             changes["description"] = None
-            
+
         if changes:
             self.updated_at = datetime.now()
             self.add_domain_event(CategoryDetailsUpdatedEvent(

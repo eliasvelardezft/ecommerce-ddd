@@ -18,7 +18,7 @@ class UpdateProductOnProductStockUpdated:
     async def handle(self, event: ProductStockUpdatedEvent) -> None:
         logger.info(f"Updating product stock on event: {event.aggregate_id}, new stock: {event.stock_quantity}")
         product_dto = await self._read_repository.get_product_details(id=UUID(event.aggregate_id))
-        
+
         if product_dto:
             product_dto.stock_quantity = event.stock_quantity
             product_dto.updated_at = event.occurred_on # Update timestamp

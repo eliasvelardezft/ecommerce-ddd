@@ -22,13 +22,13 @@ class RegisterCustomerHandler:
 
     async def handle(self, command: RegisterCustomerCommand) -> Customer:
         logger.info("[Command] Processing RegisterCustomerCommand for %s", command.email)
-        
+
         # Create customer using factory method
         customer = Customer.create(
             name=command.name,
             email=command.email
         )
-        
+
         # Save customer
         await self._repository.save(customer)
         logger.info(f"Customer saved to write repository: {customer.id}")
@@ -36,8 +36,8 @@ class RegisterCustomerHandler:
         # Dispatch all domain events using the new method
         await self._event_dispatcher.dispatch_events(customer.domain_events)
         logger.info(f"[Command] Dispatched {len(customer.domain_events)} domain events for customer {customer.id}")
-        
+
         # Clear events after dispatching
         customer.clear_domain_events()
-        
+
         return customer

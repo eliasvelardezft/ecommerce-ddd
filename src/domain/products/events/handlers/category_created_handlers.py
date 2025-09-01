@@ -14,7 +14,7 @@ class UpdateCategoryOnCategoryCreated:
 
     async def handle(self, event: CategoryCreatedEvent) -> None:
         logger.info(f"Creating category read model on CategoryCreatedEvent: {event.aggregate_id}")
-        
+
         category_dto = CategoryDetailsDTO(
             id=str(event.aggregate_id),  # Convert EntityId to string
             name=event.name,
@@ -25,6 +25,6 @@ class UpdateCategoryOnCategoryCreated:
             created_at=event.created_at,
             updated_at=event.created_at
         )
-        
+
         await self._read_repository.update_read_model(category_dto)
         logger.info(f"Successfully created/updated read model for category {event.aggregate_id}")

@@ -179,23 +179,23 @@ def register_order_event_handlers(
         InternalOrderPlacedEvent,
         OrderUpdateReadModelHandler(order_read_repo)
     )
-    
+
     # Register lifecycle event handlers
     domain_event_dispatcher.register_handler(
         InternalOrderProcessingEvent,
         UpdateOrderOnOrderProcessing(order_read_repo)
     )
-    
+
     domain_event_dispatcher.register_handler(
         InternalOrderCompletedEvent,
         UpdateOrderOnOrderCompleted(order_read_repo)
     )
-    
+
     domain_event_dispatcher.register_handler(
         InternalOrderCancelledEvent,
         UpdateOrderOnOrderCancelled(order_read_repo)
     )
-    
+
     logger.info("[Registry] Internal Order event handlers registered with DomainEventDispatcher.")
 
     # 2. (Example) Register handlers for PUBLIC INTEGRATION event contracts consumed by Order domain
@@ -273,13 +273,13 @@ def register_all_event_handlers(
     using the functions from the registry.
     """
     logger.info("[Bootstrap] Registering all application event handlers from registry...")
-    
+
     register_customer_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
         integration_event_dispatcher=integration_event_dispatcher,
         container=container
     )
-    
+
     register_order_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
         integration_event_dispatcher=integration_event_dispatcher, # Now passed here
@@ -290,10 +290,10 @@ def register_all_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
         container=container
     )
-    
+
     register_category_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
         container=container
     )
-    
+
     logger.info("[Bootstrap] All application event handlers registered.")

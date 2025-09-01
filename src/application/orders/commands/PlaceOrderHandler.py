@@ -31,13 +31,13 @@ class PlaceOrderHandler:
 
     async def handle(self, command: PlaceOrderCommand) -> Order:
         logger.info(f"[PlaceOrderHandler] Processing PlaceOrderCommand for customer {command.customer_id}")
-        
+
         # Convert customer_id string to EntityId
         customer_entity_id = EntityId.from_string(command.customer_id)
-        
+
         # Convert OrderItemRequest DTOs to the format expected by Order.create()
         items_data_list = [item_model.model_dump() for item_model in command.items]
-            
+
         shipping_details_dict = command.shipping_details.model_dump()
 
         order = Order.create(

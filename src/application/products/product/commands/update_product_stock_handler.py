@@ -38,7 +38,7 @@ class UpdateProductStockHandler:
             return
 
         await self._product_write_repository.save(product)
-        
+
         await self._domain_event_dispatcher.dispatch_events(product.domain_events)
         logger.info(f"Dispatched {len(product.domain_events)} domain events for product {product.id} after stock update.")
         product.clear_domain_events()

@@ -27,7 +27,7 @@ class CategoryReadRepository(ICategoryReadRepository):
             doc["id"] = str(doc["_id"])
         elif "id" in doc:
             doc["id"] = str(doc["id"])
-        
+
         # Recursively convert children if they exist
         if "children" in doc and isinstance(doc["children"], list):
             children_dtos = []
@@ -42,10 +42,10 @@ class CategoryReadRepository(ICategoryReadRepository):
         if "children_ids" not in doc: # Ensure children_ids list exists even if empty
             doc["children_ids"] = []
         # children_ids should already be strings now
-        
+
         # parent_category_id should remain a string (or None)
         # No conversion needed
-        
+
         return CategoryDetailsDTO(**doc)
 
     async def get_category(self, category_id: str, recursive: bool = False) -> Optional[CategoryDetailsDTO]:
@@ -102,14 +102,14 @@ class CategoryReadRepository(ICategoryReadRepository):
 
     async def update_read_model(self, category_dto: CategoryDetailsDTO) -> None:
         logger.debug(f"[ReadRepo] Updating read model for category ID: {category_dto.id}")
-        
+
         # Prepare document for MongoDB
         # For CategoryDetailsDTO, children is List[CategoryDetailsDTO].
         # model_dump will recursively dump them.
         category_doc_for_set = category_dto.model_dump()
 
         # IDs should already be strings in the DTO now, no conversion needed
-        
+
         await self._collection.update_one(
             {"_id": category_dto.id}, # Use string ID directly
             {"$set": category_doc_for_set},

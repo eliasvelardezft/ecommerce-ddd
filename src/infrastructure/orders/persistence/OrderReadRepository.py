@@ -42,12 +42,12 @@ class OrderReadRepository(IOrderReadRepository):
         """
         logger.info("[Read] Current views before update: %s",
                    [doc["id"] async for doc in self._collection.find()])
-        
+
         await self._collection.update_one(
             {"_id": str(order.id)},
             {"$set": order.model_dump()},
             upsert=True
         )
-        
+
         logger.info("[Read] Current views after update: %s",
                    [doc["id"] async for doc in self._collection.find()])

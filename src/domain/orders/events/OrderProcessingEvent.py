@@ -8,7 +8,7 @@ from domain.core.value_objects.Money import Money
 
 class OrderProcessingEvent(DomainEvent):
     """Domain Event raised when an order moves from DRAFT to PROCESSING status."""
-    
+
     def __init__(
         self,
         aggregate_id: UUID,

@@ -16,7 +16,7 @@ class UpdateProductOnProductActivated:
     async def handle(self, event: ProductActivatedEvent) -> None:
         logger.info(f"Activating product on event: {event.aggregate_id}")
         product_dto = await self._read_repository.get_product_details_by_id(product_id=UUID(event.aggregate_id))
-        
+
         if product_dto:
             product_dto.active = True
             product_dto.updated_at = event.occurred_on # Update timestamp

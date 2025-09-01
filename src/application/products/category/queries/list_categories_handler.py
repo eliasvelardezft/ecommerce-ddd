@@ -23,5 +23,5 @@ class ListCategoriesHandler:
             logger.info("Handling ListCategoriesQuery for top-level categories")
             categories = await self._category_read_repository.list_top_level()
             logger.info(f"Retrieved {len(categories)} top-level categories.")
-            
+
         return categories

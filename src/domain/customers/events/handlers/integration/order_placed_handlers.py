@@ -27,15 +27,15 @@ class UpdateCustomerOnOrderPlaced:
             f"[UpdateCustomerOnOrderPlaced] Received OrderPlacedEventContractV1 for order ID: {event.order_id}, "
             f"customer ID: {event.customer_id}"
         )
-        
+
         try:
             # Access data using Pydantic model attributes
             customer_id = event.customer_id
-            
+
             # Fetch the customer - using read repo as this handler typically updates a read model
             # or performs actions that don't belong in the customer aggregate's transactional boundary.
             customer = await self._customer_read_repository.get_customer_profile_by_id(customer_id) # Assuming find_by_id
-            
+
             if customer:
                 logger.info(f"[UpdateCustomerOnOrderPlaced] Updating customer {customer_id} based on order {event.order_id}.")
                 # Example: Increment order count or update last order date.

@@ -47,14 +47,14 @@ class CategoryWriteRepository(ICategoryWriteRepository):
 
     async def save(self, category: DomainCategory) -> None:
         logger.info(f"Saving category {category.id} (upsert) with name '{category.name}'.")
-        
+
         existing_db_category = await self._session.get(CategorySQL, str(category.id))
 
         if existing_db_category:
             await self._update_existing_sql(existing_db_category, category)
         else:
             await self._create_new_sql(category) # Will add to session
-        
+
         try:
             await self._session.commit()
 
@@ -70,7 +70,7 @@ class CategoryWriteRepository(ICategoryWriteRepository):
 
     async def get_by_id(self, category_id: EntityId) -> Optional[DomainCategory]:
         logger.debug(f"Fetching category by ID {category_id} from the database.")
-        
+
         result = await self._session.execute(
             select(CategorySQL).where(CategorySQL.id == str(category_id))
         )
@@ -79,7 +79,7 @@ class CategoryWriteRepository(ICategoryWriteRepository):
         if not db_category:
             logger.debug(f"Category with ID {category_id} not found in the database.")
             return None
-        
+
         logger.debug(f"Category {category_id} found, converting to domain model.")
         return DomainCategory(
             _id=EntityId.from_string(db_category.id),  # Convert string back to EntityId

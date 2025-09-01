@@ -16,9 +16,9 @@ class UpdateOrderOnOrderProcessing:
 
     async def handle(self, event: OrderProcessingEvent) -> None:
         logger.info(f"[UpdateOrderOnOrderProcessingHandler] Updating read model for order {event.order_number} to status {event.status}")
-        
+
         order_dto = await self._read_repository.get_order_details(id=UUID(event.aggregate_id))
-        
+
         if order_dto:
             order_dto.status = event.status
             # Potentially update other fields if they are part of the OrderProcessingEvent and DTO

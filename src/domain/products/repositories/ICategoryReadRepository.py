@@ -27,7 +27,7 @@ class ICategoryReadRepository(ABC):
     async def list_top_level(self) -> list[CategoryDetailsDTO]:
         """Lists all top-level categories (those without a parent)."""
         raise NotImplementedError
-    
+
     @abstractmethod
     async def update_read_model(self, category_dto: CategoryDetailsDTO) -> None:
         """Updates the category read model, typically used by event handlers."""

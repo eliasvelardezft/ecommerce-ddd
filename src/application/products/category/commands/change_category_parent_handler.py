@@ -46,7 +46,7 @@ class ChangeCategoryParentHandler:
         logger.info(f"Parent changed for category {category.id} to {command.new_parent_category_id}.")
 
         await self._category_write_repository.save(category)
-        
+
         await self._domain_event_dispatcher.dispatch_events(category.domain_events)
         logger.info(f"Dispatched {len(category.domain_events)} domain events for category {category.id} after parent change.")
         category.clear_domain_events()

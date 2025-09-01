@@ -60,7 +60,7 @@ class Order(AggregateRoot):
         super().__init__()
         self.id = _id
         self.customer_id = customer_id
-        
+
         if not currency or len(currency) != 3:
             raise OrderValidationException("Order currency must be a 3-letter code.")
         self.currency = currency.upper()
@@ -76,7 +76,7 @@ class Order(AggregateRoot):
         # Initialize Money fields with the order's currency
         self.shipping_cost = Money(shipping_cost_raw if shipping_cost_raw is not None else Decimal(0), self.currency)
         self.tax_amount = Money(tax_amount_raw if tax_amount_raw is not None else Decimal(0), self.currency)
-        
+
         self.items = [] # Initialize before validating and adding
         if not items: # Check after self.currency is set, as add_item might need it for Money.zero()
             raise OrderValidationException("Order must have at least one item upon creation.")
@@ -108,14 +108,14 @@ class Order(AggregateRoot):
         """Adds an item to the order. Validates currency against order currency."""
         if self.status != OrderStatus.DRAFT:
             raise OrderValidationException("Cannot add items to an order that is not in DRAFT status.")
-        
+
         self._validate_item_currency(item_to_add) # Ensure item currency is consistent with order currency
-        
+
         # Check if item with same product_id already exists, if so, consider updating quantity (optional rule)
         # For now, allowing duplicate product_ids as separate line items if their UUIDs are different.
         self.items.append(item_to_add)
         self.updated_at = datetime.now(timezone.utc)
-        
+
         # Placeholder for event dispatching
         # if dispatch_event:
         #     self.add_domain_event(OrderItemAddedEvent(aggregate_id=self.id, item_id=item_to_add.id, ...))
@@ -151,7 +151,7 @@ class Order(AggregateRoot):
         order_currency = currency.upper()
 
         shipping_details_obj = ShippingDetails(**shipping_details_data)
-        
+
         processed_order_items = []
         if not items_data:
             raise OrderValidationException("Cannot create an order with no items data.")
@@ -163,13 +163,13 @@ class Order(AggregateRoot):
                 raise OrderValidationException(f"Missing or invalid unit_price data for item: {item_dict.get('product_name', 'N/A')}")
 
             item_unit_price = Money(unit_price_data['amount'], unit_price_data['currency'])
-            
+
             if item_unit_price.currency != order_currency:
                  raise OrderValidationException(
                     f"Item '{item_dict.get('product_name', 'N/A')}' unit price currency ({item_unit_price.currency}) "
                     f"does not match order currency ({order_currency})."
                 )
-            
+
             processed_order_items.append(OrderItem(
                 product_id=EntityId.from_string(item_dict['product_id']),
                 product_name=item_dict['product_name'],
@@ -228,11 +228,11 @@ class Order(AggregateRoot):
             raise OrderValidationException("Cannot update item quantity for an order not in DRAFT status.")
         if new_quantity <= 0:
             raise OrderValidationException("Item quantity must be positive.")
-        
+
         item_to_update = next((it for it in self.items if it.id == item_id), None)
         if not item_to_update:
             raise OrderValidationException(f"Item with ID {item_id} not found to update quantity.")
-        
+
         item_to_update.quantity = new_quantity # OrderItem is Pydantic, quantity is assignable
         self.updated_at = datetime.now(timezone.utc)
         # if dispatch_event: self.add_domain_event(OrderItemQuantityUpdatedEvent(...))
