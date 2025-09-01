@@ -63,7 +63,7 @@ async def create_product(
         logger.info(f"Successfully created product {product.id}")
         return {
             "message": "Product created successfully",
-            "product_id": product.id,
+            "product_id": str(product.id),  # Convert EntityId to string
             "sku": product.sku,
             "name": product.name
         }
@@ -73,7 +73,7 @@ async def create_product(
 
 @router.get("/{product_id}")
 async def get_product(
-    product_id: UUID,
+    product_id: str,
     repository: IProductReadRepository = Depends(get_product_read_repository)
 ):
     """Get product by ID"""

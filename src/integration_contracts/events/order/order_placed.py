@@ -8,6 +8,7 @@ class OrderPlacedEventContractV1(BaseModel):
     order_id: UUID
     customer_id: UUID
     total_amount: float
+    currency: str
     item_count: int
     occurred_on: datetime
     event_id: UUID = Field(default_factory=uuid.uuid4)

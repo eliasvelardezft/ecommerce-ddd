@@ -1,9 +1,9 @@
 import logging
 from typing import List, Optional
-from uuid import UUID
 
 from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
 from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
+from domain.core.value_objects.EntityId import EntityId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class CustomerReadRepository(ICustomerReadRepository):
         logger.info(f"Customer profile found for email: {email}")
         return CustomerProfileDTO(**doc)
 
-    async def get_customer_profile_by_id(self, id: UUID) -> Optional[CustomerProfileDTO]:
+    async def get_customer_profile_by_id(self, id: EntityId) -> Optional[CustomerProfileDTO]:
         """Get customer profile by id"""
         logger.info("[Read] Fetching profile by id for: %s", id)
         doc = await self._collection.find_one({"_id": str(id)})

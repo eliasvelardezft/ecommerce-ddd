@@ -1,6 +1,5 @@
 from datetime import datetime
-from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -9,7 +8,7 @@ from domain.orders.value_objects.ShippingDetails import ShippingDetails
 
 class OrderItemDTO(BaseModel):
     product_name: str
-    product_id: UUID
+    product_id: str
     quantity: int
     subtotal: float
     final_price: float
@@ -18,6 +17,7 @@ class OrderItemDTO(BaseModel):
 class OrderDetailsDTO(BaseModel):
     id: str
     customer_id: str
+    items: List[OrderItemDTO]
     items_count: int
     total_amount: float
     created_at: datetime

@@ -33,6 +33,23 @@ pytest-asyncio = "^1.0.0"
 ruff = "^0.11.11"
 mypy = "^1.15.0"
 ipdb = "^0.13.13"
+pytest-cov = "^6.2.1"
+mongomock-motor = "^0.0.36"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--asyncio-mode=auto",
+    "-v"
+]
+testpaths = ["tests"]
+pythonpath = ["src"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
 
 [build-system]
 requires = ["poetry-core>=2.1.3"]

@@ -1,5 +1,5 @@
 import logging
-from uuid import UUID
+from domain.core.value_objects.EntityId import EntityId
 from fastapi import APIRouter, HTTPException, Depends
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
@@ -48,7 +48,7 @@ async def create_category(
         logger.info(f"Successfully created category {category.id}")
         return {
             "message": "Category created successfully",
-            "category_id": category.id,
+            "category_id": str(category.id),  # Convert EntityId to string
             "name": category.name
         }
     except Exception as e:
@@ -57,11 +57,13 @@ async def create_category(
 
 @router.get("/{category_id}")
 async def get_category(
-    category_id: UUID,
+    category_id: str,
     repository: ICategoryReadRepository = Depends(get_category_read_repository)
 ):
     """Get category by ID"""
     logger.info(f"Fetching category {category_id}")
+    # Validate the category_id format by creating EntityId (will raise if invalid)
+    EntityId.from_string(category_id)
     query = GetCategoryDetailsQuery(category_id=category_id)
     handler = GetCategoryDetailsHandler(repository)
     try:
@@ -96,7 +98,7 @@ async def list_categories(
 
 @router.put("/{category_id}")
 async def update_category_details(
-    category_id: UUID,
+    category_id: str,
     command: UpdateCategoryDetailsCommand,
     repository: ICategoryWriteRepository = Depends(get_category_write_repository),
     event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
@@ -120,7 +122,7 @@ async def update_category_details(
 # Business-oriented action
 @router.put("/{category_id}/parent")
 async def change_category_parent(
-    category_id: UUID,
+    category_id: str,
     command: ChangeCategoryParentCommand,
     repository: ICategoryWriteRepository = Depends(get_category_write_repository),
     event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)

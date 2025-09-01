@@ -54,8 +54,8 @@ async def place_order(
 
     return {
         "message": "Order placed successfully", 
-        "order_id": order.id, 
-        "customer_id": order.customer_id, 
+        "order_id": str(order.id),  # Convert EntityId to string
+        "customer_id": str(order.customer_id),  # Convert EntityId to string
         "total_amount": order.total_amount,
         "shipping_details": order.shipping_details.model_dump()
     }

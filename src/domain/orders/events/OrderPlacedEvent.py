@@ -4,6 +4,7 @@ from datetime import datetime
 
 from domain.core.events.DomainEvent import DomainEvent
 from domain.orders.models.OrderItem import OrderItem
+from domain.core.value_objects.Money import Money
 
 
 class OrderPlacedEvent(DomainEvent):
@@ -14,8 +15,7 @@ class OrderPlacedEvent(DomainEvent):
         customer_id: UUID,
         order_number: str,
         items_data: List[Dict[str, Any]],
-        total_amount_str: str,
-        currency: str,
+        amount: Money,
         shipping_details_data: Dict[str, Any],
         status: str,
     ):
@@ -23,8 +23,8 @@ class OrderPlacedEvent(DomainEvent):
         self.customer_id: UUID = customer_id
         self.order_number: str = order_number
         self.items_data: list[dict[str, Any]] = items_data
-        self.total_amount_str: str = total_amount_str
-        self.currency: str = currency
+        self.total_amount: float = amount.amount
+        self.currency: str = amount.currency
         self.shipping_details_data: Dict[str, Any] = shipping_details_data
         self.status: str = status
 
@@ -38,7 +38,7 @@ class OrderPlacedEvent(DomainEvent):
             "customer_id": str(self.customer_id),
             "order_number": self.order_number,
             "items_data": self.items_data,
-            "total_amount_str": self.total_amount_str,
+            "total_amount": self.total_amount,
             "currency": self.currency,
             "shipping_details_data": self.shipping_details_data,
             "status": self.status,

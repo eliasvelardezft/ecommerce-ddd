@@ -1,6 +1,7 @@
 from abc import ABC
-from uuid import UUID
+from typing import Optional
 
+from domain.core.value_objects.EntityId import EntityId
 from domain.orders.models.Order import Order
 
 
@@ -11,5 +12,5 @@ class IOrderWriteRepository(ABC):
     async def delete(self, order: Order) -> None:
         raise NotImplementedError
 
-    async def get_by_id(self, id: UUID) -> Order:
+    async def get_by_id(self, id: EntityId) -> Optional[Order]:
         raise NotImplementedError
