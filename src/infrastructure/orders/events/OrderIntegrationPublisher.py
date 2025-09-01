@@ -1,20 +1,15 @@
 import logging
-from typing import Callable
+from collections.abc import Callable
 
 from pydantic import BaseModel as PydanticBaseModel
 
 from domain.core.events.DomainEvent import DomainEvent
-
-# Import specific internal event types from the Order domain that can become public
 from domain.orders.events.OrderPlacedEvent import (
     OrderPlacedEvent as InternalOrderPlacedEvent,
 )
 from infrastructure.core.events.integration_event_dispatcher import (
     IntegrationEventDispatcher,
 )
-
-# from domain.orders.events.OrderCancelledEvent import OrderCancelledEvent as InternalOrderCancelledEvent # Example
-# Import their corresponding mappers
 from infrastructure.orders.events.mappers import (
     map_internal_order_placed_to_v1_contract,
 )

@@ -1,6 +1,6 @@
 import random
 import string
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from decimal import Decimal
 
 from domain.core.AggregateRoot import AggregateRoot
@@ -68,7 +68,7 @@ class Order(AggregateRoot):
         self.shipping_details = shipping_details
         self.notes = notes
         self.status = status # Initial status
-        self.created_at = created_at if created_at else datetime.now(timezone.utc)
+        self.created_at = created_at if created_at else datetime.now(UTC)
         self.updated_at = updated_at
         self.tracking_number = tracking_number
 
@@ -113,7 +113,7 @@ class Order(AggregateRoot):
         # Check if item with same product_id already exists, if so, consider updating quantity (optional rule)
         # For now, allowing duplicate product_ids as separate line items if their UUIDs are different.
         self.items.append(item_to_add)
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
         # Placeholder for event dispatching
         # if dispatch_event:
@@ -219,7 +219,7 @@ class Order(AggregateRoot):
             raise OrderValidationException(f"Item with ID {item_id} not found in order.")
         if not self.items:
              raise OrderValidationException("Order must have at least one item after removal.")
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         # if dispatch_event: self.add_domain_event(OrderItemRemovedEvent(aggregate_id=self.id, item_id=item_id))
 
     def update_item_quantity(self, item_id: EntityId, new_quantity: int, dispatch_event: bool = True):
@@ -233,14 +233,14 @@ class Order(AggregateRoot):
             raise OrderValidationException(f"Item with ID {item_id} not found to update quantity.")
 
         item_to_update.quantity = new_quantity # OrderItem is Pydantic, quantity is assignable
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         # if dispatch_event: self.add_domain_event(OrderItemQuantityUpdatedEvent(...))
 
     def update_shipping_details(self, shipping_details: ShippingDetails, dispatch_event: bool = True):
         if self.status != OrderStatus.DRAFT:
             raise OrderValidationException("Cannot update shipping details for an order not in DRAFT status.")
         self.shipping_details = shipping_details
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         # if dispatch_event: self.add_domain_event(OrderShippingDetailsUpdatedEvent(...))
 
     def update_shipping_cost(self, new_shipping_cost: Money, dispatch_event: bool = True):
@@ -249,7 +249,7 @@ class Order(AggregateRoot):
         if new_shipping_cost.currency != self.currency:
             raise OrderValidationException(f"Shipping cost currency ({new_shipping_cost.currency}) must match order currency ({self.currency}).")
         self.shipping_cost = new_shipping_cost
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         # if dispatch_event: self.add_domain_event(OrderShippingCostUpdatedEvent(...))
 
     def update_tax_amount(self, new_tax_amount: Money, dispatch_event: bool = True):
@@ -258,14 +258,14 @@ class Order(AggregateRoot):
         if new_tax_amount.currency != self.currency:
             raise OrderValidationException(f"Tax amount currency ({new_tax_amount.currency}) must match order currency ({self.currency}).")
         self.tax_amount = new_tax_amount
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         # if dispatch_event: self.add_domain_event(OrderTaxAmountUpdatedEvent(...))
 
     def process_order(self): # Renamed from original 'processing'
         if self.status != OrderStatus.DRAFT:
             raise OrderValidationException(f"Can only process DRAFT orders. Current status: {self.status.value}")
         self.status = OrderStatus.PROCESSING
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         self.add_domain_event(OrderProcessingEvent(
             aggregate_id=self.id,
             order_number=self.order_number,
@@ -279,7 +279,7 @@ class Order(AggregateRoot):
         if self.status not in [OrderStatus.DRAFT, OrderStatus.PROCESSING]:
             raise OrderValidationException(f"Cannot cancel order in status {self.status.value}.")
         self.status = OrderStatus.CANCELLED
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         self.add_domain_event(OrderCancelledEvent(
             aggregate_id=self.id,
             order_number=self.order_number,
@@ -293,7 +293,7 @@ class Order(AggregateRoot):
         if self.status != OrderStatus.PROCESSING:
             raise OrderValidationException(f"Cannot complete order in status {self.status.value}. Must be PROCESSING.")
         self.status = OrderStatus.COMPLETED
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
         # Update tracking number if provided
         if tracking_number:
             self.tracking_number = tracking_number

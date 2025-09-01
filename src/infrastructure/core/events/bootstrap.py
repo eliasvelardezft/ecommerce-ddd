@@ -7,7 +7,6 @@ from infrastructure.core.events.integration_event_dispatcher import (
     IntegrationEventDispatcher,
 )
 
-
 logger = logging.getLogger(__name__)
 
 def create_domain_event_dispatcher(container: dict) -> DomainEventDispatcher:

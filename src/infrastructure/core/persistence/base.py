@@ -12,9 +12,9 @@ def camel_to_snake(name):
 
 class Base(DeclarativeBase):
     @declared_attr
-    def __tablename__(cls) -> str:
+    def __tablename__(self) -> str:
         # Remove the 'SQL' suffix from the class name
-        class_name = cls.__name__[:-3]
+        class_name = self.__name__[:-3]
         return camel_to_snake(class_name)
 
     def as_dict(self):
