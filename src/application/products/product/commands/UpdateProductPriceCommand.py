@@ -1,6 +1,8 @@
-from uuid import UUID
 from decimal import Decimal
+from uuid import UUID
+
 from pydantic import BaseModel, Field
+
 
 class UpdateProductPriceCommand(BaseModel):
     """Command to update the price of a product."""

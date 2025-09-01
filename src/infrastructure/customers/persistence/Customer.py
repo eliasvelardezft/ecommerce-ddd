@@ -1,6 +1,8 @@
-from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from infrastructure.core.persistence.base import BaseModel
+
 
 class CustomerSQL(BaseModel):
     __tablename__ = "customers"

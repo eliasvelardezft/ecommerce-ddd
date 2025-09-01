@@ -4,7 +4,9 @@ from typing import List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from domain.products.dtos.ProductDetailsDTO import ProductDetailsDTO
-from domain.products.repositories.IProductReadRepository import IProductReadRepository
+from domain.products.repositories.IProductReadRepository import (
+    IProductReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 

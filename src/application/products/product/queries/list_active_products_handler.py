@@ -2,7 +2,10 @@ import logging
 from typing import List
 
 from domain.products.dtos.ProductDetailsDTO import ProductDetailsDTO
-from domain.products.repositories.IProductReadRepository import IProductReadRepository
+from domain.products.repositories.IProductReadRepository import (
+    IProductReadRepository,
+)
+
 from .ListActiveProductsQuery import ListActiveProductsQuery
 
 logger = logging.getLogger(__name__)

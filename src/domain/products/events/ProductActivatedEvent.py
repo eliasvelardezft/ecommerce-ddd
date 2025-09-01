@@ -1,5 +1,7 @@
 from uuid import UUID
+
 from domain.core.events.DomainEvent import DomainEvent
+
 
 class ProductActivatedEvent(DomainEvent):
     """Event raised when a product is activated."""

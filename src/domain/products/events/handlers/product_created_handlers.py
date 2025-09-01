@@ -2,9 +2,11 @@ import logging
 
 from domain.products.dtos.ProductDetailsDTO import ProductDetailsDTO
 from domain.products.events.ProductCreatedEvent import ProductCreatedEvent
-from domain.products.repositories.IProductReadRepository import IProductReadRepository
-from domain.products.value_objects.ImageUrl import ImageUrl
+from domain.products.repositories.IProductReadRepository import (
+    IProductReadRepository,
+)
 from domain.products.value_objects.Attribute import Attribute
+from domain.products.value_objects.ImageUrl import ImageUrl
 
 logger = logging.getLogger(__name__)
 

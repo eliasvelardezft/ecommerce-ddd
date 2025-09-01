@@ -1,10 +1,13 @@
 import logging
 from typing import List, Optional
 
-from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
-from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
-from domain.core.value_objects.EntityId import EntityId
 from motor.motor_asyncio import AsyncIOMotorDatabase
+
+from domain.core.value_objects.EntityId import EntityId
+from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
+from domain.customers.repositories.ICustomerReadRepository import (
+    ICustomerReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
-from domain.core.events.handlers.DomainEventHandler import DomainEventHandler
 from domain.core.events.DomainEvent import DomainEvent
 from domain.core.events.EventStore import EventStore
+from domain.core.events.handlers.DomainEventHandler import DomainEventHandler
 
 
 class EventStoreHandler(DomainEventHandler[DomainEvent]):

@@ -1,6 +1,8 @@
 from uuid import UUID
+
 from domain.core.events.DomainEvent import DomainEvent
-from domain.core.value_objects.Money import Money # Assuming Money is needed
+from domain.core.value_objects.Money import Money  # Assuming Money is needed
+
 
 class ProductPriceUpdatedEvent(DomainEvent):
     """Event raised when the price of a product is updated."""

@@ -3,7 +3,10 @@ from uuid import UUID
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.core.value_objects.Money import Money
-from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
+from domain.products.repositories.IProductWriteRepository import (
+    IProductWriteRepository,
+)
+
 from .UpdateProductPriceCommand import UpdateProductPriceCommand
 
 logger = logging.getLogger(__name__)

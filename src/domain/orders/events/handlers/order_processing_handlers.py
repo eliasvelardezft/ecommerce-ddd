@@ -1,9 +1,11 @@
-from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
-from domain.orders.events.OrderProcessingEvent import OrderProcessingEvent
-from domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
+import logging
 from uuid import UUID
 
-import logging
+from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
+from domain.orders.events.OrderProcessingEvent import OrderProcessingEvent
+from domain.orders.repositories.IOrderReadRepository import (
+    IOrderReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 

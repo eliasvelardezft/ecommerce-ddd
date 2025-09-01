@@ -1,8 +1,10 @@
 import uuid
-from uuid import UUID
 from datetime import datetime
-from pydantic import BaseModel, Field
 from typing import Literal
+from uuid import UUID
+
+from pydantic import BaseModel, Field
+
 
 class OrderPlacedEventContractV1(BaseModel):
     order_id: UUID

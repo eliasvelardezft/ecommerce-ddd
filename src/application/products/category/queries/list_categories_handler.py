@@ -2,7 +2,10 @@ import logging
 from typing import List
 
 from domain.products.dtos.CategoryDetailsDTO import CategoryDetailsDTO
-from domain.products.repositories.ICategoryReadRepository import ICategoryReadRepository
+from domain.products.repositories.ICategoryReadRepository import (
+    ICategoryReadRepository,
+)
+
 from .ListCategoriesQuery import ListCategoriesQuery
 
 logger = logging.getLogger(__name__)

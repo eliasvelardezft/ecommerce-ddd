@@ -1,13 +1,18 @@
 from fastapi import Depends
 
 from api.dependencies import (
-    get_domain_event_dispatcher,
     get_db_session,
+    get_domain_event_dispatcher,
     get_mongo_db,
 )
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from infrastructure.orders.persistence.OrderReadRepository import OrderReadRepository
-from infrastructure.orders.persistence.OrderWriteRepository import OrderWriteRepository
+from infrastructure.orders.persistence.OrderReadRepository import (
+    OrderReadRepository,
+)
+from infrastructure.orders.persistence.OrderWriteRepository import (
+    OrderWriteRepository,
+)
+
 
 def get_order_write_repository(db=Depends(get_db_session)):
     return OrderWriteRepository(session=db)

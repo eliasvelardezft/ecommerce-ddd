@@ -1,8 +1,11 @@
 import logging
 
-from integration_contracts.events.order.order_placed import OrderPlacedEventContractV1
-from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
-
+from domain.customers.repositories.ICustomerReadRepository import (
+    ICustomerReadRepository,
+)
+from integration_contracts.events.order.order_placed import (
+    OrderPlacedEventContractV1,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -1,12 +1,16 @@
-from datetime import datetime
 import logging
+from datetime import datetime
 
 from domain.core.events.handlers.DomainEventHandler import DomainEventHandler
-from domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent
-from infrastructure.customers.services.EmailService import EmailService
-from infrastructure.customers.services.AuditService import AuditService
 from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
-from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
+from domain.customers.events.CustomerRegisteredEvent import (
+    CustomerRegisteredEvent,
+)
+from domain.customers.repositories.ICustomerReadRepository import (
+    ICustomerReadRepository,
+)
+from infrastructure.customers.services.AuditService import AuditService
+from infrastructure.customers.services.EmailService import EmailService
 
 logger = logging.getLogger(__name__)
 

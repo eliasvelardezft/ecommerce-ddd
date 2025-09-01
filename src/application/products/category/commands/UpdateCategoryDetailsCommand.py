@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 
 class UpdateCategoryDetailsCommand(BaseModel):
     """Command to update a category's details (name, description)."""

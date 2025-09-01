@@ -1,5 +1,10 @@
-from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent as InternalOrderPlacedEvent
-from integration_contracts.events.order.order_placed import OrderPlacedEventContractV1
+from domain.orders.events.OrderPlacedEvent import (
+    OrderPlacedEvent as InternalOrderPlacedEvent,
+)
+from integration_contracts.events.order.order_placed import (
+    OrderPlacedEventContractV1,
+)
+
 # Import other internal events and their contract DTOs as needed
 
 # For Pydantic default factories if they are not used directly in the contract DTO

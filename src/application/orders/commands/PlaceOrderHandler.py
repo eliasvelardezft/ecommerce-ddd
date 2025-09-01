@@ -1,11 +1,16 @@
 import logging
 
-from domain.core.value_objects.EntityId import EntityId
-from domain.orders.models.Order import Order
-from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
-from domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
+from domain.core.value_objects.EntityId import EntityId
+from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
+from domain.orders.models.Order import Order
+from domain.orders.repositories.IOrderWriteRepository import (
+    IOrderWriteRepository,
+)
+from infrastructure.orders.events.OrderIntegrationPublisher import (
+    OrderIntegrationEventPublisher,
+)
+
 from .PlaceOrderCommand import PlaceOrderCommand
 
 logger = logging.getLogger(__name__)

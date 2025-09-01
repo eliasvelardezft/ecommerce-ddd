@@ -1,7 +1,9 @@
-from sqlalchemy import ForeignKey, Enum as SQLEnum, String
-from sqlalchemy.orm import relationship, Mapped, mapped_column
-from infrastructure.core.persistence.base import BaseModel
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from domain.orders.models.OrderStatus import OrderStatus
+from infrastructure.core.persistence.base import BaseModel
 
 
 class OrderSQL(BaseModel):

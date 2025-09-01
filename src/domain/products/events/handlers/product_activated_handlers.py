@@ -3,7 +3,9 @@ from uuid import UUID
 
 from domain.products.dtos.ProductDetailsDTO import ProductDetailsDTO
 from domain.products.events.ProductActivatedEvent import ProductActivatedEvent
-from domain.products.repositories.IProductReadRepository import IProductReadRepository
+from domain.products.repositories.IProductReadRepository import (
+    IProductReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 

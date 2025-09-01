@@ -1,21 +1,24 @@
 import logging
-from typing import Optional, List
-from uuid import uuid4 # Import uuid4 for AttributeSQL IDs
-from decimal import Decimal # For price conversion
+from decimal import Decimal  # For price conversion
+from typing import List, Optional
+from uuid import uuid4  # Import uuid4 for AttributeSQL IDs
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload # For eager loading
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload  # For eager loading
 
 from domain.core.value_objects.EntityId import EntityId
-from domain.products.models.Product import Product as DomainProduct
-from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
 from domain.core.value_objects.Money import Money
+from domain.products.models.Product import Product as DomainProduct
+from domain.products.repositories.IProductWriteRepository import (
+    IProductWriteRepository,
+)
+from domain.products.value_objects.Attribute import (
+    Attribute as DomainAttribute,
+)
 from domain.products.value_objects.ImageUrl import ImageUrl as DomainImageUrl
-from domain.products.value_objects.Attribute import Attribute as DomainAttribute
 
-from .Product import ProductSQL, AttributeSQL
-
+from .Product import AttributeSQL, ProductSQL
 
 logger = logging.getLogger(__name__)
 

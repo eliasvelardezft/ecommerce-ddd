@@ -1,5 +1,7 @@
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 
 class CreateCategoryCommand(BaseModel):
     """Command to create a new category."""

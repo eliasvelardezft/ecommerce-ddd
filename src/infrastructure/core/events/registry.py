@@ -1,66 +1,118 @@
 import logging
+
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from infrastructure.core.events.integration_event_dispatcher import IntegrationEventDispatcher
 
 # Import internal domain events
-from domain.customers.events.CustomerRegisteredEvent import CustomerRegisteredEvent as InternalCustomerRegisteredEvent
-from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent as InternalOrderPlacedEvent
-from domain.orders.events.OrderProcessingEvent import OrderProcessingEvent as InternalOrderProcessingEvent
-from domain.orders.events.OrderCompletedEvent import OrderCompletedEvent as InternalOrderCompletedEvent
-from domain.orders.events.OrderCancelledEvent import OrderCancelledEvent as InternalOrderCancelledEvent
+from domain.customers.events.CustomerRegisteredEvent import (
+    CustomerRegisteredEvent as InternalCustomerRegisteredEvent,
+)
+from domain.customers.events.handlers.customer_registered_handlers import (
+    AuditNewCustomerOnCustomerRegisteredEvent,
+)
+from domain.customers.events.handlers.customer_registered_handlers import (
+    SendWelcomeEmailOnCustomerRegisteredEvent as CustomerSendWelcomeEmailHandler,
+)
 
-# Import public event contracts
-from integration_contracts.events.order.order_placed import OrderPlacedEventContractV1
 # from integration_contracts.events.customer_events import CustomerRegisteredEventContractV1 # Example for future use
-
 # Import internal handlers (same-BC)
 from domain.customers.events.handlers.customer_registered_handlers import (
     UpdateReadModelOnCustomerRegisteredEvent as CustomerUpdateReadModelHandler,
-    SendWelcomeEmailOnCustomerRegisteredEvent as CustomerSendWelcomeEmailHandler,
-    AuditNewCustomerOnCustomerRegisteredEvent
-)
-from domain.orders.events.handlers.order_placed_handlers import (
-    UpdateOrderOnOrderPlaced as OrderUpdateReadModelHandler
-)
-# Added imports for new handlers
-from domain.orders.events.handlers.order_processing_handlers import (
-    UpdateOrderOnOrderProcessing
-)
-from domain.orders.events.handlers.order_completed_handlers import (
-    UpdateOrderOnOrderCompleted
-)
-from domain.orders.events.handlers.order_cancelled_handlers import (
-    UpdateOrderOnOrderCancelled
 )
 
 # Import integration handlers (cross-BC, listen to public contracts)
 from domain.customers.events.handlers.integration.order_placed_handlers import (
-    UpdateCustomerOnOrderPlaced # Renamed for clarity and to expect a contract
+    UpdateCustomerOnOrderPlaced,  # Renamed for clarity and to expect a contract
+)
+from domain.orders.events.handlers.order_cancelled_handlers import (
+    UpdateOrderOnOrderCancelled,
+)
+from domain.orders.events.handlers.order_completed_handlers import (
+    UpdateOrderOnOrderCompleted,
+)
+from domain.orders.events.handlers.order_placed_handlers import (
+    UpdateOrderOnOrderPlaced as OrderUpdateReadModelHandler,
+)
+
+# Added imports for new handlers
+from domain.orders.events.handlers.order_processing_handlers import (
+    UpdateOrderOnOrderProcessing,
+)
+from domain.orders.events.OrderCancelledEvent import (
+    OrderCancelledEvent as InternalOrderCancelledEvent,
+)
+from domain.orders.events.OrderCompletedEvent import (
+    OrderCompletedEvent as InternalOrderCompletedEvent,
+)
+from domain.orders.events.OrderPlacedEvent import (
+    OrderPlacedEvent as InternalOrderPlacedEvent,
+)
+from domain.orders.events.OrderProcessingEvent import (
+    OrderProcessingEvent as InternalOrderProcessingEvent,
+)
+
+# Import internal Category domain events
+from domain.products.events.CategoryCreatedEvent import (
+    CategoryCreatedEvent as InternalCategoryCreatedEvent,
+)
+from domain.products.events.CategoryDetailsUpdatedEvent import (
+    CategoryDetailsUpdatedEvent as InternalCategoryDetailsUpdatedEvent,
+)
+from domain.products.events.CategoryParentChangedEvent import (
+    CategoryParentChangedEvent as InternalCategoryParentChangedEvent,
+)
+
+# Import internal Category handlers
+from domain.products.events.handlers.category_created_handlers import (
+    UpdateCategoryOnCategoryCreated,
+)
+from domain.products.events.handlers.category_details_updated_handlers import (
+    UpdateCategoryOnCategoryDetailsUpdated,
+)
+from domain.products.events.handlers.category_parent_changed_handlers import (
+    UpdateCategoryOnCategoryParentChanged,
+)
+from domain.products.events.handlers.product_activated_handlers import (
+    UpdateProductOnProductActivated,
+)
+
+# Import internal Product handlers
+from domain.products.events.handlers.product_created_handlers import (
+    UpdateProductOnProductCreated,
+)
+from domain.products.events.handlers.product_deactivated_handlers import (
+    UpdateProductOnProductDeactivated,
+)
+from domain.products.events.handlers.product_price_updated_handlers import (
+    UpdateProductOnProductPriceUpdated,
+)
+from domain.products.events.handlers.product_stock_updated_handlers import (
+    UpdateProductOnProductStockUpdated,
+)
+from domain.products.events.ProductActivatedEvent import (
+    ProductActivatedEvent as InternalProductActivatedEvent,
 )
 
 # Import internal Product domain events
-from domain.products.events.ProductCreatedEvent import ProductCreatedEvent as InternalProductCreatedEvent
-from domain.products.events.ProductStockUpdatedEvent import ProductStockUpdatedEvent as InternalProductStockUpdatedEvent
-from domain.products.events.ProductPriceUpdatedEvent import ProductPriceUpdatedEvent as InternalProductPriceUpdatedEvent
-from domain.products.events.ProductActivatedEvent import ProductActivatedEvent as InternalProductActivatedEvent
-from domain.products.events.ProductDeactivatedEvent import ProductDeactivatedEvent as InternalProductDeactivatedEvent
+from domain.products.events.ProductCreatedEvent import (
+    ProductCreatedEvent as InternalProductCreatedEvent,
+)
+from domain.products.events.ProductDeactivatedEvent import (
+    ProductDeactivatedEvent as InternalProductDeactivatedEvent,
+)
+from domain.products.events.ProductPriceUpdatedEvent import (
+    ProductPriceUpdatedEvent as InternalProductPriceUpdatedEvent,
+)
+from domain.products.events.ProductStockUpdatedEvent import (
+    ProductStockUpdatedEvent as InternalProductStockUpdatedEvent,
+)
+from infrastructure.core.events.integration_event_dispatcher import (
+    IntegrationEventDispatcher,
+)
 
-# Import internal Product handlers
-from domain.products.events.handlers.product_created_handlers import UpdateProductOnProductCreated
-from domain.products.events.handlers.product_stock_updated_handlers import UpdateProductOnProductStockUpdated
-from domain.products.events.handlers.product_price_updated_handlers import UpdateProductOnProductPriceUpdated
-from domain.products.events.handlers.product_activated_handlers import UpdateProductOnProductActivated
-from domain.products.events.handlers.product_deactivated_handlers import UpdateProductOnProductDeactivated
-
-# Import internal Category domain events
-from domain.products.events.CategoryCreatedEvent import CategoryCreatedEvent as InternalCategoryCreatedEvent
-from domain.products.events.CategoryDetailsUpdatedEvent import CategoryDetailsUpdatedEvent as InternalCategoryDetailsUpdatedEvent
-from domain.products.events.CategoryParentChangedEvent import CategoryParentChangedEvent as InternalCategoryParentChangedEvent
-
-# Import internal Category handlers
-from domain.products.events.handlers.category_created_handlers import UpdateCategoryOnCategoryCreated
-from domain.products.events.handlers.category_details_updated_handlers import UpdateCategoryOnCategoryDetailsUpdated
-from domain.products.events.handlers.category_parent_changed_handlers import UpdateCategoryOnCategoryParentChanged
+# Import public event contracts
+from integration_contracts.events.order.order_placed import (
+    OrderPlacedEventContractV1,
+)
 
 logger = logging.getLogger(__name__)
 

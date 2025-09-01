@@ -1,16 +1,16 @@
-from datetime import datetime, timezone
-from typing import List, Optional
 import random
 import string
+from datetime import datetime, timezone
 from decimal import Decimal
+from typing import List, Optional
 
 from domain.core.AggregateRoot import AggregateRoot
 from domain.core.value_objects.EntityId import EntityId
-from domain.core.value_objects.Money import Money # Core Money VO
+from domain.core.value_objects.Money import Money  # Core Money VO
+from domain.orders.events.OrderCancelledEvent import OrderCancelledEvent
+from domain.orders.events.OrderCompletedEvent import OrderCompletedEvent
 from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
 from domain.orders.events.OrderProcessingEvent import OrderProcessingEvent
-from domain.orders.events.OrderCompletedEvent import OrderCompletedEvent
-from domain.orders.events.OrderCancelledEvent import OrderCancelledEvent
 from domain.orders.exceptions import OrderValidationException
 from domain.orders.models.OrderItem import OrderItem
 from domain.orders.models.OrderStatus import OrderStatus

@@ -1,10 +1,10 @@
-from typing import Annotated
 from decimal import Decimal
+from typing import Annotated
 
 from pydantic import BaseModel, Field
 
 from domain.core.value_objects.EntityId import EntityId
-from domain.core.value_objects.Money import Money # Using the core Money VO
+from domain.core.value_objects.Money import Money  # Using the core Money VO
 
 
 class OrderItem(BaseModel):

@@ -1,6 +1,8 @@
 from typing import Optional
 from uuid import UUID
+
 from pydantic import BaseModel, Field
+
 
 class ListCategoriesQuery(BaseModel):
     """Query to list categories. 

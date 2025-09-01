@@ -1,9 +1,11 @@
+import logging
+
 from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO, OrderItemDTO
 from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
 from domain.orders.models.OrderStatus import OrderStatus
-from domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
-
-import logging
+from domain.orders.repositories.IOrderReadRepository import (
+    IOrderReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 

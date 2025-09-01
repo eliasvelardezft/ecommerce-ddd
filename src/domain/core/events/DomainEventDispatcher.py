@@ -1,5 +1,6 @@
 import logging
-from typing import Dict, List, Type, Any, Callable
+from typing import Any, Callable, Dict, List, Type
+
 from .DomainEvent import DomainEvent
 from .handlers.DomainEventHandler import DomainEventHandler
 

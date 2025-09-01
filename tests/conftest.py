@@ -5,17 +5,16 @@ This file contains shared fixtures and configuration that can be used
 across all test modules.
 """
 
-import pytest
 import asyncio
 from pathlib import Path
 from typing import AsyncGenerator
 
+import mongomock_motor
+import pytest
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-import mongomock_motor
 
 from infrastructure.core.persistence.base import BaseModel
-
 
 # Test Configuration
 TEST_SQLITE_URL = "sqlite+aiosqlite:///:memory:"

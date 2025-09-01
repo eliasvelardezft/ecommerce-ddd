@@ -3,7 +3,10 @@ import logging
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Category import Category
-from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
+from domain.products.repositories.ICategoryWriteRepository import (
+    ICategoryWriteRepository,
+)
+
 from .CreateCategoryCommand import CreateCategoryCommand
 
 logger = logging.getLogger(__name__)

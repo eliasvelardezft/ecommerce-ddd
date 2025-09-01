@@ -1,5 +1,7 @@
+from typing import Any, Dict
+
 from domain.core.events.DomainEvent import DomainEvent
-from typing import Dict, Any
+
 
 class CustomerRegisteredEvent(DomainEvent):
     def __init__(self, aggregate_id: str, name: str, email: str):

@@ -2,7 +2,10 @@ import logging
 from uuid import UUID
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
+from domain.products.repositories.IProductWriteRepository import (
+    IProductWriteRepository,
+)
+
 from .ActivateProductCommand import ActivateProductCommand
 
 logger = logging.getLogger(__name__)

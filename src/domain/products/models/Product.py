@@ -1,17 +1,22 @@
 from datetime import datetime
-from typing import List, Optional, Dict, Any
+from typing import Any, Dict, List, Optional
 
 from domain.core.AggregateRoot import AggregateRoot
 from domain.core.value_objects.EntityId import EntityId
 from domain.core.value_objects.Money import Money
-from domain.products.events.ProductCreatedEvent import ProductCreatedEvent
-from domain.products.events.ProductStockUpdatedEvent import ProductStockUpdatedEvent
-from domain.products.events.ProductPriceUpdatedEvent import ProductPriceUpdatedEvent
 from domain.products.events.ProductActivatedEvent import ProductActivatedEvent
-from domain.products.events.ProductDeactivatedEvent import ProductDeactivatedEvent
-from domain.products.value_objects.ImageUrl import ImageUrl
+from domain.products.events.ProductCreatedEvent import ProductCreatedEvent
+from domain.products.events.ProductDeactivatedEvent import (
+    ProductDeactivatedEvent,
+)
+from domain.products.events.ProductPriceUpdatedEvent import (
+    ProductPriceUpdatedEvent,
+)
+from domain.products.events.ProductStockUpdatedEvent import (
+    ProductStockUpdatedEvent,
+)
 from domain.products.value_objects.Attribute import Attribute
-
+from domain.products.value_objects.ImageUrl import ImageUrl
 
 
 class Product(AggregateRoot):

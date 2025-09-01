@@ -1,35 +1,69 @@
 import logging
 from uuid import UUID
-from fastapi import APIRouter, HTTPException, Depends
 
-from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
-from domain.products.repositories.IProductReadRepository import IProductReadRepository
-from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
-
-# Product Commands and Handlers
-from application.products.product.commands.CreateProductCommand import CreateProductCommand
-from application.products.product.commands.create_product_handler import CreateProductHandler
-from application.products.product.commands.UpdateProductPriceCommand import UpdateProductPriceCommand
-from application.products.product.commands.update_product_price_handler import UpdateProductPriceHandler
-from application.products.product.commands.UpdateProductStockCommand import UpdateProductStockCommand
-from application.products.product.commands.update_product_stock_handler import UpdateProductStockHandler
-from application.products.product.commands.ActivateProductCommand import ActivateProductCommand
-from application.products.product.commands.activate_product_handler import ActivateProductHandler
-from application.products.product.commands.DeactivateProductCommand import DeactivateProductCommand
-from application.products.product.commands.deactivate_product_handler import DeactivateProductHandler
-
-# Product Queries and Handlers
-from application.products.product.queries.GetProductByIdQuery import GetProductByIdQuery
-from application.products.product.queries.get_product_by_id_handler import GetProductByIdHandler
-from application.products.product.queries.ListActiveProductsQuery import ListActiveProductsQuery
-from application.products.product.queries.list_active_products_handler import ListActiveProductsHandler
+from fastapi import APIRouter, Depends, HTTPException
 
 from api.products.dependencies import (
-    get_product_write_repository,
-    get_products_event_dispatcher,
     get_category_write_repository,
     get_product_read_repository,
+    get_product_write_repository,
+    get_products_event_dispatcher,
+)
+from application.products.product.commands.activate_product_handler import (
+    ActivateProductHandler,
+)
+from application.products.product.commands.ActivateProductCommand import (
+    ActivateProductCommand,
+)
+from application.products.product.commands.create_product_handler import (
+    CreateProductHandler,
+)
+
+# Product Commands and Handlers
+from application.products.product.commands.CreateProductCommand import (
+    CreateProductCommand,
+)
+from application.products.product.commands.deactivate_product_handler import (
+    DeactivateProductHandler,
+)
+from application.products.product.commands.DeactivateProductCommand import (
+    DeactivateProductCommand,
+)
+from application.products.product.commands.update_product_price_handler import (
+    UpdateProductPriceHandler,
+)
+from application.products.product.commands.update_product_stock_handler import (
+    UpdateProductStockHandler,
+)
+from application.products.product.commands.UpdateProductPriceCommand import (
+    UpdateProductPriceCommand,
+)
+from application.products.product.commands.UpdateProductStockCommand import (
+    UpdateProductStockCommand,
+)
+from application.products.product.queries.get_product_by_id_handler import (
+    GetProductByIdHandler,
+)
+
+# Product Queries and Handlers
+from application.products.product.queries.GetProductByIdQuery import (
+    GetProductByIdQuery,
+)
+from application.products.product.queries.list_active_products_handler import (
+    ListActiveProductsHandler,
+)
+from application.products.product.queries.ListActiveProductsQuery import (
+    ListActiveProductsQuery,
+)
+from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.products.repositories.ICategoryWriteRepository import (
+    ICategoryWriteRepository,
+)
+from domain.products.repositories.IProductReadRepository import (
+    IProductReadRepository,
+)
+from domain.products.repositories.IProductWriteRepository import (
+    IProductWriteRepository,
 )
 
 logger = logging.getLogger(__name__)

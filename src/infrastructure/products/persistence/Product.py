@@ -1,8 +1,19 @@
-from sqlalchemy import Column, String, Text, Boolean, Integer, Numeric, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List, Optional
 
+from sqlalchemy import (
+    Boolean,
+    Column,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from infrastructure.core.persistence.base import BaseModel
+
 
 class ProductSQL(BaseModel):
     __tablename__ = "products"

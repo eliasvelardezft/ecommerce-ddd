@@ -1,12 +1,24 @@
 """Product-specific dependencies"""
 from fastapi import Depends
 
-from api.dependencies import get_db_session, get_mongo_db, get_domain_event_dispatcher
+from api.dependencies import (
+    get_db_session,
+    get_domain_event_dispatcher,
+    get_mongo_db,
+)
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from infrastructure.products.persistence.ProductWriteRepository import ProductWriteRepository
-from infrastructure.products.persistence.CategoryWriteRepository import CategoryWriteRepository
-from infrastructure.products.persistence.ProductReadRepository import ProductReadRepository
-from infrastructure.products.persistence.CategoryReadRepository import CategoryReadRepository
+from infrastructure.products.persistence.CategoryReadRepository import (
+    CategoryReadRepository,
+)
+from infrastructure.products.persistence.CategoryWriteRepository import (
+    CategoryWriteRepository,
+)
+from infrastructure.products.persistence.ProductReadRepository import (
+    ProductReadRepository,
+)
+from infrastructure.products.persistence.ProductWriteRepository import (
+    ProductWriteRepository,
+)
 
 
 def get_product_write_repository(session = Depends(get_db_session)):

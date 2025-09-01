@@ -1,13 +1,19 @@
 import logging
 from uuid import UUID
 
-from domain.core.events.DomainEventDispatcher import DomainEventDispatcher # Assuming we'll inject this for event publishing
-from domain.core.value_objects.Money import Money # Import Money VO
+from domain.core.events.DomainEventDispatcher import (
+    DomainEventDispatcher,  # Assuming we'll inject this for event publishing
+)
+from domain.core.value_objects.Money import Money  # Import Money VO
 from domain.products.models.Product import Product
-from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
-from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository # To validate category
-from .CreateProductCommand import CreateProductCommand
+from domain.products.repositories.ICategoryWriteRepository import (
+    ICategoryWriteRepository,  # To validate category
+)
+from domain.products.repositories.IProductWriteRepository import (
+    IProductWriteRepository,
+)
 
+from .CreateProductCommand import CreateProductCommand
 
 logger = logging.getLogger(__name__)
 

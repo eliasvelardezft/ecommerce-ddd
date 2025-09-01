@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from domain.products.dtos.CategoryDetailsDTO import CategoryDetailsDTO
 
+
 class ICategoryReadRepository(ABC):
     @abstractmethod
     async def get_category(self, category_id: str, recursive: bool = False) -> Optional[CategoryDetailsDTO]:

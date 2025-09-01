@@ -1,10 +1,12 @@
 import logging
 
-from domain.customers.Customer import Customer
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from .RegisterCustomerCommand import RegisterCustomerCommand
-from infrastructure.customers.persistence.CustomerWriteRepository import CustomerWriteRepository
+from domain.customers.Customer import Customer
+from infrastructure.customers.persistence.CustomerWriteRepository import (
+    CustomerWriteRepository,
+)
 
+from .RegisterCustomerCommand import RegisterCustomerCommand
 
 logger = logging.getLogger(__name__)
 

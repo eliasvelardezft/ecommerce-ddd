@@ -1,5 +1,6 @@
 from abc import ABC
 from typing import List, Optional
+
 from domain.core.value_objects.EntityId import EntityId
 from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
 

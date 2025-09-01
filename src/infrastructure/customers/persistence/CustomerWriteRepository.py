@@ -1,11 +1,16 @@
-from typing import Optional
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from domain.customers.Customer import Customer
-from domain.customers.repositories.ICustomerWriteRepository import ICustomerWriteRepository
-from domain.core.value_objects.EntityId import EntityId
-from .Customer import CustomerSQL
 import logging
+from typing import Optional
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from domain.core.value_objects.EntityId import EntityId
+from domain.customers.Customer import Customer
+from domain.customers.repositories.ICustomerWriteRepository import (
+    ICustomerWriteRepository,
+)
+
+from .Customer import CustomerSQL
 
 logger = logging.getLogger(__name__)
 

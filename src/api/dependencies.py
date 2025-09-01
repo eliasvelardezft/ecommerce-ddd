@@ -1,19 +1,26 @@
 """Core/infrastructure dependencies"""
-from fastapi import Request, Depends
-from motor.motor_asyncio import AsyncIOMotorClient
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from infrastructure.core.settings import settings
 from typing import AsyncGenerator
+
+from fastapi import Depends, Request
+from motor.motor_asyncio import AsyncIOMotorClient
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.core.events.EventStore import EventStore
-from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
-from infrastructure.core.events.integration_event_dispatcher import IntegrationEventDispatcher
-from infrastructure.core.events.bootstrap import create_domain_event_dispatcher, create_integration_event_dispatcher
+from infrastructure.core.events.bootstrap import (
+    create_domain_event_dispatcher,
+    create_integration_event_dispatcher,
+)
+from infrastructure.core.events.integration_event_dispatcher import (
+    IntegrationEventDispatcher,
+)
 from infrastructure.core.events.registry import register_all_event_handlers
 from infrastructure.core.persistence.base import BaseModel
-
+from infrastructure.core.settings import settings
+from infrastructure.orders.events.OrderIntegrationPublisher import (
+    OrderIntegrationEventPublisher,
+)
 
 # MongoDB client for read model
 mongo_client = AsyncIOMotorClient(
@@ -54,12 +61,20 @@ def get_mongo_db():
 # Event System Dependencies
 def get_domain_event_dispatcher(mongo_db = Depends(get_mongo_db)) -> DomainEventDispatcher:
     """Create a fresh DomainEventDispatcher with all handlers registered."""
-    from infrastructure.customers.services.EmailService import EmailService
+    from infrastructure.customers.persistence.CustomerReadRepository import (
+        CustomerReadRepository,
+    )
     from infrastructure.customers.services.AuditService import AuditService
-    from infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
-    from infrastructure.orders.persistence.OrderReadRepository import OrderReadRepository
-    from infrastructure.products.persistence.ProductReadRepository import ProductReadRepository
-    from infrastructure.products.persistence.CategoryReadRepository import CategoryReadRepository
+    from infrastructure.customers.services.EmailService import EmailService
+    from infrastructure.orders.persistence.OrderReadRepository import (
+        OrderReadRepository,
+    )
+    from infrastructure.products.persistence.CategoryReadRepository import (
+        CategoryReadRepository,
+    )
+    from infrastructure.products.persistence.ProductReadRepository import (
+        ProductReadRepository,
+    )
     
     # Create event handler dependencies using injected mongo_db
     event_handler_dependencies = {

@@ -1,7 +1,11 @@
 # src/infrastructure/core/events/integration_event_dispatcher.py
 import logging
-from typing import Dict, List, Type, Any, Callable
-from pydantic import BaseModel as PydanticBaseModel # Integration events are Pydantic models
+from typing import Any, Callable, Dict, List, Type
+
+from pydantic import (
+    BaseModel as PydanticBaseModel,  # Integration events are Pydantic models
+)
+
 # If you have a base IntegrationEventHandler class, you can import and use it
 
 logger = logging.getLogger(__name__)

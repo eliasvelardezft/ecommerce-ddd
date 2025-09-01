@@ -1,11 +1,16 @@
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 from domain.core.AggregateRoot import AggregateRoot
 from domain.core.value_objects.EntityId import EntityId
 from domain.products.events.CategoryCreatedEvent import CategoryCreatedEvent
-from domain.products.events.CategoryDetailsUpdatedEvent import CategoryDetailsUpdatedEvent
-from domain.products.events.CategoryParentChangedEvent import CategoryParentChangedEvent
+from domain.products.events.CategoryDetailsUpdatedEvent import (
+    CategoryDetailsUpdatedEvent,
+)
+from domain.products.events.CategoryParentChangedEvent import (
+    CategoryParentChangedEvent,
+)
+
 # from domain.products.exceptions import CategoryDomainException # Placeholder for future custom exceptions
 
 class Category(AggregateRoot):

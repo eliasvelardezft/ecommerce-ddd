@@ -2,6 +2,7 @@ from datetime import datetime
 
 from domain.core.AggregateRoot import AggregateRoot
 from domain.core.value_objects.EntityId import EntityId
+
 from .events.CustomerRegisteredEvent import CustomerRegisteredEvent
 
 

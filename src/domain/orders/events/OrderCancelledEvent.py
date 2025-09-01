@@ -1,6 +1,6 @@
-from typing import Dict, Any, Optional
-from uuid import UUID
 from datetime import datetime
+from typing import Any, Dict, Optional
+from uuid import UUID
 
 from domain.core.events.DomainEvent import DomainEvent
 from domain.core.value_objects.Money import Money

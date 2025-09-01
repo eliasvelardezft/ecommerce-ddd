@@ -1,5 +1,7 @@
 from uuid import UUID
+
 from domain.core.events.DomainEvent import DomainEvent
+
 
 class ProductStockUpdatedEvent(DomainEvent):
     """Event raised when the stock quantity of a product is updated."""

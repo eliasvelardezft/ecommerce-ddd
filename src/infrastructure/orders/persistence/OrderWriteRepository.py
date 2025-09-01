@@ -2,15 +2,16 @@ import logging
 from typing import Optional
 from uuid import uuid4
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from domain.core.value_objects.EntityId import EntityId
-from domain.orders.models.Order import Order
-from domain.orders.models.Order import OrderItem
-from domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
-from .Order import OrderSQL, OrderItemSQL
+from domain.orders.models.Order import Order, OrderItem
+from domain.orders.repositories.IOrderWriteRepository import (
+    IOrderWriteRepository,
+)
 
+from .Order import OrderItemSQL, OrderSQL
 
 logger = logging.getLogger(__name__)
 

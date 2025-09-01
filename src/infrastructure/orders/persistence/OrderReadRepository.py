@@ -1,10 +1,12 @@
 import logging
 from typing import List, Optional
 
-from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
-from domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
+from domain.orders.repositories.IOrderReadRepository import (
+    IOrderReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 

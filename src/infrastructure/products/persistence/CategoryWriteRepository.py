@@ -1,12 +1,15 @@
 import logging
 from typing import Optional
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Category import Category as DomainCategory
-from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
+from domain.products.repositories.ICategoryWriteRepository import (
+    ICategoryWriteRepository,
+)
+
 from .Category import CategorySQL
 
 logger = logging.getLogger(__name__)

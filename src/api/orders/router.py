@@ -1,25 +1,34 @@
 import logging
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from api.dependencies import (
     get_domain_event_dispatcher,
-    get_order_integration_event_publisher
+    get_order_integration_event_publisher,
 )
 from api.orders.dependencies import (
-    get_order_write_repository,
     get_order_read_repository,
+    get_order_write_repository,
 )
 from application.orders.commands.PlaceOrderCommand import PlaceOrderCommand
 from application.orders.commands.PlaceOrderHandler import PlaceOrderHandler
-from application.orders.queries.GetOrderDetailsQuery import GetOrderDetailsQuery
-from application.orders.queries.GetOrderDetailsHandler import GetOrderDetailsHandler
+from application.orders.queries.GetOrderDetailsHandler import (
+    GetOrderDetailsHandler,
+)
+from application.orders.queries.GetOrderDetailsQuery import (
+    GetOrderDetailsQuery,
+)
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from infrastructure.orders.events.OrderIntegrationPublisher import OrderIntegrationEventPublisher
-from domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
-from domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
-
+from domain.orders.repositories.IOrderReadRepository import (
+    IOrderReadRepository,
+)
+from domain.orders.repositories.IOrderWriteRepository import (
+    IOrderWriteRepository,
+)
+from infrastructure.orders.events.OrderIntegrationPublisher import (
+    OrderIntegrationEventPublisher,
+)
 
 logger = logging.getLogger(__name__)
 

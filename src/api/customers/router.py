@@ -1,20 +1,33 @@
 import logging
-from domain.core.value_objects.EntityId import EntityId
-from fastapi import APIRouter, HTTPException, Depends
 
-from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from domain.customers.repositories.ICustomerWriteRepository import ICustomerWriteRepository
-from domain.customers.repositories.ICustomerReadRepository import ICustomerReadRepository
-from application.customers.commands.RegisterCustomerCommand import RegisterCustomerCommand
-from application.customers.commands.RegisterCustomerHandler import RegisterCustomerHandler
-from .dependencies import (
-    get_customer_write_repository,
-    get_customer_read_repository,
-)
+from fastapi import APIRouter, Depends, HTTPException
+
 from api.dependencies import get_domain_event_dispatcher
-from application.customers.queries.GetCustomerProfileQuery import GetCustomerProfileQuery
-from application.customers.queries.GetCustomerProfileHandler import GetCustomerProfileHandler
+from application.customers.commands.RegisterCustomerCommand import (
+    RegisterCustomerCommand,
+)
+from application.customers.commands.RegisterCustomerHandler import (
+    RegisterCustomerHandler,
+)
+from application.customers.queries.GetCustomerProfileHandler import (
+    GetCustomerProfileHandler,
+)
+from application.customers.queries.GetCustomerProfileQuery import (
+    GetCustomerProfileQuery,
+)
+from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.core.value_objects.EntityId import EntityId
+from domain.customers.repositories.ICustomerReadRepository import (
+    ICustomerReadRepository,
+)
+from domain.customers.repositories.ICustomerWriteRepository import (
+    ICustomerWriteRepository,
+)
 
+from .dependencies import (
+    get_customer_read_repository,
+    get_customer_write_repository,
+)
 
 logger = logging.getLogger(__name__)
 

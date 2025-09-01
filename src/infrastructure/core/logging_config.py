@@ -1,9 +1,10 @@
 import logging
 import re
-from rich.logging import RichHandler
-from rich.console import Console
-from infrastructure.core.settings import settings
 
+from rich.console import Console
+from rich.logging import RichHandler
+
+from infrastructure.core.settings import settings
 
 # Each key (e.g., "API", "DOMAIN_MODELS") will become part of a unique tag like "[LOG_STYLE:API]"
 # The patterns are regex strings to match logger names (e.g., record.name)

@@ -17,18 +17,18 @@ Testing Strategy:
 - Focus on behavior, not implementation details
 """
 
-import pytest
 import asyncio
 from decimal import Decimal
-from uuid import UUID, uuid4
-from typing import AsyncGenerator, Dict, Any
+from typing import Any, AsyncGenerator, Dict
 from unittest.mock import Mock, patch
+from uuid import UUID, uuid4
 
+import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from main import app
 from api.dependencies import get_db_session, get_mongo_db
+from main import app
 
 
 @pytest.fixture

@@ -4,6 +4,7 @@ from typing import Optional
 from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Category import Category
 
+
 class ICategoryWriteRepository(ABC):
     @abstractmethod
     async def save(self, category: Category) -> None:

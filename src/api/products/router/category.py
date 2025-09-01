@@ -1,29 +1,53 @@
 import logging
-from domain.core.value_objects.EntityId import EntityId
-from fastapi import APIRouter, HTTPException, Depends
 
-from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
-from domain.products.repositories.ICategoryReadRepository import ICategoryReadRepository
-
-# Category Commands and Handlers
-from application.products.category.commands.CreateCategoryCommand import CreateCategoryCommand
-from application.products.category.commands.create_category_handler import CreateCategoryHandler
-from application.products.category.commands.UpdateCategoryDetailsCommand import UpdateCategoryDetailsCommand
-from application.products.category.commands.update_category_details_handler import UpdateCategoryDetailsHandler
-from application.products.category.commands.ChangeCategoryParentCommand import ChangeCategoryParentCommand
-from application.products.category.commands.change_category_parent_handler import ChangeCategoryParentHandler
-
-# Category Queries and Handlers
-from application.products.category.queries.GetCategoryDetailsQuery import GetCategoryDetailsQuery
-from application.products.category.queries.get_category_details_handler import GetCategoryDetailsHandler
-from application.products.category.queries.ListCategoriesQuery import ListCategoriesQuery
-from application.products.category.queries.list_categories_handler import ListCategoriesHandler
+from fastapi import APIRouter, Depends, HTTPException
 
 from api.products.dependencies import (
-    get_category_write_repository,
     get_category_read_repository,
+    get_category_write_repository,
     get_products_event_dispatcher,
+)
+from application.products.category.commands.change_category_parent_handler import (
+    ChangeCategoryParentHandler,
+)
+from application.products.category.commands.ChangeCategoryParentCommand import (
+    ChangeCategoryParentCommand,
+)
+from application.products.category.commands.create_category_handler import (
+    CreateCategoryHandler,
+)
+
+# Category Commands and Handlers
+from application.products.category.commands.CreateCategoryCommand import (
+    CreateCategoryCommand,
+)
+from application.products.category.commands.update_category_details_handler import (
+    UpdateCategoryDetailsHandler,
+)
+from application.products.category.commands.UpdateCategoryDetailsCommand import (
+    UpdateCategoryDetailsCommand,
+)
+from application.products.category.queries.get_category_details_handler import (
+    GetCategoryDetailsHandler,
+)
+
+# Category Queries and Handlers
+from application.products.category.queries.GetCategoryDetailsQuery import (
+    GetCategoryDetailsQuery,
+)
+from application.products.category.queries.list_categories_handler import (
+    ListCategoriesHandler,
+)
+from application.products.category.queries.ListCategoriesQuery import (
+    ListCategoriesQuery,
+)
+from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.core.value_objects.EntityId import EntityId
+from domain.products.repositories.ICategoryReadRepository import (
+    ICategoryReadRepository,
+)
+from domain.products.repositories.ICategoryWriteRepository import (
+    ICategoryWriteRepository,
 )
 
 logger = logging.getLogger(__name__)

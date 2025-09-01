@@ -1,9 +1,12 @@
 import logging
 from uuid import UUID
 
-from domain.products.events.CategoryParentChangedEvent import CategoryParentChangedEvent
-from domain.products.repositories.ICategoryReadRepository import ICategoryReadRepository
-
+from domain.products.events.CategoryParentChangedEvent import (
+    CategoryParentChangedEvent,
+)
+from domain.products.repositories.ICategoryReadRepository import (
+    ICategoryReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 

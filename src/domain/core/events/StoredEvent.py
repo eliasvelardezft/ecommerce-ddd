@@ -1,6 +1,7 @@
+import json
 from datetime import datetime
 from uuid import UUID, uuid4
-import json
+
 from fastapi.encoders import jsonable_encoder
 
 from domain.core.events.DomainEvent import DomainEvent
