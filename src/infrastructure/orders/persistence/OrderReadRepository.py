@@ -30,7 +30,7 @@ class OrderReadRepository(IOrderReadRepository):
         logger.info(f"Order details found for id: {id}")
         return OrderDetailsDTO(**doc)
 
-    async def get_all_detailss(self) -> List[OrderDetailsDTO]:
+    async def get_all_detailss(self) -> list[OrderDetailsDTO]:
         """Get all order detailss"""
         cursor = self._collection.find()
         return [OrderDetailsDTO(**doc) async for doc in cursor]

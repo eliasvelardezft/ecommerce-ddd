@@ -16,5 +16,5 @@ class CreateProductCommand(BaseModel):
     stock_quantity: int = Field(..., ge=0, description="Available stock quantity.")
     category_id: str = Field(..., description="ID of the category this product belongs to.")
     image_url: Optional[ImageUrl] = Field(None, description="Image URL for the product.")
-    attributes: Optional[List[Attribute]] = Field(None, description="List of product attributes.")
+    attributes: Optional[list[Attribute]] = Field(None, description="List of product attributes.")
     active: bool = Field(True, description="Whether the product is initially active.")

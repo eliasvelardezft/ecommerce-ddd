@@ -21,7 +21,7 @@ class Order(AggregateRoot):
     id: EntityId
     customer_id: EntityId
     order_number: str
-    items: List[OrderItem]
+    items: list[OrderItem]
     shipping_details: ShippingDetails
     currency: str # e.g., "USD", "EUR"
     shipping_cost: Money
@@ -45,7 +45,7 @@ class Order(AggregateRoot):
         self,
         _id: EntityId,
         customer_id: EntityId,
-        items: List[OrderItem], # List of Pydantic OrderItem models
+        items: list[OrderItem], # List of Pydantic OrderItem models
         shipping_details: ShippingDetails,
         currency: str = "USD",
         order_number: Optional[str] = None,
@@ -137,7 +137,7 @@ class Order(AggregateRoot):
     def create(
         cls,
         customer_id: EntityId,
-        items_data: List[dict], # Expect list of dicts for OrderItems
+        items_data: list[dict], # Expect list of dicts for OrderItems
         shipping_details_data: dict, # Expect dict for ShippingDetails
         currency: str = "USD",
         order_id: Optional[EntityId] = None,

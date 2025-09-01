@@ -17,7 +17,7 @@ class OrderItemDTO(BaseModel):
 class OrderDetailsDTO(BaseModel):
     id: str
     customer_id: str
-    items: List[OrderItemDTO]
+    items: list[OrderItemDTO]
     items_count: int
     total_amount: float
     created_at: datetime

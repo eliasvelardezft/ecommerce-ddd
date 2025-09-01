@@ -14,7 +14,7 @@ class ListActiveProductsHandler:
     def __init__(self, repository: IProductReadRepository):
         self._repository = repository
 
-    async def handle(self, query: ListActiveProductsQuery) -> List[ProductDetailsDTO]:
+    async def handle(self, query: ListActiveProductsQuery) -> list[ProductDetailsDTO]:
         logger.info("Handling ListActiveProductsQuery")
         
         active_products = await self._repository.list_active_products(query.category_id)

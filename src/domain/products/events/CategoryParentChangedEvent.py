@@ -23,7 +23,7 @@ class CategoryParentChangedEvent(DomainEvent):
         self.prev_parent_category_id = prev_parent_category_id
         self.updated_at = updated_at
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "aggregate_id": self.aggregate_id,
             "new_parent_category_id": str(self.new_parent_category_id) if self.new_parent_category_id else None,

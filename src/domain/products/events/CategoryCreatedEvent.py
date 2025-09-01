@@ -26,7 +26,7 @@ class CategoryCreatedEvent(DomainEvent):
         self.parent_category_id = parent_category_id
         self.created_at = created_at
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "aggregate_id": self.aggregate_id,
             "name": self.name,

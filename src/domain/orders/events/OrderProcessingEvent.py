@@ -24,7 +24,7 @@ class OrderProcessingEvent(DomainEvent):
         self.total_amount: float = amount.amount
         self.currency: str = amount.currency
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()
         base_dict.update({
             "order_number": self.order_number,

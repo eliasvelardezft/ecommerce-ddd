@@ -33,7 +33,7 @@ class ProductReadRepository(IProductReadRepository):
             doc["id"] = str(doc["_id"])
         return ProductDetailsDTO(**doc)
 
-    async def list_all_products(self, category_id: Optional[str] = None) -> List[ProductDetailsDTO]:
+    async def list_all_products(self, category_id: Optional[str] = None) -> list[ProductDetailsDTO]:
         query_filter = {}
         if category_id:
             query_filter["category_id"] = category_id  # category_id is already a string
@@ -47,7 +47,7 @@ class ProductReadRepository(IProductReadRepository):
             products.append(ProductDetailsDTO(**doc))
         return products
 
-    async def list_active_products(self, category_id: Optional[str] = None) -> List[ProductDetailsDTO]:
+    async def list_active_products(self, category_id: Optional[str] = None) -> list[ProductDetailsDTO]:
         """List active products, optionally filtered by category."""
         query_filter = {"active": True}
         if category_id:

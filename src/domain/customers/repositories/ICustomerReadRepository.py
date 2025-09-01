@@ -12,7 +12,7 @@ class ICustomerReadRepository(ABC):
     async def get_customer_profile_by_id(self, id: EntityId) -> Optional[CustomerProfileDTO]:
         raise NotImplementedError
 
-    async def get_all_customer_profiles(self) -> List[CustomerProfileDTO]:
+    async def get_all_customer_profiles(self) -> list[CustomerProfileDTO]:
         raise NotImplementedError
 
     async def update_read_model(self, customer_profile: CustomerProfileDTO) -> None:

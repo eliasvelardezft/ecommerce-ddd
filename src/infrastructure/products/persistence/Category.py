@@ -17,4 +17,4 @@ class CategorySQL(BaseModel):
     parent = relationship("CategorySQL", remote_side=[id], back_populates="children", lazy="joined")
     children = relationship("CategorySQL", back_populates="parent", cascade="all, delete-orphan", lazy="joined")
 
-    products: Mapped[List["ProductSQL"]] = relationship(back_populates="category")
+    products: Mapped[list["ProductSQL"]] = relationship(back_populates="category")

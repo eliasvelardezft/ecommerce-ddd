@@ -11,12 +11,12 @@ class IProductReadRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def list_all_products(self, category_id: Optional[str] = None) -> List[ProductDetailsDTO]:
+    async def list_all_products(self, category_id: Optional[str] = None) -> list[ProductDetailsDTO]:
         """Lists all products, regardless of status."""
         raise NotImplementedError
 
     @abstractmethod
-    async def list_active_products(self, category_id: Optional[str] = None) -> List[ProductDetailsDTO]:
+    async def list_active_products(self, category_id: Optional[str] = None) -> list[ProductDetailsDTO]:
         """Lists all active products."""
         raise NotImplementedError
 

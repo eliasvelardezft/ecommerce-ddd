@@ -14,7 +14,7 @@ class ProductCreatedEvent(DomainEvent):
     price_amount: Decimal
     price_currency: str
     category_id: UUID
-    attributes: List[dict]
+    attributes: list[dict]
     image_url: Optional[str]
     image_alt_text: Optional[str]
 
@@ -29,7 +29,7 @@ class ProductCreatedEvent(DomainEvent):
         price_amount: Decimal,
         price_currency: str,
         category_id: UUID,
-        attributes: List[dict],
+        attributes: list[dict],
         image_url: Optional[str] = None,
         image_alt_text: Optional[str] = None,
     ):

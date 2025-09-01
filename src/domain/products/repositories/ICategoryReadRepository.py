@@ -14,17 +14,17 @@ class ICategoryReadRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def list_categories(self) -> List[CategoryDetailsDTO]:
+    async def list_categories(self) -> list[CategoryDetailsDTO]:
         """Lists all categories."""
         raise NotImplementedError
 
     @abstractmethod
-    async def list_children(self, parent_category_id: str) -> List[CategoryDetailsDTO]:
+    async def list_children(self, parent_category_id: str) -> list[CategoryDetailsDTO]:
         """Lists direct children of a given parent category."""
         raise NotImplementedError
 
     @abstractmethod
-    async def list_top_level(self) -> List[CategoryDetailsDTO]:
+    async def list_top_level(self) -> list[CategoryDetailsDTO]:
         """Lists all top-level categories (those without a parent)."""
         raise NotImplementedError
     

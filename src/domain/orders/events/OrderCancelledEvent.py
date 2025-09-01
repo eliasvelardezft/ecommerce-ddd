@@ -26,7 +26,7 @@ class OrderCancelledEvent(DomainEvent):
         self.currency: str = amount.currency
         self.cancellation_reason: Optional[str] = cancellation_reason
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()
         base_dict.update({
             "order_number": self.order_number,

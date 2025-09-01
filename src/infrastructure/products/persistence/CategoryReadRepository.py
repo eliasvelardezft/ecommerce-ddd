@@ -69,7 +69,7 @@ class CategoryReadRepository(ICategoryReadRepository):
         # The `recursive` flag here is more of a hint to the caller or a future optimization point for the query itself.
         return await self._doc_to_dto(doc)
 
-    async def list_categories(self) -> List[CategoryDetailsDTO]:
+    async def list_categories(self) -> list[CategoryDetailsDTO]:
         logger.debug("[ReadRepo] Listing all category_details")
         cursor = self._collection.find()
         categories = []
@@ -79,7 +79,7 @@ class CategoryReadRepository(ICategoryReadRepository):
                 categories.append(dto)
         return categories
 
-    async def list_children(self, parent_category_id: str) -> List[CategoryDetailsDTO]:
+    async def list_children(self, parent_category_id: str) -> list[CategoryDetailsDTO]:
         logger.debug(f"[ReadRepo] Listing children for parent ID: {parent_category_id}")
         # This assumes children are stored nested or queried by parent_category_id field
         cursor = self._collection.find({"parent_category_id": parent_category_id})
@@ -90,7 +90,7 @@ class CategoryReadRepository(ICategoryReadRepository):
                 categories.append(dto)
         return categories
 
-    async def list_top_level(self) -> List[CategoryDetailsDTO]:
+    async def list_top_level(self) -> list[CategoryDetailsDTO]:
         logger.debug("[ReadRepo] Listing top-level category_details")
         cursor = self._collection.find({"parent_category_id": None})
         categories = []

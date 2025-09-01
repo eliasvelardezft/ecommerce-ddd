@@ -28,7 +28,7 @@ class Product(AggregateRoot):
     stock_quantity: int
     price: Money
     category_id: EntityId
-    attributes: List[Attribute]
+    attributes: list[Attribute]
     image_url: Optional[ImageUrl]
     created_at: datetime
     updated_at: datetime
@@ -43,7 +43,7 @@ class Product(AggregateRoot):
         description: Optional[str] = None,
         active: bool = True,
         stock_quantity: int = 0,
-        attributes: Optional[List[Attribute]] = None,
+        attributes: Optional[list[Attribute]] = None,
         image_url: Optional[ImageUrl] = None,
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None,
@@ -72,7 +72,7 @@ class Product(AggregateRoot):
         active: bool = True,
         stock_quantity: int = 0,
         image_url: Optional[ImageUrl] = None,
-        attributes: Optional[List[Attribute]] = None,
+        attributes: Optional[list[Attribute]] = None,
         description: Optional[str] = None,
     ) -> 'Product':
         _id = EntityId.generate()

@@ -13,10 +13,10 @@ class DomainEventDispatcher:
         # Registry: InternalEventType -> List[HandlerInstance]
         # Using Type[Any] for key if events don't all share a very specific common base other than object
         # Using Any for handler type if no common base handler class
-        self._handlers: Dict[Type[DomainEvent], List[Any]] = {}
+        self._handlers: dict[type[DomainEvent], list[Any]] = {}
         logger.info("[DomainEventDispatcher] Initialized for internal domain events.")
 
-    def register_handler(self, event_type: Type[DomainEvent], handler: Any) -> None:
+    def register_handler(self, event_type: type[DomainEvent], handler: Any) -> None:
         """Register a handler for a specific internal domain event type."""
         if not issubclass(event_type, DomainEvent):
             logger.error(f"Attempted to register handler for non-DomainEvent type: {event_type.__name__}")
@@ -67,7 +67,7 @@ class DomainEventDispatcher:
         if event_type not in self._handlers and (event_type is not DomainEvent or DomainEvent not in self._handlers):
             logger.debug(f"[DomainEventDispatcher] No specific or base handlers registered for internal event '{event_type.__name__}'")
 
-    async def dispatch_events(self, events: List[DomainEvent]) -> None:
+    async def dispatch_events(self, events: list[DomainEvent]) -> None:
         """Dispatch a list of domain events to all registered handlers."""
         logger.info(f"[DomainEventDispatcher] Dispatching {len(events)} domain events")
         for event in events:

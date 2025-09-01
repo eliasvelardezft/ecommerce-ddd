@@ -34,7 +34,7 @@ class ProductSQL(BaseModel):
     image_url_url: Mapped[Optional[str]] = mapped_column(String(2048), nullable=True)
     image_alt_text: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
-    attributes: Mapped[List["AttributeSQL"]] = relationship(
+    attributes: Mapped[list["AttributeSQL"]] = relationship(
         "AttributeSQL",
         back_populates="product",
         cascade="all, delete-orphan",

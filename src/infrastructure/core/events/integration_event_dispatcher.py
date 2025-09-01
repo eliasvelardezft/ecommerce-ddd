@@ -18,10 +18,10 @@ class IntegrationEventDispatcher:
     """
     def __init__(self):
         # Registry: PublicContractDTOType -> List[HandlerInstance]
-        self._handlers: Dict[Type[PydanticBaseModel], List[Any]] = {}
+        self._handlers: dict[type[PydanticBaseModel], list[Any]] = {}
         logger.info("[IntegrationEventDispatcher] Initialized for public integration event contracts.")
 
-    def register_handler(self, contract_event_type: Type[PydanticBaseModel], handler: Any) -> None:
+    def register_handler(self, contract_event_type: type[PydanticBaseModel], handler: Any) -> None:
         """Register a handler for a specific public integration event contract type."""
         if not issubclass(contract_event_type, PydanticBaseModel):
             logger.error(

@@ -14,9 +14,9 @@ class OrderPlacedEvent(DomainEvent):
         aggregate_id: UUID,
         customer_id: UUID,
         order_number: str,
-        items_data: List[Dict[str, Any]],
+        items_data: list[dict[str, Any]],
         amount: Money,
-        shipping_details_data: Dict[str, Any],
+        shipping_details_data: dict[str, Any],
         status: str,
     ):
         super().__init__(aggregate_id=str(aggregate_id))
@@ -25,14 +25,14 @@ class OrderPlacedEvent(DomainEvent):
         self.items_data: list[dict[str, Any]] = items_data
         self.total_amount: float = amount.amount
         self.currency: str = amount.currency
-        self.shipping_details_data: Dict[str, Any] = shipping_details_data
+        self.shipping_details_data: dict[str, Any] = shipping_details_data
         self.status: str = status
 
     @property
     def items_count(self) -> int:
         return len(self.items_data)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()
         base_dict.update({
             "customer_id": str(self.customer_id),

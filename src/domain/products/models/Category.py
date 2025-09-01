@@ -76,7 +76,7 @@ class Category(AggregateRoot):
         name: Optional[str] = None,
         description: Optional[str] = None,
     ) -> None:
-        changes: Dict[str, Any] = {}
+        changes: dict[str, Any] = {}
         if name is not None and self.name != name:
             if not name.strip():
                 raise ValueError("Category name cannot be empty when updating.") # Replace with CategoryDomainException

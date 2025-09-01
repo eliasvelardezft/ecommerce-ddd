@@ -11,5 +11,5 @@ class CustomerProfileDTO(BaseModel):
     created_at: datetime
     total_orders: int
     last_order_date: Optional[datetime] = None
-    favorite_products: List[str] = []
+    favorite_products: list[str] = []
     loyalty_tier: str = "Bronze"

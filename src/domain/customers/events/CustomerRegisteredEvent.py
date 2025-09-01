@@ -9,7 +9,7 @@ class CustomerRegisteredEvent(DomainEvent):
         self.name = name
         self.email = email
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()
         base_dict.update({
             "name": self.name,

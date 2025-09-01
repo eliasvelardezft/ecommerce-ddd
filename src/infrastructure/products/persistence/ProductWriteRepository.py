@@ -159,7 +159,7 @@ class ProductWriteRepository(IProductWriteRepository):
             # Ensure HttpUrl conversion if DomainImageUrl expects it
             domain_image_url = DomainImageUrl(url=str(db_product.image_url_url), alt_text=db_product.image_alt_text)
             
-        domain_attributes: List[DomainAttribute] = []
+        domain_attributes: list[DomainAttribute] = []
         if db_product.attributes: # Check if attributes were loaded and exist
             for attr_sql in db_product.attributes:
                 domain_attributes.append(DomainAttribute(name=attr_sql.name, value=attr_sql.value))
