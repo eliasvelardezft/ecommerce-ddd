@@ -31,7 +31,6 @@ target_metadata = BaseModel.metadata
 
 # Set the database URL dynamically from our settings
 database_url = settings.postgres_sync_url
-print(f"DEBUG: Using database URL: {database_url}")
 config.set_main_option("sqlalchemy.url", database_url)
 
 # other values from the config, defined by the needs of env.py,

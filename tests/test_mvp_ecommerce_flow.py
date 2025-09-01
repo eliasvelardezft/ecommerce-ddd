@@ -19,6 +19,7 @@ Testing Strategy:
 
 import asyncio
 from decimal import Decimal
+import logging
 from typing import Any, AsyncGenerator, Dict
 from unittest.mock import Mock, patch
 from uuid import UUID, uuid4
@@ -29,6 +30,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies import get_db_session, get_mongo_db
 from main import app
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -91,9 +94,9 @@ class TestMVPECommerceFlow:
         
         # Debug: Print response details if not 200
         if response.status_code != 200:
-            print(f"❌ Registration failed with status {response.status_code}")
-            print(f"Response content: {response.text}")
-            print(f"Request data: {sample_customer_data}")
+            logger.error(f"❌ Registration failed with status {response.status_code}")
+            logger.error(f"Response content: {response.text}")
+            logger.error(f"Request data: {sample_customer_data}")
         
         assert response.status_code == 200
         

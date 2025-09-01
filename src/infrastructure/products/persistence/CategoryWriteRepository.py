@@ -58,8 +58,6 @@ class CategoryWriteRepository(ICategoryWriteRepository):
             await self._session.commit()
 
             category = await self.get_by_id(category.id)
-            print(category)
-
 
             logger.info(f"Successfully saved (upserted) category {category.id}.")
         except Exception as e:

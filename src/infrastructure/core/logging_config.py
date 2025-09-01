@@ -87,7 +87,7 @@ class RegexStyleTagFilter(logging.Filter):
                 try:
                     self.compiled_patterns.append((re.compile(pattern_str), style_to_apply))
                 except re.error as e:
-                    print(f"Error compiling regex '{pattern_str}' for {layer_key}: {e}")
+                    logging.getLogger(__name__).error(f"Error compiling regex '{pattern_str}' for {layer_key}: {e}")
 
     def filter(self, record):
         if not hasattr(record, "original_msg"):
@@ -98,11 +98,9 @@ class RegexStyleTagFilter(logging.Filter):
         if not isinstance(record.msg, str):
             record.msg = str(record.msg)
 
-        matched_style = None
         for compiled_regex, style_to_apply in self.compiled_patterns:
             if compiled_regex.fullmatch(record.name):
                 record.msg = f"[{style_to_apply}]{record.original_msg}[/]"
-                matched_style = style_to_apply
                 break
 
         return True
