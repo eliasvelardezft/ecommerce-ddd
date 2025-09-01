@@ -62,7 +62,7 @@ class OrderIntegrationEventPublisher:
 
     async def publish(self, internal_event: DomainEvent) -> None:
         """
-        Maps a single internal domain event (passed by a command handler) to its public contract 
+        Maps a single internal domain event (passed by a command handler) to its public contract
         (if a mapper is registered) and dispatches the contract via the IntegrationEventDispatcher.
         """
         internal_event_type = type(internal_event)

@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class IntegrationEventDispatcher:
     """
-    Handles dispatching of PUBLIC IntegrationEventContracts (Pydantic models) 
+    Handles dispatching of PUBLIC IntegrationEventContracts (Pydantic models)
     to their respective handlers across Bounded Contexts (within the monolith).
     In a microservices architecture, this would be replaced by a message bus (e.g., Kafka, RabbitMQ).
     """

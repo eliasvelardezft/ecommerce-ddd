@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 
 class ListCategoriesQuery(BaseModel):
-    """Query to list categories. 
+    """Query to list categories.
     If parent_category_id is provided, lists its direct children.
     If parent_category_id is None, lists top-level categories.
     """
