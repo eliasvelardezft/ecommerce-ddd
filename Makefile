@@ -4,6 +4,7 @@ SHELL := /bin/bash
 COMPOSE_PROJECT_NAME ?= ecommerce_ddd
 CONTAINER_NAME = ecommerce
 POSTGRES_CONTAINER_NAME = ecommerce-postgres
+POETRY = poetry
 
 # Ensure this path matches the location of your main FastAPI app
 APP_MODULE ?= src.main:app
@@ -89,10 +90,7 @@ lint:
 
 # Placeholder for tests
 test:
-	@echo "Testing not yet implemented. Configure your test runner here."
-	@echo "Example for Pytest (if installed in the container):"
-	@echo "  docker compose -p $(COMPOSE_PROJECT_NAME) exec app pytest"
-	# docker compose -p $(COMPOSE_PROJECT_NAME) exec app pytest
+	$(POETRY) run pytest tests/
 
 # Placeholder for seeding data
 seed-data:
