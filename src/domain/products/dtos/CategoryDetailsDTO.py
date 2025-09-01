@@ -1,15 +1,14 @@
 from datetime import datetime
 from typing import Optional, List
-from uuid import UUID
 
 from pydantic import BaseModel
 
 class CategoryDetailsDTO(BaseModel):
-    id: UUID
+    id: str
     name: str
     description: Optional[str]
-    parent_category_id: Optional[UUID]
-    children_ids: List[UUID] = [] 
+    parent_category_id: Optional[str]
+    children_ids: List[str] = [] 
     children: List["CategoryDetailsDTO"] = []
     created_at: datetime
     updated_at: datetime

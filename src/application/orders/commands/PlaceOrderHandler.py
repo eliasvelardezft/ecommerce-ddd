@@ -1,6 +1,6 @@
 import logging
-from uuid import uuid4
 
+from domain.core.value_objects.EntityId import EntityId
 from domain.orders.models.Order import Order
 from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
 from domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
@@ -27,12 +27,16 @@ class PlaceOrderHandler:
     async def handle(self, command: PlaceOrderCommand) -> Order:
         logger.info(f"[PlaceOrderHandler] Processing PlaceOrderCommand for customer {command.customer_id}")
         
+        # Convert customer_id string to EntityId
+        customer_entity_id = EntityId.from_string(command.customer_id)
+        
+        # Convert OrderItemRequest DTOs to the format expected by Order.create()
         items_data_list = [item_model.model_dump() for item_model in command.items]
             
         shipping_details_dict = command.shipping_details.model_dump()
 
         order = Order.create(
-            customer_id=command.customer_id,
+            customer_id=customer_entity_id,
             items_data=items_data_list, 
             shipping_details_data=shipping_details_dict,
             currency=command.currency, # PlaceOrderCommand now has these fields with defaults

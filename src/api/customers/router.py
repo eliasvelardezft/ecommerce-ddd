@@ -1,4 +1,5 @@
 import logging
+from domain.core.value_objects.EntityId import EntityId
 from fastapi import APIRouter, HTTPException, Depends
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
@@ -31,7 +32,14 @@ async def register_customer(
     handler = RegisterCustomerHandler(repository, event_dispatcher)
     try:
         customer = await handler.handle(command)
-        return customer
+        # Return a clean JSON response with string ID
+        return {
+            "id": str(customer.id),  # Convert EntityId to string
+            "name": customer.name,
+            "email": customer.email,
+            "created_at": customer.created_at,
+            "updated_at": customer.updated_at
+        }
     except Exception as e:
         import traceback
         logger.error(traceback.format_exc())
@@ -49,3 +57,18 @@ async def get_customer_profile(
         raise HTTPException(status_code=404, detail="Customer not found")
     
     return customer
+
+@router.get("/{customer_id}")
+async def get_customer_by_id(
+    customer_id: str,
+    repository: ICustomerReadRepository = Depends(get_customer_read_repository)
+):
+    try:
+        entity_id = EntityId.from_string(customer_id)
+        customer = await repository.get_customer_profile_by_id(entity_id)
+        if not customer:
+            raise HTTPException(status_code=404, detail="Customer not found")
+        return customer
+    except Exception as e:
+        logger.error(f"Error fetching customer {customer_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=400, detail=str(e))

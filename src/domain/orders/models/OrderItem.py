@@ -1,15 +1,15 @@
-from uuid import UUID, uuid4
 from typing import Annotated
 from decimal import Decimal
 
 from pydantic import BaseModel, Field
 
+from domain.core.value_objects.EntityId import EntityId
 from domain.core.value_objects.Money import Money # Using the core Money VO
 
 
 class OrderItem(BaseModel):
-    id: Annotated[UUID, Field(default_factory=uuid4)]
-    product_id: UUID
+    id: Annotated[EntityId, Field(default_factory=EntityId.generate)]
+    product_id: EntityId
     product_name: Annotated[str, Field(min_length=1, max_length=255)]
     quantity: Annotated[int, Field(gt=0)]
     unit_price: Money # Instance of the Money class from core value_objects

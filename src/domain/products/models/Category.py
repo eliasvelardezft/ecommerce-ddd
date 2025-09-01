@@ -1,27 +1,27 @@
 from datetime import datetime
 from typing import Optional, Dict, Any
-from uuid import UUID, uuid4
 
 from domain.core.AggregateRoot import AggregateRoot
+from domain.core.value_objects.EntityId import EntityId
 from domain.products.events.CategoryCreatedEvent import CategoryCreatedEvent
 from domain.products.events.CategoryDetailsUpdatedEvent import CategoryDetailsUpdatedEvent
 from domain.products.events.CategoryParentChangedEvent import CategoryParentChangedEvent
 # from domain.products.exceptions import CategoryDomainException # Placeholder for future custom exceptions
 
 class Category(AggregateRoot):
-    id: UUID
+    id: EntityId
     name: str
     description: Optional[str]
-    parent_category_id: Optional[UUID]
+    parent_category_id: Optional[EntityId]
     created_at: datetime
     updated_at: datetime
 
     def __init__(
         self,
-        _id: UUID,
+        _id: EntityId,
         name: str,
         description: Optional[str] = None,
-        parent_category_id: Optional[UUID] = None,
+        parent_category_id: Optional[EntityId] = None,
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None
     ):
@@ -45,9 +45,9 @@ class Category(AggregateRoot):
         cls,
         name: str,
         description: Optional[str] = None,
-        parent_category_id: Optional[UUID] = None,
+        parent_category_id: Optional[EntityId] = None,
     ) -> 'Category':
-        _id = uuid4()
+        _id = EntityId.generate()
         if parent_category_id == _id: # Should not happen with uuid4 but as a safeguard
             raise ValueError("A category cannot be its own parent during creation.")
 
@@ -96,7 +96,7 @@ class Category(AggregateRoot):
 
     def change_parent(
         self, 
-        new_parent_category_id: Optional[UUID]
+        new_parent_category_id: Optional[EntityId]
     ) -> None:
         if self.parent_category_id == new_parent_category_id:
             return

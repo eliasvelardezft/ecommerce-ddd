@@ -1,12 +1,13 @@
 import logging
 from typing import Optional, List
-from uuid import UUID, uuid4 # Import uuid4 for AttributeSQL IDs
+from uuid import uuid4 # Import uuid4 for AttributeSQL IDs
 from decimal import Decimal # For price conversion
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload # For eager loading
 
+from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Product import Product as DomainProduct
 from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
 from domain.core.value_objects.Money import Money
@@ -40,7 +41,7 @@ class ProductWriteRepository(IProductWriteRepository):
             )
 
         db_product_sql = ProductSQL(
-            id=product.id,
+            id=str(product.id),  # Convert EntityId to string
             name=product.name,
             description=product.description,
             sku=product.sku,
@@ -48,7 +49,7 @@ class ProductWriteRepository(IProductWriteRepository):
             stock_quantity=product.stock_quantity,
             price_amount=float(product.price.amount), # SQLAlchemy Numeric might prefer float or Decimal
             price_currency=product.price.currency,
-            category_id=product.category_id,
+            category_id=str(product.category_id),  # Convert EntityId to string
             image_url_url=str(product.image_url.url) if product.image_url else None,
             image_alt_text=product.image_url.alt_text if product.image_url else None,
             attributes=db_attributes_sql, # Assign list of new AttributeSQL instances
@@ -97,7 +98,7 @@ class ProductWriteRepository(IProductWriteRepository):
         # Eager load attributes when checking for existing product to avoid separate queries if updating attributes
         existing_db_product = await self._session.get(
             ProductSQL, 
-            product.id, 
+            str(product.id),
             options=[selectinload(ProductSQL.attributes)]
         )
 
@@ -114,9 +115,9 @@ class ProductWriteRepository(IProductWriteRepository):
             await self._session.rollback()
             raise
     
-    async def delete(self, product_id: UUID) -> None:
+    async def delete(self, product_id: EntityId) -> None:
         logger.info(f"Attempting to delete product {product_id}.")
-        db_product = await self._session.get(ProductSQL, product_id)
+        db_product = await self._session.get(ProductSQL, str(product_id))
         if db_product:
             await self._session.delete(db_product)
             try:
@@ -129,7 +130,7 @@ class ProductWriteRepository(IProductWriteRepository):
         else:
             logger.warning(f"Product {product_id} not found in database for deletion.")
 
-    async def get_by_id(self, product_id: UUID) -> Optional[DomainProduct]:
+    async def get_by_id(self, product_id: EntityId) -> Optional[DomainProduct]:
         logger.debug(f"Fetching product by ID {product_id} from the database.")
         
         result = await self._session.execute(
@@ -138,7 +139,7 @@ class ProductWriteRepository(IProductWriteRepository):
                 selectinload(ProductSQL.attributes), # Eager load attributes
                 selectinload(ProductSQL.category)    # Eager load category
             )
-            .where(ProductSQL.id == product_id)
+            .where(ProductSQL.id == str(product_id))
         )
         db_product: Optional[ProductSQL] = result.scalar_one_or_none()
 
@@ -161,14 +162,14 @@ class ProductWriteRepository(IProductWriteRepository):
                 domain_attributes.append(DomainAttribute(name=attr_sql.name, value=attr_sql.value))
 
         return DomainProduct(
-            _id=db_product.id,
+            _id=EntityId.from_string(db_product.id),
             name=db_product.name,
             description=db_product.description,
             sku=db_product.sku,
             active=db_product.active,
             stock_quantity=db_product.stock_quantity,
             price=domain_price,
-            category_id=db_product.category_id,
+            category_id=EntityId.from_string(db_product.category_id),
             image_url=domain_image_url,
             attributes=domain_attributes,
             created_at=db_product.created_at,

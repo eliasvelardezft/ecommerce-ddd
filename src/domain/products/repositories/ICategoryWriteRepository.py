@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from uuid import UUID
 from typing import Optional
 
+from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Category import Category
 
 class ICategoryWriteRepository(ABC):
@@ -11,6 +11,6 @@ class ICategoryWriteRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_by_id(self, category_id: UUID) -> Optional[Category]:
+    async def get_by_id(self, category_id: EntityId) -> Optional[Category]:
         """Retrieves a category by its ID, potentially for updates or checks."""
         raise NotImplementedError

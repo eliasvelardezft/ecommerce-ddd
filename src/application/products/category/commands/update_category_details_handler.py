@@ -1,7 +1,7 @@
 import logging
-from uuid import UUID
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.core.value_objects.EntityId import EntityId
 from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
 from .UpdateCategoryDetailsCommand import UpdateCategoryDetailsCommand
 
@@ -19,7 +19,8 @@ class UpdateCategoryDetailsHandler:
     async def handle(self, command: UpdateCategoryDetailsCommand) -> None:
         logger.info(f"Handling UpdateCategoryDetailsCommand for category ID: {command.category_id}")
 
-        category = await self._repository.get_by_id(command.category_id)
+        category_id = EntityId.from_string(command.category_id)
+        category = await self._repository.get_by_id(category_id)
         if not category:
             logger.error(f"Category with ID {command.category_id} not found for details update.")
             raise ValueError(f"Category with ID {command.category_id} not found.")

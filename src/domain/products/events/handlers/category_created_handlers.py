@@ -1,5 +1,4 @@
 import logging
-from uuid import UUID
 
 from domain.products.dtos.CategoryDetailsDTO import CategoryDetailsDTO
 from domain.products.events.CategoryCreatedEvent import CategoryCreatedEvent
@@ -16,10 +15,10 @@ class UpdateCategoryOnCategoryCreated:
         logger.info(f"Creating category read model on CategoryCreatedEvent: {event.aggregate_id}")
         
         category_dto = CategoryDetailsDTO(
-            id=UUID(event.aggregate_id),
+            id=str(event.aggregate_id),  # Convert EntityId to string
             name=event.name,
             description=event.description,
-            parent_category_id=event.parent_category_id,
+            parent_category_id=str(event.parent_category_id) if event.parent_category_id else None,
             children_ids=[],
             children=[],
             created_at=event.created_at,

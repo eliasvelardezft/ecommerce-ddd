@@ -1,7 +1,7 @@
 import logging
-from uuid import UUID
 
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
+from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Category import Category
 from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
 from .CreateCategoryCommand import CreateCategoryCommand
@@ -17,12 +17,14 @@ class CreateCategoryHandler:
         self._repository = category_write_repository
         self._domain_event_dispatcher = domain_event_dispatcher
 
-    async def handle(self, command: CreateCategoryCommand) -> UUID:
+    async def handle(self, command: CreateCategoryCommand) -> Category:
         logger.info(f"Handling CreateCategoryCommand for category name: {command.name}")
 
         # 1. Validate parent_category_id if provided
+        parent_category_id = None
         if command.parent_category_id:
-            parent_category = await self._repository.get_by_id(command.parent_category_id)
+            parent_category_id = EntityId.from_string(command.parent_category_id)
+            parent_category = await self._repository.get_by_id(parent_category_id)
             if not parent_category:
                 logger.error(f"Parent category with ID {command.parent_category_id} not found.")
                 raise ValueError(f"Parent category with ID {command.parent_category_id} not found.")
@@ -32,7 +34,7 @@ class CreateCategoryHandler:
         category = Category.create(
             name=command.name,
             description=command.description, # Domain model handles Optional description
-            parent_category_id=command.parent_category_id
+            parent_category_id=parent_category_id  # Use EntityId or None
         )
 
         # 3. Persist the aggregate

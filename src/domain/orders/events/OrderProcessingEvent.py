@@ -3,6 +3,7 @@ from uuid import UUID
 from datetime import datetime
 
 from domain.core.events.DomainEvent import DomainEvent
+from domain.core.value_objects.Money import Money
 
 
 class OrderProcessingEvent(DomainEvent):
@@ -14,15 +15,14 @@ class OrderProcessingEvent(DomainEvent):
         order_number: str,
         customer_id: UUID,
         status: str,
-        total_amount_str: str,
-        currency: str,
+        amount: Money,
     ):
         super().__init__(aggregate_id=str(aggregate_id))
         self.order_number: str = order_number
         self.customer_id: UUID = customer_id
         self.status: str = status
-        self.total_amount_str: str = total_amount_str
-        self.currency: str = currency
+        self.total_amount: float = amount.amount
+        self.currency: str = amount.currency
 
     def to_dict(self) -> Dict[str, Any]:
         base_dict = super().to_dict()
@@ -30,7 +30,7 @@ class OrderProcessingEvent(DomainEvent):
             "order_number": self.order_number,
             "customer_id": str(self.customer_id),
             "status": self.status,
-            "total_amount_str": self.total_amount_str,
+            "total_amount": self.total_amount,
             "currency": self.currency,
         })
         return base_dict

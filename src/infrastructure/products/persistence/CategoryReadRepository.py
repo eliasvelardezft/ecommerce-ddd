@@ -1,6 +1,5 @@
 import logging
 from typing import List, Optional
-from uuid import UUID
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -21,11 +20,11 @@ class CategoryReadRepository(ICategoryReadRepository):
     async def _doc_to_dto(self, doc: dict) -> Optional[CategoryDetailsDTO]:
         if not doc:
             return None
-        # Ensure _id (or id) from Mongo is converted to UUID for the DTO
-        if isinstance(doc.get("_id"), str):
-            doc["id"] = UUID(doc["_id"])
-        elif isinstance(doc.get("id"), str):
-            doc["id"] = UUID(doc["id"])
+        # Ensure _id (or id) from Mongo is converted to string for the DTO
+        if "_id" in doc:
+            doc["id"] = str(doc["_id"])
+        elif "id" in doc:
+            doc["id"] = str(doc["id"])
         
         # Recursively convert children if they exist
         if "children" in doc and isinstance(doc["children"], list):
@@ -40,17 +39,16 @@ class CategoryReadRepository(ICategoryReadRepository):
 
         if "children_ids" not in doc: # Ensure children_ids list exists even if empty
             doc["children_ids"] = []
-        else: # Ensure children_ids are UUIDs
-            doc["children_ids"] = [UUID(cid) for cid in doc["children_ids"] if isinstance(cid, str)]
+        # children_ids should already be strings now
         
-        if "parent_category_id" in doc and isinstance(doc["parent_category_id"], str):
-            doc["parent_category_id"] = UUID(doc["parent_category_id"])
+        # parent_category_id should remain a string (or None)
+        # No conversion needed
         
         return CategoryDetailsDTO(**doc)
 
-    async def get_category(self, category_id: UUID, recursive: bool = False) -> Optional[CategoryDetailsDTO]:
+    async def get_category(self, category_id: str, recursive: bool = False) -> Optional[CategoryDetailsDTO]:
         logger.debug(f"[ReadRepo] Fetching category_details by ID: {category_id}, Recursive: {recursive}")
-        doc = await self._collection.find_one({"_id": str(category_id)})
+        doc = await self._collection.find_one({"_id": category_id})
         if not doc:
             logger.warning(f"[ReadRepo] CategoryDetailsDTO not found for ID: {category_id}")
             return None
@@ -79,10 +77,10 @@ class CategoryReadRepository(ICategoryReadRepository):
                 categories.append(dto)
         return categories
 
-    async def list_children(self, parent_category_id: UUID) -> List[CategoryDetailsDTO]:
+    async def list_children(self, parent_category_id: str) -> List[CategoryDetailsDTO]:
         logger.debug(f"[ReadRepo] Listing children for parent ID: {parent_category_id}")
         # This assumes children are stored nested or queried by parent_category_id field
-        cursor = self._collection.find({"parent_category_id": str(parent_category_id)})
+        cursor = self._collection.find({"parent_category_id": parent_category_id})
         categories = []
         async for doc in cursor:
             dto = await self._doc_to_dto(doc)
@@ -108,24 +106,10 @@ class CategoryReadRepository(ICategoryReadRepository):
         # model_dump will recursively dump them.
         category_doc_for_set = category_dto.model_dump()
 
-        # Convert main ID and parent_category_id to string for $set if they are UUIDs in the DTO
-        if "id" in category_doc_for_set and isinstance(category_doc_for_set["id"], UUID):
-            category_doc_for_set["id"] = str(category_doc_for_set["id"])
-        if "parent_category_id" in category_doc_for_set and category_doc_for_set["parent_category_id"] is not None and isinstance(category_doc_for_set["parent_category_id"], UUID):
-            category_doc_for_set["parent_category_id"] = str(category_doc_for_set["parent_category_id"])
+        # IDs should already be strings in the DTO now, no conversion needed
         
-        # children_ids are List[UUID], convert them to List[str]
-        if "children_ids" in category_doc_for_set and isinstance(category_doc_for_set["children_ids"], list):
-            category_doc_for_set["children_ids"] = [str(cid) for cid in category_doc_for_set["children_ids"]]
-
-        # For the 'children' field (List[CategoryDetailsDTO]), model_dump should handle nested serialization.
-        # We need to ensure UUIDs within those nested DTOs are also stringified if that's the storage convention.
-        # Pydantic's model_dump(mode='json') usually handles UUID to str for JSON-like structures.
-        # If direct dict is used, manual conversion might be needed for nested UUIDs.
-        # Let's assume model_dump is sufficient for nested structures for now.
-
         await self._collection.update_one(
-            {"_id": str(category_dto.id)}, # Query by string representation of UUID for _id
+            {"_id": category_dto.id}, # Use string ID directly
             {"$set": category_doc_for_set},
             upsert=True
         )

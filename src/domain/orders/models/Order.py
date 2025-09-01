@@ -1,11 +1,11 @@
 from datetime import datetime, timezone
 from typing import List, Optional
-from uuid import UUID, uuid4
 import random
 import string
 from decimal import Decimal
 
 from domain.core.AggregateRoot import AggregateRoot
+from domain.core.value_objects.EntityId import EntityId
 from domain.core.value_objects.Money import Money # Core Money VO
 from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
 from domain.orders.events.OrderProcessingEvent import OrderProcessingEvent
@@ -18,8 +18,8 @@ from domain.orders.value_objects.ShippingDetails import ShippingDetails
 
 
 class Order(AggregateRoot):
-    id: UUID
-    customer_id: UUID
+    id: EntityId
+    customer_id: EntityId
     order_number: str
     items: List[OrderItem]
     shipping_details: ShippingDetails
@@ -43,8 +43,8 @@ class Order(AggregateRoot):
 
     def __init__(
         self,
-        _id: UUID,
-        customer_id: UUID,
+        _id: EntityId,
+        customer_id: EntityId,
         items: List[OrderItem], # List of Pydantic OrderItem models
         shipping_details: ShippingDetails,
         currency: str = "USD",
@@ -136,18 +136,18 @@ class Order(AggregateRoot):
     @classmethod
     def create(
         cls,
-        customer_id: UUID,
+        customer_id: EntityId,
         items_data: List[dict], # Expect list of dicts for OrderItems
         shipping_details_data: dict, # Expect dict for ShippingDetails
         currency: str = "USD",
-        order_id: Optional[UUID] = None,
+        order_id: Optional[EntityId] = None,
         order_number_override: Optional[str] = None, # Allow overriding generated number if needed
         shipping_cost_raw: Optional[Decimal] = None, # Renamed
         tax_amount_raw: Optional[Decimal] = None,    # Renamed
         notes: Optional[str] = None,
     ) -> "Order":
         """Factory method to create a new Order from raw data and raise OrderPlacedEvent."""
-        instance_id = order_id if order_id else uuid4()
+        instance_id = order_id if order_id else EntityId.generate()
         order_currency = currency.upper()
 
         shipping_details_obj = ShippingDetails(**shipping_details_data)
@@ -171,7 +171,7 @@ class Order(AggregateRoot):
                 )
             
             processed_order_items.append(OrderItem(
-                product_id=UUID(item_dict['product_id']),
+                product_id=EntityId.from_string(item_dict['product_id']),
                 product_name=item_dict['product_name'],
                 quantity=item_dict['quantity'],
                 unit_price=item_unit_price,
@@ -204,15 +204,14 @@ class Order(AggregateRoot):
                 customer_id=order.customer_id,
                 order_number=order.order_number,
                 items_data=event_items_data, # Use the processed list
-                total_amount_str=str(order.total_amount), # total_amount is Money, str() is fine
-                currency=order.currency,
+                amount=order.total_amount,
                 shipping_details_data=order.shipping_details.model_dump(), # ShippingDetails is Pydantic
                 status=order.status.value
             )
         )
         return order
 
-    def remove_item(self, item_id: UUID, dispatch_event: bool = True):
+    def remove_item(self, item_id: EntityId, dispatch_event: bool = True):
         if self.status != OrderStatus.DRAFT:
             raise OrderValidationException("Cannot remove items from an order that is not in DRAFT status.")
         original_item_count = len(self.items)
@@ -224,7 +223,7 @@ class Order(AggregateRoot):
         self.updated_at = datetime.now(timezone.utc)
         # if dispatch_event: self.add_domain_event(OrderItemRemovedEvent(aggregate_id=self.id, item_id=item_id))
 
-    def update_item_quantity(self, item_id: UUID, new_quantity: int, dispatch_event: bool = True):
+    def update_item_quantity(self, item_id: EntityId, new_quantity: int, dispatch_event: bool = True):
         if self.status != OrderStatus.DRAFT:
             raise OrderValidationException("Cannot update item quantity for an order not in DRAFT status.")
         if new_quantity <= 0:
@@ -273,8 +272,7 @@ class Order(AggregateRoot):
             order_number=self.order_number,
             customer_id=self.customer_id,
             status=self.status.value,
-            total_amount_str=str(self.total_amount),
-            currency=self.currency
+            amount=self.total_amount,
         ))
 
     def cancel_order(self, cancellation_reason: Optional[str] = None): # Added reason parameter
@@ -288,8 +286,7 @@ class Order(AggregateRoot):
             order_number=self.order_number,
             customer_id=self.customer_id,
             status=self.status.value,
-            total_amount_str=str(self.total_amount),
-            currency=self.currency,
+            amount=self.total_amount,
             cancellation_reason=cancellation_reason
         ))
 
@@ -306,7 +303,6 @@ class Order(AggregateRoot):
             order_number=self.order_number,
             customer_id=self.customer_id,
             status=self.status.value,
-            total_amount_str=str(self.total_amount),
-            currency=self.currency,
+            amount=self.total_amount,
             tracking_number=self.tracking_number
         ))

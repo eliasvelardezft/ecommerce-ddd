@@ -1,10 +1,11 @@
 import logging
 from typing import Optional
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
+from domain.core.value_objects.EntityId import EntityId
 from domain.orders.models.Order import Order
 from domain.orders.models.Order import OrderItem
 from domain.orders.repositories.IOrderWriteRepository import IOrderWriteRepository
@@ -25,8 +26,8 @@ class OrderWriteRepository(IOrderWriteRepository):
         
         # Convert domain order to SQL model
         db_order = OrderSQL(
-            id=order.id,
-            customer_id=order.customer_id,
+            id=str(order.id),  # Convert EntityId to string
+            customer_id=str(order.customer_id),  # Convert EntityId to string
             status=order.status,
             created_at=order.created_at,
             updated_at=order.updated_at
@@ -35,11 +36,11 @@ class OrderWriteRepository(IOrderWriteRepository):
         # Convert domain items to SQL models
         db_order.items = [
             OrderItemSQL(
-                id=uuid4(),  # Generate new ID for each item
-                order_id=order.id,
-                product_id=item.product_id,
+                id=str(uuid4()),  # Generate new ID for each item, convert to string
+                order_id=str(order.id),  # Convert EntityId to string
+                product_id=str(item.product_id),  # Convert EntityId to string
                 quantity=item.quantity,
-                unit_price=item.unit_price
+                unit_price=float(item.unit_price.amount)  # Convert Money to float for database
             )
             for item in order.items
         ]
@@ -50,10 +51,10 @@ class OrderWriteRepository(IOrderWriteRepository):
         
         return order
 
-    async def get_by_id(self, id: UUID) -> Optional[Order]:
+    async def get_by_id(self, id: EntityId) -> Optional[Order]:
         """Retrieve an order by ID"""
         result = await self._session.execute(
-            select(OrderSQL).where(OrderSQL.id == id)
+            select(OrderSQL).where(OrderSQL.id == str(id))
         )
         db_order = result.scalar_one_or_none()
         
@@ -63,7 +64,7 @@ class OrderWriteRepository(IOrderWriteRepository):
         # Convert SQL model back to domain entity
         order_items = [
             OrderItem(
-                product_id=item.product_id,
+                product_id=EntityId.from_string(item.product_id),  # Convert string back to EntityId
                 quantity=item.quantity,
                 unit_price=item.unit_price
             )
@@ -71,8 +72,8 @@ class OrderWriteRepository(IOrderWriteRepository):
         ]
         
         return Order(
-            id=db_order.id,
-            customer_id=db_order.customer_id,
+            _id=EntityId.from_string(db_order.id),  # Convert string back to EntityId
+            customer_id=EntityId.from_string(db_order.customer_id),  # Convert string back to EntityId
             items=order_items,
             status=db_order.status,
             created_at=db_order.created_at,

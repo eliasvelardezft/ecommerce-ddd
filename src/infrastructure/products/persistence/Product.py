@@ -1,12 +1,13 @@
 from sqlalchemy import Column, String, Text, Boolean, Integer, Numeric, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from uuid import UUID
 from typing import List, Optional
 
 from infrastructure.core.persistence.base import BaseModel
 
 class ProductSQL(BaseModel):
-    id: Mapped[UUID] = mapped_column(primary_key=True, index=True)
+    __tablename__ = "products"
+    
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), index=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     sku: Mapped[str] = mapped_column(String(100), unique=True, index=True)
@@ -16,7 +17,7 @@ class ProductSQL(BaseModel):
     price_amount: Mapped[float] = mapped_column(Numeric(10, 2)) # Stored as Numeric, handled as Decimal in domain
     price_currency: Mapped[str] = mapped_column(String(3))
 
-    category_id: Mapped[UUID] = mapped_column(ForeignKey("category.id"), index=True)
+    category_id: Mapped[str] = mapped_column(String(36), ForeignKey("categories.id"), index=True)
     category: Mapped["CategorySQL"] = relationship(back_populates="products", lazy="joined")
 
     image_url_url: Mapped[Optional[str]] = mapped_column(String(2048), nullable=True)
@@ -32,8 +33,8 @@ class ProductSQL(BaseModel):
 class AttributeSQL(BaseModel):
     __tablename__ = "product_attributes"
 
-    id: Mapped[UUID] = mapped_column(primary_key=True, index=True)
-    product_id: Mapped[UUID] = mapped_column(ForeignKey("product.id"), nullable=False, index=True)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, index=True)
+    product_id: Mapped[str] = mapped_column(String(36), ForeignKey("products.id"), nullable=False, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     value: Mapped[str] = mapped_column(String(255), nullable=False)
 

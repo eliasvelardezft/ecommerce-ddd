@@ -1,5 +1,4 @@
 import logging
-from uuid import UUID
 
 from domain.products.dtos.ProductDetailsDTO import ProductDetailsDTO
 from domain.products.events.ProductCreatedEvent import ProductCreatedEvent
@@ -25,7 +24,7 @@ class UpdateProductOnProductCreated:
         attributes = [Attribute(**attr) for attr in event.attributes]
 
         product_details = ProductDetailsDTO(
-            id=UUID(event.aggregate_id),
+            id=str(event.aggregate_id),  # Convert EntityId to string
             name=event.name,
             description=event.description,
             sku=event.sku,
@@ -33,7 +32,7 @@ class UpdateProductOnProductCreated:
             stock_quantity=event.stock_quantity,
             price_amount=event.price_amount,
             price_currency=event.price_currency,
-            category_id=event.category_id,
+            category_id=str(event.category_id),  # Convert EntityId to string
             attributes=attributes,
             image_url=image_url,
             created_at=event.occurred_on,

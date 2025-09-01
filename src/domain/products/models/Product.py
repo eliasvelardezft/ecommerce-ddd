@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import List, Optional, Dict, Any
-from uuid import UUID, uuid4
 
 from domain.core.AggregateRoot import AggregateRoot
+from domain.core.value_objects.EntityId import EntityId
 from domain.core.value_objects.Money import Money
 from domain.products.events.ProductCreatedEvent import ProductCreatedEvent
 from domain.products.events.ProductStockUpdatedEvent import ProductStockUpdatedEvent
@@ -15,14 +15,14 @@ from domain.products.value_objects.Attribute import Attribute
 
 
 class Product(AggregateRoot):
-    id: UUID
+    id: EntityId
     name: str
     description: Optional[str] = None
     sku: str
     active: bool
     stock_quantity: int
     price: Money
-    category_id: UUID
+    category_id: EntityId
     attributes: List[Attribute]
     image_url: Optional[ImageUrl]
     created_at: datetime
@@ -30,10 +30,10 @@ class Product(AggregateRoot):
 
     def __init__(
         self,
-        _id: UUID,
+        _id: EntityId,
         name: str,
         sku: str,
-        category_id: UUID,
+        category_id: EntityId,
         price: Money,
         description: Optional[str] = None,
         active: bool = True,
@@ -62,7 +62,7 @@ class Product(AggregateRoot):
         cls,
         name: str,
         sku: str,
-        category_id: UUID,
+        category_id: EntityId,
         price: Money,
         active: bool = True,
         stock_quantity: int = 0,
@@ -70,7 +70,7 @@ class Product(AggregateRoot):
         attributes: Optional[List[Attribute]] = None,
         description: Optional[str] = None,
     ) -> 'Product':
-        _id = uuid4()
+        _id = EntityId.generate()
         product = cls(
             _id=_id,
             name=name,

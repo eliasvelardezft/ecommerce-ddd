@@ -1,9 +1,9 @@
 from typing import Optional
-from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from domain.customers.Customer import Customer
 from domain.customers.repositories.ICustomerWriteRepository import ICustomerWriteRepository
+from domain.core.value_objects.EntityId import EntityId
 from .Customer import CustomerSQL
 import logging
 
@@ -21,7 +21,7 @@ class CustomerWriteRepository(ICustomerWriteRepository):
         
         # Convert domain entity to database model
         db_customer = CustomerSQL(
-            id=customer.id,
+            id=str(customer.id),  # Clean conversion to string for database storage
             name=customer.name,
             email=customer.email,
             created_at=customer.created_at,
@@ -36,13 +36,13 @@ class CustomerWriteRepository(ICustomerWriteRepository):
         self._session.delete(customer)
         await self._session.commit()
 
-    async def get_by_id(self, id: UUID) -> Optional[Customer]:
+    async def get_by_id(self, id: EntityId) -> Optional[Customer]:
         """
         Note: This is mainly used by command handlers to load an aggregate
         before applying changes
         """
         result = await self._session.execute(
-            select(CustomerSQL).where(CustomerSQL.id == id)
+            select(CustomerSQL).where(CustomerSQL.id == str(id))  # Clean conversion to string
         )
         db_customer = result.scalar_one_or_none()
         if not db_customer:
@@ -50,7 +50,7 @@ class CustomerWriteRepository(ICustomerWriteRepository):
             
         # Convert back to domain entity
         return Customer(
-            id=db_customer.id,
+            _id=EntityId.from_string(db_customer.id),  # Clean conversion back to EntityId
             name=db_customer.name,
             email=db_customer.email,
             created_at=db_customer.created_at,

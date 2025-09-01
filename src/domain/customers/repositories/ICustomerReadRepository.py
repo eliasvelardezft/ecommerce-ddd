@@ -1,14 +1,14 @@
 from abc import ABC
-from typing import List
-from uuid import UUID
+from typing import List, Optional
+from domain.core.value_objects.EntityId import EntityId
 from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
 
 
 class ICustomerReadRepository(ABC):
-    async def get_customer_profile_by_email(self, email: str) -> CustomerProfileDTO:
+    async def get_customer_profile_by_email(self, email: str) -> Optional[CustomerProfileDTO]:
         raise NotImplementedError
 
-    async def get_customer_profile_by_id(self, id: UUID) -> CustomerProfileDTO:
+    async def get_customer_profile_by_id(self, id: EntityId) -> Optional[CustomerProfileDTO]:
         raise NotImplementedError
 
     async def get_all_customer_profiles(self) -> List[CustomerProfileDTO]:

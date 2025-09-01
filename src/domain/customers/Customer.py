@@ -1,14 +1,14 @@
-from uuid import UUID, uuid4
 from datetime import datetime
 
 from domain.core.AggregateRoot import AggregateRoot
+from domain.core.value_objects.EntityId import EntityId
 from .events.CustomerRegisteredEvent import CustomerRegisteredEvent
 
 
 class Customer(AggregateRoot):
     def __init__(
         self,
-        _id: UUID,
+        _id: EntityId,
         name: str,
         email: str,
     ):
@@ -22,7 +22,7 @@ class Customer(AggregateRoot):
     @staticmethod
     def create(name: str, email: str) -> 'Customer':
         """Factory method for creating a new customer"""
-        _id = uuid4()
+        _id = EntityId.generate()
         customer = Customer(
             _id=_id,
             name=name,

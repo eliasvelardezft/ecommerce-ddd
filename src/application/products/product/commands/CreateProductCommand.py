@@ -1,6 +1,5 @@
 from decimal import Decimal
 from typing import Optional, List
-from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -15,7 +14,7 @@ class CreateProductCommand(BaseModel):
     price_amount: Decimal = Field(..., gt=0, description="Price of the product.")
     price_currency: str = Field(..., min_length=3, max_length=3, description="Currency code (e.g., USD).")
     stock_quantity: int = Field(..., ge=0, description="Available stock quantity.")
-    category_id: UUID = Field(..., description="ID of the category this product belongs to.")
+    category_id: str = Field(..., description="ID of the category this product belongs to.")
     image_url: Optional[ImageUrl] = Field(None, description="Image URL for the product.")
     attributes: Optional[List[Attribute]] = Field(None, description="List of product attributes.")
     active: bool = Field(True, description="Whether the product is initially active.")
