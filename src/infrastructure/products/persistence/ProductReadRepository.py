@@ -54,7 +54,7 @@ class ProductReadRepository(IProductReadRepository):
         query_filter = {"active": True}
         if category_id:
             query_filter["category_id"] = category_id
-        logger.debug(f"[ReadRepo] Listing active product_details with jdoedjoea djoae djoae jdoae jdoaejodejaodj aoe djeofilter: {query_filter}")
+        logger.debug(f"[ReadRepo] Listing active product_details with filter: {query_filter}")
 
         cursor = self._collection.find(query_filter)
         products = []
