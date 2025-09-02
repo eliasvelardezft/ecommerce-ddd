@@ -1,6 +1,5 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -18,7 +17,7 @@ class ProductDetailsDTO(BaseModel):
     price_amount: Decimal
     price_currency: str
     category_id: str
-    attributes: List[Attribute]
-    image_url: Optional[ImageUrl]
+    attributes: list[Attribute]
+    image_url: ImageUrl | None
     created_at: datetime
     updated_at: datetime

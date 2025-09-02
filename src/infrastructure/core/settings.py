@@ -1,6 +1,7 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from functools import lru_cache
 import logging
+from functools import lru_cache
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -33,15 +34,13 @@ class Settings(BaseSettings):
         """Construct PostgreSQL sync connection URL for migrations"""
         return f"postgresql+psycopg2://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        case_sensitive=False,
-        extra='ignore'
-    )
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=False, extra="ignore")
 
-@lru_cache()
+
+@lru_cache
 def get_settings() -> Settings:
     return Settings()
+
 
 settings = get_settings()
 

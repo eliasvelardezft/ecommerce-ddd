@@ -1,6 +1,6 @@
-from typing import Optional, List
-from uuid import UUID
 from decimal import Decimal
+from uuid import UUID
+
 from domain.core.events.DomainEvent import DomainEvent
 
 
@@ -13,9 +13,9 @@ class ProductCreatedEvent(DomainEvent):
     price_amount: Decimal
     price_currency: str
     category_id: UUID
-    attributes: List[dict]
-    image_url: Optional[str]
-    image_alt_text: Optional[str]
+    attributes: list[dict]
+    image_url: str | None
+    image_alt_text: str | None
 
     def __init__(
         self,
@@ -28,9 +28,9 @@ class ProductCreatedEvent(DomainEvent):
         price_amount: Decimal,
         price_currency: str,
         category_id: UUID,
-        attributes: List[dict],
-        image_url: Optional[str] = None,
-        image_alt_text: Optional[str] = None,
+        attributes: list[dict],
+        image_url: str | None = None,
+        image_alt_text: str | None = None,
     ):
         super().__init__(str(aggregate_id))
         self.name = name

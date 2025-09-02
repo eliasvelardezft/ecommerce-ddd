@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -17,11 +16,11 @@ class OrderItemDTO(BaseModel):
 class OrderDetailsDTO(BaseModel):
     id: str
     customer_id: str
-    items: List[OrderItemDTO]
+    items: list[OrderItemDTO]
     items_count: int
     total_amount: float
     created_at: datetime
     status: str
-    shipping_details: Optional[ShippingDetails] = None
-    tracking_number: Optional[str] = None
-    cancellation_reason: Optional[str] = None
+    shipping_details: ShippingDetails | None = None
+    tracking_number: str | None = None
+    cancellation_reason: str | None = None

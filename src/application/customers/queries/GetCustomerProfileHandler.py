@@ -1,12 +1,14 @@
-from typing import Optional
-from .GetCustomerProfileQuery import GetCustomerProfileQuery
 from domain.customers.dtos.CustomerProfileDTO import CustomerProfileDTO
-from infrastructure.customers.persistence.CustomerReadRepository import CustomerReadRepository
+from infrastructure.customers.persistence.CustomerReadRepository import (
+    CustomerReadRepository,
+)
+
+from .GetCustomerProfileQuery import GetCustomerProfileQuery
 
 
 class GetCustomerProfileHandler:
     def __init__(self, read_repository: CustomerReadRepository):
         self._repository = read_repository
 
-    async def handle(self, query: GetCustomerProfileQuery) -> Optional[CustomerProfileDTO]:
+    async def handle(self, query: GetCustomerProfileQuery) -> CustomerProfileDTO | None:
         return await self._repository.get_customer_profile_by_email(query.email)

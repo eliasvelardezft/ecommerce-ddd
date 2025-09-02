@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any
 
 
 class DomainEvent:
@@ -7,10 +7,9 @@ class DomainEvent:
         self.aggregate_id = aggregate_id
         self.occurred_on = datetime.now()
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         base_dict = {}
-        base_dict.update({
-            "aggregate_id": self.aggregate_id,
-            "occurred_on": self.occurred_on.isoformat()
-        })
+        base_dict.update(
+            {"aggregate_id": self.aggregate_id, "occurred_on": self.occurred_on.isoformat()}
+        )
         return base_dict

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+
 from pydantic import BaseModel
 
 
@@ -9,6 +9,6 @@ class CustomerProfileDTO(BaseModel):
     email: str
     created_at: datetime
     total_orders: int
-    last_order_date: Optional[datetime] = None
-    favorite_products: List[str] = []
+    last_order_date: datetime | None = None
+    favorite_products: list[str] = []
     loyalty_tier: str = "Bronze"

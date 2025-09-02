@@ -3,16 +3,20 @@ import logging
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.core.value_objects.EntityId import EntityId
 from domain.products.models.Category import Category
-from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository
+from domain.products.repositories.ICategoryWriteRepository import (
+    ICategoryWriteRepository,
+)
+
 from .CreateCategoryCommand import CreateCategoryCommand
 
 logger = logging.getLogger(__name__)
+
 
 class CreateCategoryHandler:
     def __init__(
         self,
         category_write_repository: ICategoryWriteRepository,
-        domain_event_dispatcher: DomainEventDispatcher
+        domain_event_dispatcher: DomainEventDispatcher,
     ):
         self._repository = category_write_repository
         self._domain_event_dispatcher = domain_event_dispatcher
@@ -33,8 +37,8 @@ class CreateCategoryHandler:
         # Category.create handles initial event creation (CategoryCreatedEvent)
         category = Category.create(
             name=command.name,
-            description=command.description, # Domain model handles Optional description
-            parent_category_id=parent_category_id  # Use EntityId or None
+            description=command.description,  # Domain model handles Optional description
+            parent_category_id=parent_category_id,  # Use EntityId or None
         )
 
         # 3. Persist the aggregate
@@ -43,7 +47,9 @@ class CreateCategoryHandler:
 
         # 4. Dispatch domain events
         await self._domain_event_dispatcher.dispatch_events(category.domain_events)
-        logger.info(f"Dispatched {len(category.domain_events)} domain events for category {category.id}.")
+        logger.info(
+            f"Dispatched {len(category.domain_events)} domain events for category {category.id}."
+        )
         category.clear_domain_events()
 
         return category

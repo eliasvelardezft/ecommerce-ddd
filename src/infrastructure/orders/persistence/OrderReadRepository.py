@@ -1,10 +1,11 @@
 import logging
-from typing import List, Optional
 
-from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
-from domain.orders.repositories.IOrderReadRepository import IOrderReadRepository
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
+from domain.orders.repositories.IOrderReadRepository import (
+    IOrderReadRepository,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ class OrderReadRepository(IOrderReadRepository):
         self._collection = database.order_details
         logger.info("Initialized OrderReadRepository")
 
-    async def get_order_details(self, id: str) -> Optional[OrderDetailsDTO]:
+    async def get_order_details(self, id: str) -> OrderDetailsDTO | None:
         """Get order details by id"""
         logger.info("[Read] Fetching order details for: %s", id)
         doc = await self._collection.find_one({"_id": str(id)})
@@ -28,7 +29,7 @@ class OrderReadRepository(IOrderReadRepository):
         logger.info(f"Order details found for id: {id}")
         return OrderDetailsDTO(**doc)
 
-    async def get_all_detailss(self) -> List[OrderDetailsDTO]:
+    async def get_all_order_details(self) -> list[OrderDetailsDTO]:
         """Get all order detailss"""
         cursor = self._collection.find()
         return [OrderDetailsDTO(**doc) async for doc in cursor]
@@ -38,14 +39,16 @@ class OrderReadRepository(IOrderReadRepository):
         Update the read model when changes occur
         This would be called by event handlers
         """
-        logger.info("[Read] Current views before update: %s", 
-                   [doc["id"] async for doc in self._collection.find()])
-        
-        await self._collection.update_one(
-            {"_id": str(order.id)},
-            {"$set": order.model_dump()},
-            upsert=True
+        logger.info(
+            "[Read] Current views before update: %s",
+            [doc["id"] async for doc in self._collection.find()],
         )
-        
-        logger.info("[Read] Current views after update: %s", 
-                   [doc["id"] async for doc in self._collection.find()])
+
+        await self._collection.update_one(
+            {"_id": str(order.id)}, {"$set": order.model_dump()}, upsert=True
+        )
+
+        logger.info(
+            "[Read] Current views after update: %s",
+            [doc["id"] async for doc in self._collection.find()],
+        )

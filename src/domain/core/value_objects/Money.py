@@ -1,13 +1,12 @@
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from functools import total_ordering
-from typing import Union
 
 
 @total_ordering
 class Money:
-    def __init__(self, amount: Union[str, float, int, Decimal], currency: str):
-        if currency is None or not isinstance(currency, str) or len(currency) != 3:
-            raise ValueError("Currency must be a 3-letter string (e.g., 'USD')")
+    def __init__(self, amount: str | float | int | Decimal, currency: str):
+        if not isinstance(currency, str):
+            raise ValueError("Currency must be a string (e.g., 'USD')")
         self.currency = currency.upper()
 
         try:
@@ -15,10 +14,9 @@ class Money:
             self._amount = Decimal(str(amount))
         except Exception as e:
             raise ValueError(f"Invalid amount: {amount}. Must be convertible to Decimal.") from e
-        
+
         # Standardize to 2 decimal places for most currencies, can be adjusted
         self._amount = self._amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-
 
     @property
     def amount(self) -> Decimal:
@@ -38,18 +36,18 @@ class Money:
             raise ValueError("Cannot subtract Money with different currencies")
         return Money(self.amount - other.amount, self.currency)
 
-    def __mul__(self, factor: Union[int, float, Decimal, str]) -> "Money":
-        if not isinstance(factor, (int, float, Decimal, str)):
+    def __mul__(self, factor: int | float | Decimal | str) -> "Money":
+        if not isinstance(factor, (int | float | Decimal | str)):
             return NotImplemented
         try:
             factor_decimal = Decimal(str(factor))
         except Exception as e:
             raise ValueError(f"Invalid multiplication factor: {factor}. Must be numeric.") from e
-        
+
         return Money(self.amount * factor_decimal, self.currency)
 
-    def __truediv__(self, divisor: Union[int, float, Decimal, str]) -> "Money":
-        if not isinstance(divisor, (int, float, Decimal, str)):
+    def __truediv__(self, divisor: int | float | Decimal | str) -> "Money":
+        if not isinstance(divisor, (int | float | Decimal | str)):
             return NotImplemented
         try:
             divisor_decimal = Decimal(str(divisor))
@@ -60,7 +58,7 @@ class Money:
         return Money(self.amount / divisor_decimal, self.currency)
 
     # For Python 2 compatibility if needed, or explicit integer division
-    def __div__(self, divisor: Union[int, float, Decimal, str]) -> "Money":
+    def __div__(self, divisor: int | float | Decimal | str) -> "Money":
         return self.__truediv__(divisor)
 
     def __eq__(self, other: object) -> bool:
@@ -74,7 +72,7 @@ class Money:
         if self.currency != other.currency:
             raise ValueError("Cannot compare Money with different currencies")
         return self.amount < other.amount
-    
+
     def __hash__(self):
         return hash((self._amount, self.currency))
 
@@ -105,4 +103,4 @@ class Money:
         return self.amount > Decimal(0)
 
     def is_negative(self) -> bool:
-        return self.amount < Decimal(0) 
+        return self.amount < Decimal(0)

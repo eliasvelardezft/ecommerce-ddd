@@ -2,24 +2,18 @@ import os
 import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
 # Add the src directory to the Python path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 # Import our settings and base model
-from infrastructure.core.settings import settings
 from infrastructure.core.persistence.base import BaseModel
+from infrastructure.core.settings import settings
 
 # Import all SQLAlchemy models to ensure they're registered with metadata
 # This follows your DDD bounded context structure
-from infrastructure.products.persistence.Product import ProductSQL, AttributeSQL
-from infrastructure.products.persistence.Category import CategorySQL
-from infrastructure.customers.persistence.Customer import CustomerSQL
-from infrastructure.orders.persistence.Order import OrderSQL, OrderItemSQL
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -37,7 +31,6 @@ target_metadata = BaseModel.metadata
 
 # Set the database URL dynamically from our settings
 database_url = settings.postgres_sync_url
-print(f"DEBUG: Using database URL: {database_url}")
 config.set_main_option("sqlalchemy.url", database_url)
 
 # other values from the config, defined by the needs of env.py,

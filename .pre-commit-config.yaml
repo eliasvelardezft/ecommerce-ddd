@@ -1,0 +1,17 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff-check
+        entry: poetry run ruff format --check
+        language: system
+        types: [python]
+
+      # TODO: uncomment when typing errors are fixed        
+      # - id: mypy
+      #   name: mypy
+      #   entry: poetry run mypy
+      #   language: system
+      #   types: [python]
+      #   args: [src]
+      #   pass_filenames: false  # mypy works better when run on the whole project

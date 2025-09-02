@@ -1,6 +1,9 @@
-from .GetOrderDetailsQuery import GetOrderDetailsQuery
-from infrastructure.orders.persistence.OrderReadRepository import OrderReadRepository
 from domain.orders.dtos.OrderDetailsDTO import OrderDetailsDTO
+from infrastructure.orders.persistence.OrderReadRepository import (
+    OrderReadRepository,
+)
+
+from .GetOrderDetailsQuery import GetOrderDetailsQuery
 
 
 class GetOrderDetailsHandler:

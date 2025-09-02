@@ -1,22 +1,29 @@
 import logging
 from uuid import UUID
 
-from domain.core.events.DomainEventDispatcher import DomainEventDispatcher # Assuming we'll inject this for event publishing
-from domain.core.value_objects.Money import Money # Import Money VO
+from domain.core.events.DomainEventDispatcher import (
+    DomainEventDispatcher,  # Assuming we'll inject this for event publishing
+)
+from domain.core.value_objects.Money import Money  # Import Money VO
 from domain.products.models.Product import Product
-from domain.products.repositories.IProductWriteRepository import IProductWriteRepository
-from domain.products.repositories.ICategoryWriteRepository import ICategoryWriteRepository # To validate category
+from domain.products.repositories.ICategoryWriteRepository import (
+    ICategoryWriteRepository,  # To validate category
+)
+from domain.products.repositories.IProductWriteRepository import (
+    IProductWriteRepository,
+)
+
 from .CreateProductCommand import CreateProductCommand
 
-
 logger = logging.getLogger(__name__)
+
 
 class CreateProductHandler:
     def __init__(
         self,
         product_write_repository: IProductWriteRepository,
         category_write_repository: ICategoryWriteRepository,
-        domain_event_dispatcher: DomainEventDispatcher # For explicit dispatch, or handled by UoW
+        domain_event_dispatcher: DomainEventDispatcher,  # For explicit dispatch, or handled by UoW
     ):
         self._product_write_repository = product_write_repository
         self._category_write_repository = category_write_repository
@@ -43,7 +50,7 @@ class CreateProductHandler:
             stock_quantity=command.stock_quantity,
             image_url=command.image_url,
             attributes=command.attributes,
-            active=command.active
+            active=command.active,
         )
 
         # 3. Persist the aggregate
@@ -54,7 +61,9 @@ class CreateProductHandler:
         # This might be handled by a Unit of Work pattern or a decorator in a full setup.
         # For explicitness here, we can dispatch them directly if the dispatcher is provided.
         await self._domain_event_dispatcher.dispatch_events(product.domain_events)
-        logger.info(f"Dispatched {len(product.domain_events)} domain events for product {product.id}.")
+        logger.info(
+            f"Dispatched {len(product.domain_events)} domain events for product {product.id}."
+        )
         product.clear_domain_events()
 
         return product

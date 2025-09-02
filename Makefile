@@ -25,8 +25,12 @@ help:
 	@echo "  shell-app      Access a shell inside the running 'app' service container."
 	@echo "  ps             List containers."
 	@echo "  clean          Remove build artifacts, Python cache, and Docker volumes."
-	@echo "  lint           Run linters (placeholder - implement this)."
-	@echo "  test           Run tests (placeholder - implement this)."
+	@echo "  lint           Run linting checks with ruff."
+	@echo "  lint-fix       Run linting checks and auto-fix issues."
+	@echo "  format         Format code with ruff."
+	@echo "  type-check     Run type checking with mypy."
+	@echo "  test           Run tests."
+	@echo "  test-coverage  Run tests with coverage report."
 	@echo "  seed-data      Run a script to seed initial data (placeholder - implement this)."
 
 # Build services
@@ -80,17 +84,28 @@ clean:
 	# rm -rf ./db
 	@echo "Cleanup complete."
 
-# Placeholder for linters
+# Linting and formatting
 lint:
-	@echo "Linting not yet implemented. Configure your linters (e.g., Ruff, MyPy) here."
-	@echo "Example for Ruff (if installed in the container or locally and pointing to container sources):"
-	@echo "  docker compose -p $(COMPOSE_PROJECT_NAME) exec app ruff check ."
-	# docker compose -p $(COMPOSE_PROJECT_NAME) exec app ruff check .
-	# docker compose -p $(COMPOSE_PROJECT_NAME) exec app mypy src
+	$(POETRY) run ruff check .
 
-# Placeholder for tests
+lint-fix:
+	$(POETRY) run ruff check --fix .
+
+format:
+	$(POETRY) run ruff format .
+
+type-check:
+	$(POETRY) run mypy src
+
+# Testing
 test:
 	$(POETRY) run pytest tests/
+
+test-coverage:
+	$(POETRY) run pytest --cov=src --cov-report=html --cov-report=term-missing tests/
+
+test-watch:
+	$(POETRY) run pytest-watch tests/
 
 # Placeholder for seeding data
 seed-data:

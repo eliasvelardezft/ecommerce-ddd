@@ -1,12 +1,14 @@
 import logging
+
 from domain.core.events.DomainEvent import DomainEvent
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
-from infrastructure.core.events.integration_event_dispatcher import IntegrationEventDispatcher
-from domain.core.events.EventStore import EventStore
 from domain.core.events.handlers.EventStoreHandler import EventStoreHandler
-from .registry import register_customer_event_handlers, register_order_event_handlers
+from infrastructure.core.events.integration_event_dispatcher import (
+    IntegrationEventDispatcher,
+)
 
 logger = logging.getLogger(__name__)
+
 
 def create_domain_event_dispatcher(container: dict) -> DomainEventDispatcher:
     """
@@ -24,13 +26,16 @@ def create_domain_event_dispatcher(container: dict) -> DomainEventDispatcher:
         # Assuming DomainEventDispatcher.register_handler can take the base DomainEvent class
         # to catch all derived domain events for the store.
         domain_event_dispatcher.register_handler(
-            DomainEvent, # Register for the base DomainEvent type
-            EventStoreHandler(event_store)
+            DomainEvent,  # Register for the base DomainEvent type
+            EventStoreHandler(event_store),
         )
         logger.info("[Bootstrap] EventStoreHandler registered with DomainEventDispatcher.")
     else:
-        logger.warning("[Bootstrap] EventStore not found in container. EventStoreHandler not registered for DomainEventDispatcher.")
+        logger.warning(
+            "[Bootstrap] EventStore not found in container. EventStoreHandler not registered for DomainEventDispatcher."
+        )
     return domain_event_dispatcher
+
 
 def create_integration_event_dispatcher() -> IntegrationEventDispatcher:
     """

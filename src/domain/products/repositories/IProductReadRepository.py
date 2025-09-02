@@ -1,22 +1,21 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
 
 from domain.products.dtos.ProductDetailsDTO import ProductDetailsDTO
 
 
 class IProductReadRepository(ABC):
     @abstractmethod
-    async def get_product_details_by_id(self, product_id: str) -> Optional[ProductDetailsDTO]:
+    async def get_product_details_by_id(self, product_id: str) -> ProductDetailsDTO | None:
         """Retrieves product details by its ID. Returns None if not found."""
         raise NotImplementedError
 
     @abstractmethod
-    async def list_all_products(self, category_id: Optional[str] = None) -> List[ProductDetailsDTO]:
+    async def list_all_products(self, category_id: str | None = None) -> list[ProductDetailsDTO]:
         """Lists all products, regardless of status."""
         raise NotImplementedError
 
     @abstractmethod
-    async def list_active_products(self, category_id: Optional[str] = None) -> List[ProductDetailsDTO]:
+    async def list_active_products(self, category_id: str | None = None) -> list[ProductDetailsDTO]:
         """Lists all active products."""
         raise NotImplementedError
 
