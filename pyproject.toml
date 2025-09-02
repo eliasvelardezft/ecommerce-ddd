@@ -35,6 +35,7 @@ mypy = "^1.15.0"
 ipdb = "^0.13.13"
 pytest-cov = "^6.2.1"
 mongomock-motor = "^0.0.36"
+pre-commit = "^3.6.0"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
