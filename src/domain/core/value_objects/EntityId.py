@@ -23,19 +23,18 @@ class EntityId:
     def _validate_uuid_format(value: str) -> None:
         """Validate that the string is a valid UUID format"""
         uuid_pattern = re.compile(
-            r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
-            re.IGNORECASE
+            r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.IGNORECASE
         )
         if not uuid_pattern.match(value):
             raise ValueError(f"Invalid UUID format: {value}")
 
     @classmethod
-    def generate(cls) -> 'EntityId':
+    def generate(cls) -> "EntityId":
         """Generate a new EntityId"""
         return cls()
 
     @classmethod
-    def from_string(cls, value: str) -> 'EntityId':
+    def from_string(cls, value: str) -> "EntityId":
         """Create EntityId from existing string"""
         return cls(value)
 

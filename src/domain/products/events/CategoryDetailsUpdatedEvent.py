@@ -7,6 +7,7 @@ from domain.core.events.DomainEvent import DomainEvent
 
 class CategoryDetailsUpdatedEvent(DomainEvent):
     """Event raised when a category's details (name, description) are updated."""
+
     updated_details: dict[str, Any]
     updated_at: datetime
 

@@ -11,8 +11,5 @@ class CustomerRegisteredEvent(DomainEvent):
 
     def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()
-        base_dict.update({
-            "name": self.name,
-            "email": self.email
-        })
+        base_dict.update({"name": self.name, "email": self.email})
         return base_dict

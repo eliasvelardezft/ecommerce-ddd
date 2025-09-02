@@ -116,10 +116,11 @@ from integration_contracts.events.order.order_placed import (
 
 logger = logging.getLogger(__name__)
 
+
 def register_customer_event_handlers(
     domain_event_dispatcher: DomainEventDispatcher,
-    integration_event_dispatcher: IntegrationEventDispatcher, # Added
-    container: dict # Assuming container is a dict for simplicity
+    integration_event_dispatcher: IntegrationEventDispatcher,  # Added
+    container: dict,  # Assuming container is a dict for simplicity
 ) -> None:
     """
     Register all event handlers related to the CUSTOMER domain.
@@ -136,33 +137,36 @@ def register_customer_event_handlers(
     # 1. Register handlers for INTERNAL events originating from Customer domain
     # These handlers are within the Customer BC and react to internal Customer events.
     domain_event_dispatcher.register_handler(
-        InternalCustomerRegisteredEvent,
-        CustomerUpdateReadModelHandler(customer_read_repo)
+        InternalCustomerRegisteredEvent, CustomerUpdateReadModelHandler(customer_read_repo)
     )
     domain_event_dispatcher.register_handler(
-        InternalCustomerRegisteredEvent,
-        CustomerSendWelcomeEmailHandler(email_service)
+        InternalCustomerRegisteredEvent, CustomerSendWelcomeEmailHandler(email_service)
     )
     domain_event_dispatcher.register_handler(
-        InternalCustomerRegisteredEvent,
-        AuditNewCustomerOnCustomerRegisteredEvent(audit_service)
+        InternalCustomerRegisteredEvent, AuditNewCustomerOnCustomerRegisteredEvent(audit_service)
     )
-    logger.info("[Registry] Internal Customer event handlers registered with DomainEventDispatcher.")
+    logger.info(
+        "[Registry] Internal Customer event handlers registered with DomainEventDispatcher."
+    )
 
     # 2. Register handlers for PUBLIC INTEGRATION event contracts consumed by Customer domain
     # These handlers are within the Customer BC but react to public events from OTHER BCs (e.g., Orders).
     # The handler 'UpdateCustomerOnOrderPlaced' now expects 'OrderPlacedEventContractV1'.
     integration_event_dispatcher.register_handler(
-        OrderPlacedEventContractV1, # Subscribes to the public contract
-        UpdateCustomerOnOrderPlaced(customer_read_repo) # This handler must be updated to expect the contract
+        OrderPlacedEventContractV1,  # Subscribes to the public contract
+        UpdateCustomerOnOrderPlaced(
+            customer_read_repo
+        ),  # This handler must be updated to expect the contract
     )
-    logger.info("[Registry] Integration event handlers for Customer domain registered with IntegrationEventDispatcher.")
+    logger.info(
+        "[Registry] Integration event handlers for Customer domain registered with IntegrationEventDispatcher."
+    )
 
 
 def register_order_event_handlers(
     domain_event_dispatcher: DomainEventDispatcher,
-    integration_event_dispatcher: IntegrationEventDispatcher, # Added for consistency and future use
-    container: dict
+    integration_event_dispatcher: IntegrationEventDispatcher,  # Added for consistency and future use
+    container: dict,
 ) -> None:
     """
     Register all event handlers related to the ORDER domain.
@@ -176,24 +180,20 @@ def register_order_event_handlers(
 
     # 1. Register handlers for INTERNAL events originating from Order domain
     domain_event_dispatcher.register_handler(
-        InternalOrderPlacedEvent,
-        OrderUpdateReadModelHandler(order_read_repo)
+        InternalOrderPlacedEvent, OrderUpdateReadModelHandler(order_read_repo)
     )
 
     # Register lifecycle event handlers
     domain_event_dispatcher.register_handler(
-        InternalOrderProcessingEvent,
-        UpdateOrderOnOrderProcessing(order_read_repo)
+        InternalOrderProcessingEvent, UpdateOrderOnOrderProcessing(order_read_repo)
     )
 
     domain_event_dispatcher.register_handler(
-        InternalOrderCompletedEvent,
-        UpdateOrderOnOrderCompleted(order_read_repo)
+        InternalOrderCompletedEvent, UpdateOrderOnOrderCompleted(order_read_repo)
     )
 
     domain_event_dispatcher.register_handler(
-        InternalOrderCancelledEvent,
-        UpdateOrderOnOrderCancelled(order_read_repo)
+        InternalOrderCancelledEvent, UpdateOrderOnOrderCancelled(order_read_repo)
     )
 
     logger.info("[Registry] Internal Order event handlers registered with DomainEventDispatcher.")
@@ -212,61 +212,59 @@ def register_order_event_handlers(
     #     )
     #     logger.info("[Registry] Integration event handlers for Order domain registered with IntegrationEventDispatcher (if any).")
 
+
 def register_product_event_handlers(
     domain_event_dispatcher: DomainEventDispatcher,
     # integration_event_dispatcher: IntegrationEventDispatcher, # If/when products have integration events
-    container: dict
+    container: dict,
 ) -> None:
     logger.info("[Registry] Registering Product event handlers...")
-    product_read_repo = container.get("product_read_repository") # Assuming this key
+    product_read_repo = container.get("product_read_repository")  # Assuming this key
 
     domain_event_dispatcher.register_handler(
-        InternalProductCreatedEvent,
-        UpdateProductOnProductCreated(product_read_repo)
+        InternalProductCreatedEvent, UpdateProductOnProductCreated(product_read_repo)
     )
     domain_event_dispatcher.register_handler(
-        InternalProductStockUpdatedEvent,
-        UpdateProductOnProductStockUpdated(product_read_repo)
+        InternalProductStockUpdatedEvent, UpdateProductOnProductStockUpdated(product_read_repo)
     )
     domain_event_dispatcher.register_handler(
-        InternalProductPriceUpdatedEvent,
-        UpdateProductOnProductPriceUpdated(product_read_repo)
+        InternalProductPriceUpdatedEvent, UpdateProductOnProductPriceUpdated(product_read_repo)
     )
     domain_event_dispatcher.register_handler(
-        InternalProductActivatedEvent,
-        UpdateProductOnProductActivated(product_read_repo)
+        InternalProductActivatedEvent, UpdateProductOnProductActivated(product_read_repo)
     )
     domain_event_dispatcher.register_handler(
-        InternalProductDeactivatedEvent,
-        UpdateProductOnProductDeactivated(product_read_repo)
+        InternalProductDeactivatedEvent, UpdateProductOnProductDeactivated(product_read_repo)
     )
     logger.info("[Registry] Internal Product event handlers registered with DomainEventDispatcher.")
 
+
 def register_category_event_handlers(
-    domain_event_dispatcher: DomainEventDispatcher,
-    container: dict
+    domain_event_dispatcher: DomainEventDispatcher, container: dict
 ) -> None:
     logger.info("[Registry] Registering Category event handlers...")
-    category_read_repo = container.get("category_read_repository") # Assuming this key
+    category_read_repo = container.get("category_read_repository")  # Assuming this key
 
     domain_event_dispatcher.register_handler(
-        InternalCategoryCreatedEvent,
-        UpdateCategoryOnCategoryCreated(category_read_repo)
+        InternalCategoryCreatedEvent, UpdateCategoryOnCategoryCreated(category_read_repo)
     )
     domain_event_dispatcher.register_handler(
         InternalCategoryDetailsUpdatedEvent,
-        UpdateCategoryOnCategoryDetailsUpdated(category_read_repo)
+        UpdateCategoryOnCategoryDetailsUpdated(category_read_repo),
     )
     domain_event_dispatcher.register_handler(
         InternalCategoryParentChangedEvent,
-        UpdateCategoryOnCategoryParentChanged(category_read_repo)
+        UpdateCategoryOnCategoryParentChanged(category_read_repo),
     )
-    logger.info("[Registry] Internal Category event handlers registered with DomainEventDispatcher.")
+    logger.info(
+        "[Registry] Internal Category event handlers registered with DomainEventDispatcher."
+    )
+
 
 def register_all_event_handlers(
     domain_event_dispatcher: DomainEventDispatcher,
     integration_event_dispatcher: IntegrationEventDispatcher,
-    container: dict
+    container: dict,
 ) -> None:
     """
     Registers all domain-specific and integration event handlers with their respective dispatchers
@@ -277,23 +275,21 @@ def register_all_event_handlers(
     register_customer_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
         integration_event_dispatcher=integration_event_dispatcher,
-        container=container
+        container=container,
     )
 
     register_order_event_handlers(
         domain_event_dispatcher=domain_event_dispatcher,
-        integration_event_dispatcher=integration_event_dispatcher, # Now passed here
-        container=container
+        integration_event_dispatcher=integration_event_dispatcher,  # Now passed here
+        container=container,
     )
 
     register_product_event_handlers(
-        domain_event_dispatcher=domain_event_dispatcher,
-        container=container
+        domain_event_dispatcher=domain_event_dispatcher, container=container
     )
 
     register_category_event_handlers(
-        domain_event_dispatcher=domain_event_dispatcher,
-        container=container
+        domain_event_dispatcher=domain_event_dispatcher, container=container
     )
 
     logger.info("[Bootstrap] All application event handlers registered.")

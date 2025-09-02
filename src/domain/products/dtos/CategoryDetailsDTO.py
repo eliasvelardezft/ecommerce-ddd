@@ -13,6 +13,4 @@ class CategoryDetailsDTO(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    model_config = {
-        "arbitrary_types_allowed": True
-    }
+    model_config = {"arbitrary_types_allowed": True}

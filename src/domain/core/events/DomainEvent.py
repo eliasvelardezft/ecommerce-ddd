@@ -9,8 +9,7 @@ class DomainEvent:
 
     def to_dict(self) -> dict[str, Any]:
         base_dict = {}
-        base_dict.update({
-            "aggregate_id": self.aggregate_id,
-            "occurred_on": self.occurred_on.isoformat()
-        })
+        base_dict.update(
+            {"aggregate_id": self.aggregate_id, "occurred_on": self.occurred_on.isoformat()}
+        )
         return base_dict

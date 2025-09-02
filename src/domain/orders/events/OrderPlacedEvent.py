@@ -7,6 +7,7 @@ from domain.core.value_objects.Money import Money
 
 class OrderPlacedEvent(DomainEvent):
     """Internal Domain Event raised when an order is successfully placed."""
+
     def __init__(
         self,
         aggregate_id: UUID,
@@ -32,14 +33,16 @@ class OrderPlacedEvent(DomainEvent):
 
     def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()
-        base_dict.update({
-            "customer_id": str(self.customer_id),
-            "order_number": self.order_number,
-            "items_data": self.items_data,
-            "total_amount": self.total_amount,
-            "currency": self.currency,
-            "shipping_details_data": self.shipping_details_data,
-            "status": self.status,
-            "items_count": self.items_count
-        })
+        base_dict.update(
+            {
+                "customer_id": str(self.customer_id),
+                "order_number": self.order_number,
+                "items_data": self.items_data,
+                "total_amount": self.total_amount,
+                "currency": self.currency,
+                "shipping_details_data": self.shipping_details_data,
+                "status": self.status,
+                "items_count": self.items_count,
+            }
+        )
         return base_dict

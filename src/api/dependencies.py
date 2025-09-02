@@ -1,4 +1,5 @@
 """Core/infrastructure dependencies"""
+
 from collections.abc import AsyncGenerator
 from typing import Annotated
 
@@ -23,26 +24,20 @@ from infrastructure.orders.events.OrderIntegrationPublisher import (
 )
 
 # MongoDB client for read model
-mongo_client = AsyncIOMotorClient(
-    settings.mongo_url,
-    uuidRepresentation="standard"
-)
+mongo_client = AsyncIOMotorClient(settings.mongo_url, uuidRepresentation="standard")
 mongo_db = mongo_client[settings.mongo_db]
 
 # PostgreSQL engine for write model
 write_engine = create_async_engine(
     settings.postgres_url,
     echo=settings.api_debug,  # Log SQL queries in debug mode
-    pool_size=10,            # Connection pool size
-    max_overflow=20,         # Additional connections beyond pool_size
-    pool_pre_ping=True,      # Validate connections before use
-    pool_recycle=3600        # Recycle connections after 1 hour
+    pool_size=10,  # Connection pool size
+    max_overflow=20,  # Additional connections beyond pool_size
+    pool_pre_ping=True,  # Validate connections before use
+    pool_recycle=3600,  # Recycle connections after 1 hour
 )
-AsyncSessionLocal = sessionmaker(
-    write_engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
+AsyncSessionLocal = sessionmaker(write_engine, class_=AsyncSession, expire_on_commit=False)
+
 
 async def get_db_session() -> AsyncGenerator[AsyncSession]:
     async with AsyncSessionLocal() as session:
@@ -55,11 +50,15 @@ async def get_db_session() -> AsyncGenerator[AsyncSession]:
         finally:
             await session.close()
 
+
 def get_mongo_db():
     return mongo_db
 
+
 # Event System Dependencies
-def get_domain_event_dispatcher(mongo_db: Annotated[AsyncIOMotorDatabase, Depends(get_mongo_db)]) -> DomainEventDispatcher:
+def get_domain_event_dispatcher(
+    mongo_db: Annotated[AsyncIOMotorDatabase, Depends(get_mongo_db)],
+) -> DomainEventDispatcher:
     """Create a fresh DomainEventDispatcher with all handlers registered."""
     from infrastructure.customers.persistence.CustomerReadRepository import (
         CustomerReadRepository,
@@ -93,22 +92,25 @@ def get_domain_event_dispatcher(mongo_db: Annotated[AsyncIOMotorDatabase, Depend
     # Register all event handlers
     integration_event_dispatcher = get_integration_event_dispatcher()
     register_all_event_handlers(
-        domain_event_dispatcher,
-        integration_event_dispatcher,
-        event_handler_dependencies
+        domain_event_dispatcher, integration_event_dispatcher, event_handler_dependencies
     )
 
     return domain_event_dispatcher
+
 
 def get_integration_event_dispatcher() -> IntegrationEventDispatcher:
     """Create a fresh IntegrationEventDispatcher."""
     return create_integration_event_dispatcher()
 
+
 def get_order_integration_event_publisher(
-    integration_dispatcher: Annotated[IntegrationEventDispatcher, Depends(get_integration_event_dispatcher)]
+    integration_dispatcher: Annotated[
+        IntegrationEventDispatcher, Depends(get_integration_event_dispatcher)
+    ],
 ) -> OrderIntegrationEventPublisher:
     """Create a fresh OrderIntegrationEventPublisher."""
     return OrderIntegrationEventPublisher(integration_dispatcher)
+
 
 def get_event_store() -> EventStore:
     """Create a fresh EventStore instance."""

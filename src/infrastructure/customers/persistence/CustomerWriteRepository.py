@@ -13,6 +13,7 @@ from .Customer import CustomerSQL
 
 logger = logging.getLogger(__name__)
 
+
 class CustomerWriteRepository(ICustomerWriteRepository):
     """Repository for write operations (commands) on Customer aggregate"""
 
@@ -29,7 +30,7 @@ class CustomerWriteRepository(ICustomerWriteRepository):
             name=customer.name,
             email=customer.email,
             created_at=customer.created_at,
-            updated_at=customer.updated_at
+            updated_at=customer.updated_at,
         )
 
         self._session.add(db_customer)
@@ -58,5 +59,5 @@ class CustomerWriteRepository(ICustomerWriteRepository):
             name=db_customer.name,
             email=db_customer.email,
             created_at=db_customer.created_at,
-            updated_at=db_customer.updated_at
+            updated_at=db_customer.updated_at,
         )

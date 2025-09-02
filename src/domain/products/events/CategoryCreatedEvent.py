@@ -7,6 +7,7 @@ from domain.core.events.DomainEvent import DomainEvent
 
 class CategoryCreatedEvent(DomainEvent):
     """Event raised when a new category is created."""
+
     name: str
     description: str | None
     parent_category_id: UUID | None

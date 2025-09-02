@@ -53,17 +53,14 @@ from domain.products.repositories.ICategoryWriteRepository import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(
-    prefix="/category",
-    tags=["category"]
-)
+router = APIRouter(prefix="/category", tags=["category"])
 
 
 @router.post("/")
 async def create_category(
     command: CreateCategoryCommand,
     repository: Annotated[ICategoryWriteRepository, Depends(get_category_write_repository)],
-    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)],
 ):
     """Create a new category"""
     logger.info(f"Creating category '{command.name}'")
@@ -74,16 +71,17 @@ async def create_category(
         return {
             "message": "Category created successfully",
             "category_id": str(category.id),  # Convert EntityId to string
-            "name": category.name
+            "name": category.name,
         }
     except Exception as e:
         logger.error(f"Error creating category: {e}", exc_info=True)
         raise HTTPException(status_code=400, detail=str(e)) from e
 
+
 @router.get("/{category_id}")
 async def get_category(
     category_id: str,
-    repository: Annotated[ICategoryReadRepository, Depends(get_category_read_repository)]
+    repository: Annotated[ICategoryReadRepository, Depends(get_category_read_repository)],
 ):
     """Get category by ID"""
     logger.info(f"Fetching category {category_id}")
@@ -102,6 +100,7 @@ async def get_category(
         logger.error(f"Error fetching category {category_id}: {e}", exc_info=True)
         raise HTTPException(status_code=400, detail=str(e)) from e
 
+
 @router.get("/")
 async def list_categories(
     repository: Annotated[ICategoryReadRepository, Depends(get_category_read_repository)],
@@ -113,20 +112,18 @@ async def list_categories(
     handler = ListCategoriesHandler(repository)
     try:
         categories = await handler.handle(query)
-        return {
-            "categories": categories,
-            "count": len(categories)
-        }
+        return {"categories": categories, "count": len(categories)}
     except Exception as e:
         logger.error(f"Error listing categories: {e}", exc_info=True)
         raise HTTPException(status_code=400, detail=str(e)) from e
+
 
 @router.put("/{category_id}")
 async def update_category_details(
     category_id: str,
     command: UpdateCategoryDetailsCommand,
     repository: Annotated[ICategoryWriteRepository, Depends(get_category_write_repository)],
-    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)],
 ):
     """Update category details"""
     logger.info(f"Updating details for category {category_id}")
@@ -136,13 +133,11 @@ async def update_category_details(
     try:
         await handler.handle(command)
         logger.info(f"Successfully updated category {category_id}")
-        return {
-            "message": "Category details updated successfully",
-            "category_id": category_id
-        }
+        return {"message": "Category details updated successfully", "category_id": category_id}
     except Exception as e:
         logger.error(f"Error updating category {category_id}: {e}", exc_info=True)
         raise HTTPException(status_code=400, detail=str(e)) from e
+
 
 # Business-oriented action
 @router.put("/{category_id}/parent")
@@ -150,7 +145,7 @@ async def change_category_parent(
     category_id: str,
     command: ChangeCategoryParentCommand,
     repository: Annotated[ICategoryWriteRepository, Depends(get_category_write_repository)],
-    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)],
 ):
     """Change category parent - business action"""
     logger.info(f"Changing parent for category {category_id}")
@@ -163,7 +158,7 @@ async def change_category_parent(
         return {
             "message": "Category parent changed successfully",
             "category_id": category_id,
-            "new_parent_id": command.new_parent_category_id
+            "new_parent_id": command.new_parent_category_id,
         }
     except Exception as e:
         logger.error(f"Error changing parent for category {category_id}: {e}", exc_info=True)

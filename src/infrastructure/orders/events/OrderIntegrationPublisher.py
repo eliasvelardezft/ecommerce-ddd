@@ -16,31 +16,32 @@ from infrastructure.orders.events.mappers import (
 
 logger = logging.getLogger(__name__)
 
+
 class OrderIntegrationEventPublisher:
     """
     Responsible for converting internal Order domain events into public integration event contracts
     and dispatching them via the central IntegrationEventDispatcher.
     This publisher is specific to the Orders Bounded Context.
     """
+
     def __init__(self, integration_event_dispatcher: IntegrationEventDispatcher):
         self._integration_event_dispatcher = integration_event_dispatcher
         # Registry: InternalOrderEventType -> CallableMapperFunction (maps internal to public contract)
-        self._mappers: dict[type[DomainEvent], Callable[[DomainEvent], PydanticBaseModel | None]] = {}
+        self._mappers: dict[
+            type[DomainEvent], Callable[[DomainEvent], PydanticBaseModel | None]
+        ] = {}
         self._register_default_mappers()
         logger.info("[OrderIntegrationEventPublisher] Initialized.")
 
     def _register_default_mappers(self):
         """Pre-registers known mappers for Order domain's public events."""
-        self.register_mapper(
-            InternalOrderPlacedEvent,
-            map_internal_order_placed_to_v1_contract
-        )
+        self.register_mapper(InternalOrderPlacedEvent, map_internal_order_placed_to_v1_contract)
         logger.info("[OrderIntegrationEventPublisher] Default mappers registered.")
 
     def register_mapper(
         self,
         internal_event_type: type[DomainEvent],
-        mapper_func: Callable[[DomainEvent], PydanticBaseModel | None]
+        mapper_func: Callable[[DomainEvent], PydanticBaseModel | None],
     ) -> None:
         """Allows dynamic registration of mappers if needed (e.g., during bootstrap for plugin-like extensions)."""
         if not issubclass(internal_event_type, DomainEvent):
@@ -51,9 +52,13 @@ class OrderIntegrationEventPublisher:
             return
 
         if internal_event_type in self._mappers:
-            logger.warning(f"[OrderIntegrationEventPublisher] Re-registering mapper for internal event {internal_event_type.__name__}")
+            logger.warning(
+                f"[OrderIntegrationEventPublisher] Re-registering mapper for internal event {internal_event_type.__name__}"
+            )
         self._mappers[internal_event_type] = mapper_func
-        logger.info(f"[OrderIntegrationEventPublisher] Registered mapper for internal event {internal_event_type.__name__}")
+        logger.info(
+            f"[OrderIntegrationEventPublisher] Registered mapper for internal event {internal_event_type.__name__}"
+        )
 
     async def publish(self, internal_event: DomainEvent) -> None:
         """
@@ -70,7 +75,9 @@ class OrderIntegrationEventPublisher:
             )
             public_contract_event = mapper(internal_event)
             if public_contract_event:
-                event_type_name = getattr(public_contract_event, 'event_type', public_contract_event.__class__.__name__)
+                event_type_name = getattr(
+                    public_contract_event, "event_type", public_contract_event.__class__.__name__
+                )
                 logger.info(
                     f"[OrderIntegrationEventPublisher] Publishing public contract: {event_type_name} "
                     f"(from internal {internal_event_type.__name__})"

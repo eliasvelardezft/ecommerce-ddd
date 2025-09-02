@@ -8,6 +8,7 @@ from domain.products.repositories.ICategoryReadRepository import (
 
 logger = logging.getLogger(__name__)
 
+
 class UpdateCategoryOnCategoryCreated:
     def __init__(self, read_repository: ICategoryReadRepository):
         self._read_repository = read_repository
@@ -23,7 +24,7 @@ class UpdateCategoryOnCategoryCreated:
             children_ids=[],
             children=[],
             created_at=event.created_at,
-            updated_at=event.created_at
+            updated_at=event.created_at,
         )
 
         await self._read_repository.update_read_model(category_dto)

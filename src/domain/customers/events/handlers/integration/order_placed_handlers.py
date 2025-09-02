@@ -17,6 +17,7 @@ class UpdateCustomerOnOrderPlaced:
     Updates customer information based on an order placement.
     (Example: increment order count, update last order date)
     """
+
     def __init__(self, customer_read_repository: ICustomerReadRepository):
         self._customer_read_repository = customer_read_repository
         logger.info("[UpdateCustomerOnOrderPlaced] Initialized.")
@@ -34,21 +35,29 @@ class UpdateCustomerOnOrderPlaced:
 
             # Fetch the customer - using read repo as this handler typically updates a read model
             # or performs actions that don't belong in the customer aggregate's transactional boundary.
-            customer = await self._customer_read_repository.get_customer_profile_by_id(customer_id) # Assuming find_by_id
+            customer = await self._customer_read_repository.get_customer_profile_by_id(
+                customer_id
+            )  # Assuming find_by_id
 
             if customer:
-                logger.info(f"[UpdateCustomerOnOrderPlaced] Updating customer {customer_id} based on order {event.order_id}.")
+                logger.info(
+                    f"[UpdateCustomerOnOrderPlaced] Updating customer {customer_id} based on order {event.order_id}."
+                )
                 # Example: Increment order count or update last order date.
                 # This is a placeholder for actual logic.
                 # For a read model, you might directly update a document.
                 customer.total_orders += 1
                 customer.last_order_date = event.occurred_on
-                await self._customer_read_repository.update_read_model(customer) # Or save, depending on repo
+                await self._customer_read_repository.update_read_model(
+                    customer
+                )  # Or save, depending on repo
 
             else:
-                logger.warning(f"[UpdateCustomerOnOrderPlaced] Customer with ID {customer_id} not found. Cannot update.")
+                logger.warning(
+                    f"[UpdateCustomerOnOrderPlaced] Customer with ID {customer_id} not found. Cannot update."
+                )
         except Exception as e:
             logger.error(
                 f"[UpdateCustomerOnOrderPlaced] Error processing OrderPlacedEventContractV1 for order ID {event.order_id}: {e}",
-                exc_info=True
+                exc_info=True,
             )

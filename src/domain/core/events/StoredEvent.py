@@ -14,7 +14,7 @@ class StoredEvent:
         data: str,
         aggregate_id: str,
         timestamp: datetime | None = None,
-        event_id: UUID | None = None
+        event_id: UUID | None = None,
     ):
         self.event_id = event_id or uuid4()
         self.timestamp = timestamp or datetime.now()
@@ -23,9 +23,9 @@ class StoredEvent:
         self.aggregate_id = aggregate_id
 
     @classmethod
-    def from_domain_event(cls, event: 'DomainEvent') -> 'StoredEvent':
+    def from_domain_event(cls, event: "DomainEvent") -> "StoredEvent":
         return cls(
             event_type=event.__class__.__name__,
             data=json.dumps(jsonable_encoder(event.to_dict())),
-            aggregate_id=event.aggregate_id
+            aggregate_id=event.aggregate_id,
         )

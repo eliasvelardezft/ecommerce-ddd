@@ -16,7 +16,9 @@ class CategoryReadRepository(ICategoryReadRepository):
     def __init__(self, database: AsyncIOMotorDatabase):
         self._db = database
         self._collection = self._db.category_details_view
-        logger.info(f"Initialized CategoryReadRepository with MongoDB, collection: {self._collection}")
+        logger.info(
+            f"Initialized CategoryReadRepository with MongoDB, collection: {self._collection}"
+        )
 
     async def _doc_to_dto(self, doc: dict) -> CategoryDetailsDTO | None:
         if not doc:
@@ -31,14 +33,14 @@ class CategoryReadRepository(ICategoryReadRepository):
         if "children" in doc and isinstance(doc["children"], list):
             children_dtos = []
             for child_doc in doc["children"]:
-                child_dto = await self._doc_to_dto(child_doc) # Recursive call
+                child_dto = await self._doc_to_dto(child_doc)  # Recursive call
                 if child_dto:
                     children_dtos.append(child_dto)
             doc["children"] = children_dtos
-        elif "children" not in doc: # Ensure children list exists even if empty
+        elif "children" not in doc:  # Ensure children list exists even if empty
             doc["children"] = []
 
-        if "children_ids" not in doc: # Ensure children_ids list exists even if empty
+        if "children_ids" not in doc:  # Ensure children_ids list exists even if empty
             doc["children_ids"] = []
         # children_ids should already be strings now
 
@@ -47,8 +49,12 @@ class CategoryReadRepository(ICategoryReadRepository):
 
         return CategoryDetailsDTO(**doc)
 
-    async def get_category(self, category_id: str, recursive: bool = False) -> CategoryDetailsDTO | None:
-        logger.debug(f"[ReadRepo] Fetching category_details by ID: {category_id}, Recursive: {recursive}")
+    async def get_category(
+        self, category_id: str, recursive: bool = False
+    ) -> CategoryDetailsDTO | None:
+        logger.debug(
+            f"[ReadRepo] Fetching category_details by ID: {category_id}, Recursive: {recursive}"
+        )
         doc = await self._collection.find_one({"_id": category_id})
         if not doc:
             logger.warning(f"[ReadRepo] CategoryDetailsDTO not found for ID: {category_id}")
@@ -110,8 +116,10 @@ class CategoryReadRepository(ICategoryReadRepository):
         # IDs should already be strings in the DTO now, no conversion needed
 
         await self._collection.update_one(
-            {"_id": category_dto.id}, # Use string ID directly
+            {"_id": category_dto.id},  # Use string ID directly
             {"$set": category_doc_for_set},
-            upsert=True
+            upsert=True,
         )
-        logger.info(f"[ReadRepo] Successfully updated/inserted read model for category ID: {category_dto.id}")
+        logger.info(
+            f"[ReadRepo] Successfully updated/inserted read model for category ID: {category_dto.id}"
+        )

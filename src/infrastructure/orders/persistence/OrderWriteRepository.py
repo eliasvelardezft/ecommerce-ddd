@@ -30,7 +30,7 @@ class OrderWriteRepository(IOrderWriteRepository):
             customer_id=str(order.customer_id),  # Convert EntityId to string
             status=order.status,
             created_at=order.created_at,
-            updated_at=order.updated_at
+            updated_at=order.updated_at,
         )
 
         # Convert domain items to SQL models
@@ -40,7 +40,7 @@ class OrderWriteRepository(IOrderWriteRepository):
                 order_id=str(order.id),  # Convert EntityId to string
                 product_id=str(item.product_id),  # Convert EntityId to string
                 quantity=item.quantity,
-                unit_price=float(item.unit_price.amount)  # Convert Money to float for database
+                unit_price=float(item.unit_price.amount),  # Convert Money to float for database
             )
             for item in order.items
         ]
@@ -53,9 +53,7 @@ class OrderWriteRepository(IOrderWriteRepository):
 
     async def get_by_id(self, id: EntityId) -> Order | None:
         """Retrieve an order by ID"""
-        result = await self._session.execute(
-            select(OrderSQL).where(OrderSQL.id == str(id))
-        )
+        result = await self._session.execute(select(OrderSQL).where(OrderSQL.id == str(id)))
         db_order = result.scalar_one_or_none()
 
         if not db_order:
@@ -66,18 +64,20 @@ class OrderWriteRepository(IOrderWriteRepository):
             OrderItem(
                 product_id=EntityId.from_string(item.product_id),  # Convert string back to EntityId
                 quantity=item.quantity,
-                unit_price=item.unit_price
+                unit_price=item.unit_price,
             )
             for item in db_order.items
         ]
 
         return Order(
             _id=EntityId.from_string(db_order.id),  # Convert string back to EntityId
-            customer_id=EntityId.from_string(db_order.customer_id),  # Convert string back to EntityId
+            customer_id=EntityId.from_string(
+                db_order.customer_id
+            ),  # Convert string back to EntityId
             items=order_items,
             status=db_order.status,
             created_at=db_order.created_at,
-            updated_at=db_order.updated_at
+            updated_at=db_order.updated_at,
         )
 
     async def delete(self, order: Order) -> None:

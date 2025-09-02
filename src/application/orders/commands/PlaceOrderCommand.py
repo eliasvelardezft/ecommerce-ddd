@@ -7,6 +7,7 @@ from domain.orders.value_objects.ShippingDetails import ShippingDetails
 
 class OrderItemRequest(BaseModel):
     """DTO for order item requests from API"""
+
     product_id: str
     product_name: str
     quantity: int = Field(..., gt=0)

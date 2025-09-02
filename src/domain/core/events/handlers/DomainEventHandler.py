@@ -3,7 +3,8 @@ from typing import Generic, TypeVar
 
 from ..DomainEvent import DomainEvent
 
-TEvent = TypeVar('TEvent', bound=DomainEvent)
+TEvent = TypeVar("TEvent", bound=DomainEvent)
+
 
 class DomainEventHandler(Generic[TEvent], ABC):
     """

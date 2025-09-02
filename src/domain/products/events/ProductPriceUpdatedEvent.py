@@ -6,6 +6,7 @@ from domain.core.value_objects.Money import Money  # Assuming Money is needed
 
 class ProductPriceUpdatedEvent(DomainEvent):
     """Event raised when the price of a product is updated."""
+
     def __init__(self, aggregate_id: UUID, price: Money):
         super().__init__(aggregate_id=str(aggregate_id))
         self.price: Money = price

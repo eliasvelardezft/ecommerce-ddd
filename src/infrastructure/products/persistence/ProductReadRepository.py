@@ -12,13 +12,16 @@ logger = logging.getLogger(__name__)
 # Define the MongoDB collection name
 PRODUCT_DETAILS_COLLECTION = "product_details_view"
 
+
 class ProductReadRepository(IProductReadRepository):
     """MongoDB implementation for reading ProductDetailsDTO."""
 
     def __init__(self, database: AsyncIOMotorDatabase):
         self._db = database
         self._collection = self._db[PRODUCT_DETAILS_COLLECTION]
-        logger.info(f"Initialized ProductReadRepository with MongoDB, collection: {PRODUCT_DETAILS_COLLECTION}")
+        logger.info(
+            f"Initialized ProductReadRepository with MongoDB, collection: {PRODUCT_DETAILS_COLLECTION}"
+        )
 
     async def get_product_details_by_id(self, product_id: str) -> ProductDetailsDTO | None:
         logger.debug(f"[ReadRepo] Fetching product_details by ID: {product_id}")
@@ -64,11 +67,15 @@ class ProductReadRepository(IProductReadRepository):
     async def update_read_model(self, product_dto: ProductDetailsDTO) -> None:
         logger.debug(f"[ReadRepo] Updating read model for product ID: {product_dto.id}")
         # Prepare document for MongoDB with proper JSON serialization (converts Decimal to float)
-        update_data = product_dto.model_dump(mode='json')  # This converts Decimal to float for MongoDB
+        update_data = product_dto.model_dump(
+            mode="json"
+        )  # This converts Decimal to float for MongoDB
 
         await self._collection.update_one(
             {"_id": product_dto.id},  # Use string ID directly
             {"$set": update_data},
-            upsert=True
+            upsert=True,
         )
-        logger.info(f"[ReadRepo] Successfully updated/inserted read model for product ID: {product_dto.id}")
+        logger.info(
+            f"[ReadRepo] Successfully updated/inserted read model for product ID: {product_dto.id}"
+        )

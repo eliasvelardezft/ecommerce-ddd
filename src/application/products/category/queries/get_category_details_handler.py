@@ -9,16 +9,18 @@ from .GetCategoryDetailsQuery import GetCategoryDetailsQuery
 
 logger = logging.getLogger(__name__)
 
+
 class GetCategoryDetailsHandler:
     def __init__(self, category_read_repository: ICategoryReadRepository):
         self._category_read_repository = category_read_repository
 
     async def handle(self, query: GetCategoryDetailsQuery) -> CategoryDetailsDTO | None:
-        logger.info(f"Handling GetCategoryDetailsQuery for Category ID: {query.category_id}, Recursive: {query.recursive_children}")
+        logger.info(
+            f"Handling GetCategoryDetailsQuery for Category ID: {query.category_id}, Recursive: {query.recursive_children}"
+        )
 
         category = await self._category_read_repository.get_category(
-            category_id=query.category_id,
-            recursive=query.recursive_children
+            category_id=query.category_id, recursive=query.recursive_children
         )
 
         if not category:

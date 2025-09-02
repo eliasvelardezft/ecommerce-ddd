@@ -25,11 +25,13 @@ class OrderProcessingEvent(DomainEvent):
 
     def to_dict(self) -> dict[str, Any]:
         base_dict = super().to_dict()
-        base_dict.update({
-            "order_number": self.order_number,
-            "customer_id": str(self.customer_id),
-            "status": self.status,
-            "total_amount": self.total_amount,
-            "currency": self.currency,
-        })
+        base_dict.update(
+            {
+                "order_number": self.order_number,
+                "customer_id": str(self.customer_id),
+                "status": self.status,
+                "total_amount": self.total_amount,
+                "currency": self.currency,
+            }
+        )
         return base_dict

@@ -21,8 +21,10 @@ from infrastructure.orders.persistence.OrderWriteRepository import (
 def get_order_write_repository(db: Annotated[AsyncSession, Depends(get_db_session)]):
     return OrderWriteRepository(session=db)
 
+
 def get_order_read_repository(mongo_db: Annotated[AsyncIOMotorDatabase, Depends(get_mongo_db)]):
     return OrderReadRepository(database=mongo_db)
+
 
 def get_order_event_dispatcher(
     dispatcher: Annotated[DomainEventDispatcher, Depends(get_domain_event_dispatcher)],

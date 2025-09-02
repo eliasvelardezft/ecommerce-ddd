@@ -13,6 +13,7 @@ from domain.products.events.CategoryParentChangedEvent import (
 
 # from domain.products.exceptions import CategoryDomainException # Placeholder for future custom exceptions
 
+
 class Category(AggregateRoot):
     id: EntityId
     name: str
@@ -28,7 +29,7 @@ class Category(AggregateRoot):
         description: str | None = None,
         parent_category_id: EntityId | None = None,
         created_at: datetime | None = None,
-        updated_at: datetime | None = None
+        updated_at: datetime | None = None,
     ):
         super().__init__()
         self.id = _id
@@ -51,24 +52,23 @@ class Category(AggregateRoot):
         name: str,
         description: str | None = None,
         parent_category_id: EntityId | None = None,
-    ) -> 'Category':
+    ) -> "Category":
         _id = EntityId.generate()
-        if parent_category_id == _id: # Should not happen with uuid4 but as a safeguard
+        if parent_category_id == _id:  # Should not happen with uuid4 but as a safeguard
             raise ValueError("A category cannot be its own parent during creation.")
 
         category = cls(
-            _id=_id,
-            name=name,
-            description=description,
-            parent_category_id=parent_category_id
+            _id=_id, name=name, description=description, parent_category_id=parent_category_id
         )
-        category.add_domain_event(CategoryCreatedEvent(
-            aggregate_id=category.id,
-            name=category.name,
-            description=category.description,
-            parent_category_id=category.parent_category_id,
-            created_at=category.created_at
-        ))
+        category.add_domain_event(
+            CategoryCreatedEvent(
+                aggregate_id=category.id,
+                name=category.name,
+                description=category.description,
+                parent_category_id=category.parent_category_id,
+                created_at=category.created_at,
+            )
+        )
         return category
 
     def update_details(
@@ -79,42 +79,47 @@ class Category(AggregateRoot):
         changes: dict[str, Any] = {}
         if name is not None and self.name != name:
             if not name.strip():
-                raise ValueError("Category name cannot be empty when updating.") # Replace with CategoryDomainException
+                raise ValueError(
+                    "Category name cannot be empty when updating."
+                )  # Replace with CategoryDomainException
             self.name = name
             changes["name"] = name
 
         if description is not None:
             if self.description != description:
-                 self.description = description
-                 changes["description"] = description
-        elif description is None and self.description is not None: # If None is passed to clear existing description
+                self.description = description
+                changes["description"] = description
+        elif (
+            description is None and self.description is not None
+        ):  # If None is passed to clear existing description
             self.description = None
             changes["description"] = None
 
         if changes:
             self.updated_at = datetime.now()
-            self.add_domain_event(CategoryDetailsUpdatedEvent(
-                aggregate_id=self.id,
-                updated_details=changes,
-                updated_at=self.updated_at
-            ))
+            self.add_domain_event(
+                CategoryDetailsUpdatedEvent(
+                    aggregate_id=self.id, updated_details=changes, updated_at=self.updated_at
+                )
+            )
 
-    def change_parent(
-        self,
-        new_parent_category_id: EntityId | None
-    ) -> None:
+    def change_parent(self, new_parent_category_id: EntityId | None) -> None:
         if self.parent_category_id == new_parent_category_id:
             return
 
         if new_parent_category_id == self.id:
-            raise ValueError("A category cannot be its own parent.") # Replace with CategoryDomainException
+            raise ValueError(
+                "A category cannot be its own parent."
+            )  # Replace with CategoryDomainException
 
         prev_parent_id = self.parent_category_id
         self.parent_category_id = new_parent_category_id
         self.updated_at = datetime.now()
-        self.add_domain_event(CategoryParentChangedEvent(
-            aggregate_id=self.id,
-            new_parent_category_id=self.parent_category_id,
-            prev_parent_category_id=prev_parent_id,
-            updated_at=self.updated_at
-        ))
+        self.add_domain_event(
+            CategoryParentChangedEvent(
+                aggregate_id=self.id,
+                new_parent_category_id=self.parent_category_id,
+                prev_parent_category_id=prev_parent_id,
+                updated_at=self.updated_at,
+            )
+        )

@@ -1,4 +1,5 @@
 """Customer-specific dependencies"""
+
 from typing import Annotated
 
 from fastapi import Depends
@@ -22,11 +23,14 @@ from infrastructure.customers.services.EmailService import EmailService
 def get_customer_write_repository(session: Annotated[AsyncSession, Depends(get_db_session)]):
     return CustomerWriteRepository(session)
 
+
 def get_customer_read_repository(db: Annotated[AsyncIOMotorDatabase, Depends(get_mongo_db)]):
     return CustomerReadRepository(db)
 
+
 def get_email_service():
     return EmailService()
+
 
 def get_audit_service():
     return AuditService()

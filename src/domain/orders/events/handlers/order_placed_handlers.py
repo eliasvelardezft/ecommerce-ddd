@@ -9,6 +9,7 @@ from domain.orders.repositories.IOrderReadRepository import (
 
 logger = logging.getLogger(__name__)
 
+
 class UpdateOrderOnOrderPlaced:
     def __init__(self, read_repository: IOrderReadRepository):
         self._read_repository = read_repository
@@ -21,7 +22,7 @@ class UpdateOrderOnOrderPlaced:
                 product_name=item_data["product_name"],
                 quantity=item_data["quantity"],
                 subtotal=float(item_data["unit_price"]["amount"]) * item_data["quantity"],
-                final_price=float(item_data["unit_price"]["amount"]) * item_data["quantity"]
+                final_price=float(item_data["unit_price"]["amount"]) * item_data["quantity"],
             )
             for item_data in event.items_data
         ]
@@ -34,6 +35,6 @@ class UpdateOrderOnOrderPlaced:
             currency=event.currency,
             items_count=event.items_count,
             status=OrderStatus.DRAFT,
-            created_at=event.occurred_on
+            created_at=event.occurred_on,
         )
         await self._read_repository.update_read_model(order_details)

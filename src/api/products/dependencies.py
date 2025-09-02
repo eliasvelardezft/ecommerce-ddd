@@ -1,4 +1,5 @@
 """Product-specific dependencies"""
+
 from typing import Annotated
 
 from fastapi import Depends
@@ -28,14 +29,18 @@ from infrastructure.products.persistence.ProductWriteRepository import (
 def get_product_write_repository(session: Annotated[AsyncSession, Depends(get_db_session)]):
     return ProductWriteRepository(session)
 
+
 def get_category_write_repository(session: Annotated[AsyncSession, Depends(get_db_session)]):
     return CategoryWriteRepository(session)
+
 
 def get_product_read_repository(db: Annotated[AsyncIOMotorDatabase, Depends(get_mongo_db)]):
     return ProductReadRepository(db)
 
+
 def get_category_read_repository(db: Annotated[AsyncIOMotorDatabase, Depends(get_mongo_db)]):
     return CategoryReadRepository(db)
+
 
 def get_products_event_dispatcher(
     dispatcher: Annotated[DomainEventDispatcher, Depends(get_domain_event_dispatcher)],

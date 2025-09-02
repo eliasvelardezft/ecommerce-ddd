@@ -11,12 +11,12 @@ class OrderItem(BaseModel):
     product_id: EntityId
     product_name: Annotated[str, Field(min_length=1, max_length=255)]
     quantity: Annotated[int, Field(gt=0)]
-    unit_price: Money # Instance of the Money class from core value_objects
+    unit_price: Money  # Instance of the Money class from core value_objects
     # discount_amount field removed for now
 
     model_config = {
         "extra": "forbid",
-        "arbitrary_types_allowed": True # To allow Money type from domain.core
+        "arbitrary_types_allowed": True,  # To allow Money type from domain.core
     }
 
     # model_validator for currency consistency removed as discount_amount is removed.

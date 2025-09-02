@@ -21,7 +21,7 @@ class Customer(AggregateRoot):
         self.updated_at = None
 
     @staticmethod
-    def create(name: str, email: str) -> 'Customer':
+    def create(name: str, email: str) -> "Customer":
         """Factory method for creating a new customer"""
         _id = EntityId.generate()
         customer = Customer(
@@ -31,10 +31,8 @@ class Customer(AggregateRoot):
         )
 
         # Add domain event when customer is created
-        customer.add_domain_event(CustomerRegisteredEvent(
-            aggregate_id=str(_id),
-            name=name,
-            email=email
-        ))
+        customer.add_domain_event(
+            CustomerRegisteredEvent(aggregate_id=str(_id), name=name, email=email)
+        )
 
         return customer

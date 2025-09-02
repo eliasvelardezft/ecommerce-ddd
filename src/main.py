@@ -3,7 +3,7 @@ import logging
 # --- Import and Setup Structured Logging ---
 from infrastructure.core.logging_config import setup_logging
 
-setup_logging() # Call this early to configure logging for the entire application
+setup_logging()  # Call this early to configure logging for the entire application
 # --- End Logging Setup ---
 
 from fastapi import FastAPI
@@ -25,12 +25,11 @@ app = FastAPI(
     debug=settings.api_debug,
 )
 
+
 @app.get("/")
 async def root():
-    return {
-        "message": f"Welcome to {settings.api_title}",
-        "version": settings.api_version
-    }
+    return {"message": f"Welcome to {settings.api_title}", "version": settings.api_version}
+
 
 app.include_router(customer_router, prefix="/api")
 app.include_router(order_router, prefix="/api")

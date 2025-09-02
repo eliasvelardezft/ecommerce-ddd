@@ -73,7 +73,7 @@ class Product(AggregateRoot):
         image_url: ImageUrl | None = None,
         attributes: list[Attribute] | None = None,
         description: str | None = None,
-    ) -> 'Product':
+    ) -> "Product":
         _id = EntityId.generate()
         product = cls(
             _id=_id,
@@ -87,20 +87,22 @@ class Product(AggregateRoot):
             attributes=attributes,
             image_url=image_url,
         )
-        product.add_domain_event(ProductCreatedEvent(
-            aggregate_id=product.id,
-            name=product.name,
-            description=product.description,
-            sku=product.sku,
-            active=product.active,
-            stock_quantity=product.stock_quantity,
-            price_amount=product.price.amount,
-            price_currency=product.price.currency,
-            category_id=product.category_id,
-            image_url=product.image_url.url if product.image_url else None,
-            image_alt_text=product.image_url.alt_text if product.image_url else None,
-            attributes=[attribute.model_dump() for attribute in product.attributes],
-        ))
+        product.add_domain_event(
+            ProductCreatedEvent(
+                aggregate_id=product.id,
+                name=product.name,
+                description=product.description,
+                sku=product.sku,
+                active=product.active,
+                stock_quantity=product.stock_quantity,
+                price_amount=product.price.amount,
+                price_currency=product.price.currency,
+                category_id=product.category_id,
+                image_url=product.image_url.url if product.image_url else None,
+                image_alt_text=product.image_url.alt_text if product.image_url else None,
+                attributes=[attribute.model_dump() for attribute in product.attributes],
+            )
+        )
         return product
 
     def add_stock(self, amount: int) -> None:
@@ -108,10 +110,12 @@ class Product(AggregateRoot):
             raise ValueError("Amount to add to stock must be positive.")
         self.stock_quantity += amount
         self.updated_at = datetime.now()
-        self.add_domain_event(ProductStockUpdatedEvent(
-            aggregate_id=self.id,
-            stock_quantity=self.stock_quantity,
-        ))
+        self.add_domain_event(
+            ProductStockUpdatedEvent(
+                aggregate_id=self.id,
+                stock_quantity=self.stock_quantity,
+            )
+        )
 
     def remove_stock(self, amount: int) -> None:
         if amount <= 0:
@@ -120,33 +124,41 @@ class Product(AggregateRoot):
             raise ValueError("Insufficient stock to remove.")
         self.stock_quantity -= amount
         self.updated_at = datetime.now()
-        self.add_domain_event(ProductStockUpdatedEvent(
-            aggregate_id=self.id,
-            stock_quantity=self.stock_quantity,
-        ))
+        self.add_domain_event(
+            ProductStockUpdatedEvent(
+                aggregate_id=self.id,
+                stock_quantity=self.stock_quantity,
+            )
+        )
 
     def update_price(self, new_price: Money) -> None:
         if new_price.amount < 0:
             raise ValueError("Price cannot be negative.")
         self.price = new_price
         self.updated_at = datetime.now()
-        self.add_domain_event(ProductPriceUpdatedEvent(
-            aggregate_id=self.id,
-            price=self.price,
-        ))
+        self.add_domain_event(
+            ProductPriceUpdatedEvent(
+                aggregate_id=self.id,
+                price=self.price,
+            )
+        )
 
     def activate(self) -> None:
         if not self.active:
             self.active = True
             self.updated_at = datetime.now()
-            self.add_domain_event(ProductActivatedEvent(
-                aggregate_id=self.id,
-            ))
+            self.add_domain_event(
+                ProductActivatedEvent(
+                    aggregate_id=self.id,
+                )
+            )
 
     def deactivate(self) -> None:
         if self.active:
             self.active = False
             self.updated_at = datetime.now()
-            self.add_domain_event(ProductDeactivatedEvent(
-                aggregate_id=self.id,
-            ))
+            self.add_domain_event(
+                ProductDeactivatedEvent(
+                    aggregate_id=self.id,
+                )
+            )

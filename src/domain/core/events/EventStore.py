@@ -1,10 +1,10 @@
-
 from .DomainEvent import DomainEvent
 from .StoredEvent import StoredEvent
 
 
 class EventStore:
     """Stores and retrieves domain events"""
+
     def __init__(self):
         self._events: list[StoredEvent] = []
 

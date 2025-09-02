@@ -13,10 +13,13 @@ from .Category import CategorySQL
 
 logger = logging.getLogger(__name__)
 
+
 class EntityNotFoundError(Exception):
     """Custom exception for when an entity is not found for update."""
+
     def __init__(self, entity_id: EntityId, entity_name: str = "Entity"):
         super().__init__(f"{entity_name} with ID {entity_id} not found for update.")
+
 
 class CategoryWriteRepository(ICategoryWriteRepository):
     def __init__(self, session: AsyncSession):
@@ -29,18 +32,24 @@ class CategoryWriteRepository(ICategoryWriteRepository):
             id=str(category.id),
             name=category.name,
             description=category.description,
-            parent_category_id=str(category.parent_category_id) if category.parent_category_id else None,
+            parent_category_id=str(category.parent_category_id)
+            if category.parent_category_id
+            else None,
             created_at=category.created_at,
-            updated_at=category.updated_at
+            updated_at=category.updated_at,
         )
         self._session.add(db_category_sql)
         return db_category_sql
 
-    async def _update_existing_sql(self, existing_db_category: CategorySQL, category: DomainCategory) -> None:
+    async def _update_existing_sql(
+        self, existing_db_category: CategorySQL, category: DomainCategory
+    ) -> None:
         logger.debug(f"Category {category.id} found in DB, updating SQL fields.")
         existing_db_category.name = category.name
         existing_db_category.description = category.description
-        existing_db_category.parent_category_id = str(category.parent_category_id) if category.parent_category_id else None
+        existing_db_category.parent_category_id = (
+            str(category.parent_category_id) if category.parent_category_id else None
+        )
         # updated_at is handled by BaseModel event listener
         # No need to add to session, existing_db_category is already tracked.
 
@@ -52,7 +61,7 @@ class CategoryWriteRepository(ICategoryWriteRepository):
         if existing_db_category:
             await self._update_existing_sql(existing_db_category, category)
         else:
-            await self._create_new_sql(category) # Will add to session
+            await self._create_new_sql(category)  # Will add to session
 
         try:
             await self._session.commit()
@@ -82,7 +91,9 @@ class CategoryWriteRepository(ICategoryWriteRepository):
             _id=EntityId.from_string(db_category.id),  # Convert string back to EntityId
             name=db_category.name,
             description=db_category.description,
-            parent_category_id=EntityId.from_string(db_category.parent_category_id) if db_category.parent_category_id else None,
+            parent_category_id=EntityId.from_string(db_category.parent_category_id)
+            if db_category.parent_category_id
+            else None,
             created_at=db_category.created_at,
-            updated_at=db_category.updated_at
+            updated_at=db_category.updated_at,
         )

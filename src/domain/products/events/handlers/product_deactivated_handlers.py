@@ -10,6 +10,7 @@ from domain.products.repositories.IProductReadRepository import (
 
 logger = logging.getLogger(__name__)
 
+
 class UpdateProductOnProductDeactivated:
     def __init__(self, read_repository: IProductReadRepository):
         self._read_repository = read_repository
@@ -20,8 +21,10 @@ class UpdateProductOnProductDeactivated:
 
         if product_dto:
             product_dto.active = False
-            product_dto.updated_at = event.occurred_on # Update timestamp
+            product_dto.updated_at = event.occurred_on  # Update timestamp
             await self._read_repository.update_read_model(product_dto)
             logger.info(f"Successfully deactivated product {event.aggregate_id}")
         else:
-            logger.warning(f"ProductDetailsDTO not found for product ID {event.aggregate_id} during deactivation.")
+            logger.warning(
+                f"ProductDetailsDTO not found for product ID {event.aggregate_id} during deactivation."
+            )

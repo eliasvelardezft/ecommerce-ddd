@@ -32,16 +32,14 @@ from .dependencies import (
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(
-    prefix="/customers",
-    tags=["customers"]
-)
+router = APIRouter(prefix="/customers", tags=["customers"])
+
 
 @router.post("/")
 async def register_customer(
     command: RegisterCustomerCommand,
     repository: Annotated[ICustomerWriteRepository, Depends(get_customer_write_repository)],
-    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_domain_event_dispatcher)]
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_domain_event_dispatcher)],
 ):
     handler = RegisterCustomerHandler(repository, event_dispatcher)
     try:
@@ -52,17 +50,19 @@ async def register_customer(
             "name": customer.name,
             "email": customer.email,
             "created_at": customer.created_at,
-            "updated_at": customer.updated_at
+            "updated_at": customer.updated_at,
         }
     except Exception as e:
         import traceback
+
         logger.error(traceback.format_exc())
         raise HTTPException(status_code=400, detail=str(e)) from e
+
 
 @router.get("/profile/{email}")
 async def get_customer_profile(
     email: str,
-    repository: Annotated[ICustomerReadRepository, Depends(get_customer_read_repository)]
+    repository: Annotated[ICustomerReadRepository, Depends(get_customer_read_repository)],
 ):
     query = GetCustomerProfileQuery(email)
     handler = GetCustomerProfileHandler(repository)
@@ -72,10 +72,11 @@ async def get_customer_profile(
 
     return customer
 
+
 @router.get("/{customer_id}")
 async def get_customer_by_id(
     customer_id: str,
-    repository: Annotated[ICustomerReadRepository, Depends(get_customer_read_repository)]
+    repository: Annotated[ICustomerReadRepository, Depends(get_customer_read_repository)],
 ):
     try:
         entity_id = EntityId.from_string(customer_id)

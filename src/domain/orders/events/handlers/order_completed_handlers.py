@@ -8,13 +8,17 @@ from domain.orders.repositories.IOrderReadRepository import (
 
 logger = logging.getLogger(__name__)
 
+
 class UpdateOrderOnOrderCompleted:
     """Handler for updating read model when an order is completed"""
+
     def __init__(self, read_repository: IOrderReadRepository):
         self._read_repository = read_repository
 
     async def handle(self, event: OrderCompletedEvent) -> None:
-        logger.info(f"[UpdateOrderOnOrderCompletedHandler] Updating read model for order {event.order_number} to status {event.status}")
+        logger.info(
+            f"[UpdateOrderOnOrderCompletedHandler] Updating read model for order {event.order_number} to status {event.status}"
+        )
 
         order_dto = await self._read_repository.get_order_details(id=UUID(event.aggregate_id))
 
@@ -23,6 +27,10 @@ class UpdateOrderOnOrderCompleted:
             order_dto.tracking_number = event.tracking_number
 
             await self._read_repository.update_read_model(order_dto)
-            logger.info(f"[UpdateOrderOnOrderCompletedHandler] Successfully updated read model for order {event.order_number}.")
+            logger.info(
+                f"[UpdateOrderOnOrderCompletedHandler] Successfully updated read model for order {event.order_number}."
+            )
         else:
-            logger.warning(f"[UpdateOrderOnOrderCompletedHandler] OrderDetailsDTO not found for order ID {event.aggregate_id}. Cannot update read model.")
+            logger.warning(
+                f"[UpdateOrderOnOrderCompletedHandler] OrderDetailsDTO not found for order ID {event.aggregate_id}. Cannot update read model."
+            )

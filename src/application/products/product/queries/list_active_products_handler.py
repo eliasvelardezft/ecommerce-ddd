@@ -9,6 +9,7 @@ from .ListActiveProductsQuery import ListActiveProductsQuery
 
 logger = logging.getLogger(__name__)
 
+
 class ListActiveProductsHandler:
     def __init__(self, repository: IProductReadRepository):
         self._repository = repository

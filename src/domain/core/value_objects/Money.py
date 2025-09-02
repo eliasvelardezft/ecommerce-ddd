@@ -18,7 +18,6 @@ class Money:
         # Standardize to 2 decimal places for most currencies, can be adjusted
         self._amount = self._amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
-
     @property
     def amount(self) -> Decimal:
         return self._amount

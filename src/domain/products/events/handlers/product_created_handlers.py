@@ -18,10 +18,11 @@ class UpdateProductOnProductCreated:
     async def handle(self, event: ProductCreatedEvent) -> None:
         logger.info(f"Creating product read model on ProductCreatedEvent: {event.aggregate_id}")
 
-        image_url = ImageUrl(
-            url=event.image_url,
-            alt_text=event.image_alt_text
-        ) if event.image_url else None
+        image_url = (
+            ImageUrl(url=event.image_url, alt_text=event.image_alt_text)
+            if event.image_url
+            else None
+        )
 
         attributes = [Attribute(**attr) for attr in event.attributes]
 
@@ -38,7 +39,7 @@ class UpdateProductOnProductCreated:
             attributes=attributes,
             image_url=image_url,
             created_at=event.occurred_on,
-            updated_at=event.occurred_on # Initially, updated_at is same as created_at
+            updated_at=event.occurred_on,  # Initially, updated_at is same as created_at
         )
         await self._read_repository.update_read_model(product_details)
         logger.info(f"Successfully created/updated read model for product {event.aggregate_id}")

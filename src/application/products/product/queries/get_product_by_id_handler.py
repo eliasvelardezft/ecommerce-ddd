@@ -9,6 +9,7 @@ from .GetProductByIdQuery import GetProductByIdQuery
 
 logger = logging.getLogger(__name__)
 
+
 class GetProductByIdHandler:
     def __init__(self, product_read_repository: IProductReadRepository):
         self._product_read_repository = product_read_repository

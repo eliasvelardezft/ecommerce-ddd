@@ -1,5 +1,4 @@
 from domain.core.exceptions import DomainException
 
 
-class OrderValidationException(DomainException):
-    ...
+class OrderValidationException(DomainException): ...

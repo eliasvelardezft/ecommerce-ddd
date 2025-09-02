@@ -10,65 +10,66 @@ from infrastructure.core.settings import settings
 # The patterns are regex strings to match logger names (e.g., record.name)
 LAYER_STYLES_CONFIG = {
     "API": {
-        "patterns": [r"^api(?:\..+)?"], # Corrected: Removed unnecessary double backslashes
-        "style": "bold sky_blue1"
+        "patterns": [r"^api(?:\..+)?"],  # Corrected: Removed unnecessary double backslashes
+        "style": "bold sky_blue1",
     },
     "APPLICATION": {
-        "patterns": [r"^application(?:\..+)?"], # Corrected
-        "style": "bold bright_green"
+        "patterns": [r"^application(?:\..+)?"],  # Corrected
+        "style": "bold bright_green",
     },
     "DOMAIN_MODELS": {
         # Matches loggers like src.domain.<any_bc>.models.<module>, src.domain.core.models.<module>
         # <any_bc> can be customers, orders, products, etc.
-        "patterns": [r"^domain\.(?:[^.]+|core)\.models(?:\..+)?"], # Corrected
-        "style": "orange3"
+        "patterns": [r"^domain\.(?:[^.]+|core)\.models(?:\..+)?"],  # Corrected
+        "style": "orange3",
     },
     "DOMAIN_EVENTS_INTERNAL": {
         # Matches loggers in src.domain.<any_bc>.events.* and src.domain.core.events.*
-        "patterns": [r"^domain\.(?:[^.]+|core)\.events(?:\..+)?"], # Corrected
-        "style": "gold3"
+        "patterns": [r"^domain\.(?:[^.]+|core)\.events(?:\..+)?"],  # Corrected
+        "style": "gold3",
     },
     "INTEGRATION_CONTRACTS": {
-        "patterns": [r"^integration_contracts(?:\..+)?"], # Corrected
-        "style": "bold magenta"
+        "patterns": [r"^integration_contracts(?:\..+)?"],  # Corrected
+        "style": "bold magenta",
     },
     "INFRA_EVENT_PUBLISHING": {
         # Covers mappers and publishers for integration events for specific or all BCs
         # This one is a bit trickier to make fully generic if styles per BC were ever needed without new top-level keys.
         # Assuming for now a common style for all event publishing/mapping under infrastructure.<bc>.event_...
         "patterns": [
-            r"^infrastructure\.(?:[^.]+)\.events(?:\..+)?" # Corrected: Removed double backslashes and fixed unterminated string
+            r"^infrastructure\.(?:[^.]+)\.events(?:\..+)?"  # Corrected: Removed double backslashes and fixed unterminated string
         ],
-        "style": "deep_pink2"
+        "style": "deep_pink2",
     },
     "INFRA_CORE_EVENT_SYSTEM": {
-        "patterns": [r"^infrastructure\.core\.events(?:\..+)?"], # Corrected
-        "style": "grey62"
+        "patterns": [r"^infrastructure\.core\.events(?:\..+)?"],  # Corrected
+        "style": "grey62",
     },
     "INFRA_PERSISTENCE": {
         # Matches src.infrastructure.<any_bc>.persistence.* and src.infrastructure.core.persistence.*
         "patterns": [
-            r"^infrastructure\.(?:[^.]+|core)\.persistence(?:\..+)?" # Corrected
+            r"^infrastructure\.(?:[^.]+|core)\.persistence(?:\..+)?"  # Corrected
         ],
-        "style": "steel_blue3"
+        "style": "steel_blue3",
     },
     "INFRA_SERVICES_EXTERNAL": {
         # Example: src.infrastructure.customers.services. If you add src.infrastructure.products.services, it will be caught.
-        "patterns": [r"^infrastructure\.(?:[^.]+)\.services(?:\..+)?"], # Corrected
-        "style": "light_slate_grey"
+        "patterns": [r"^infrastructure\.(?:[^.]+)\.services(?:\..+)?"],  # Corrected
+        "style": "light_slate_grey",
     },
     "MAIN_CONFIG_SETUP": {
-        "patterns": [r"^main(?:\..+)?", r"^infrastructure\.core\.settings(?:\..+)?"], # Corrected
-        "style": "grey42"
+        "patterns": [r"^main(?:\..+)?", r"^infrastructure\.core\.settings(?:\..+)?"],  # Corrected
+        "style": "grey42",
     },
     "TESTS": {
-        "patterns": [r"^tests(?:\..+)?"], # Corrected
-        "style": "italic #008080"
-    }
+        "patterns": [r"^tests(?:\..+)?"],  # Corrected
+        "style": "italic #008080",
+    },
 }
 
-STYLE_TAG_PREFIX = "[LOG_STYLE:\""
-STYLE_TAG_SUFFIX = "\"]"
+STYLE_TAG_PREFIX = '[LOG_STYLE:"'
+STYLE_TAG_SUFFIX = '"]'
+
 
 class RegexStyleTagFilter(logging.Filter):
     def __init__(self, layer_styles_config):
@@ -78,7 +79,11 @@ class RegexStyleTagFilter(logging.Filter):
         # Sort layer keys to ensure that more specific regex patterns are tried first if there is potential for overlap
         # This is a simple sort, for very complex regex overlaps, more sophisticated ordering might be needed.
         # However, with distinct top-level keys, it mainly helps if some patterns are subsets of others accidentally.
-        sorted_layer_keys = sorted(layer_styles_config.keys(), key=lambda k: sum(len(p) for p in layer_styles_config[k]["patterns"]), reverse=True)
+        sorted_layer_keys = sorted(
+            layer_styles_config.keys(),
+            key=lambda k: sum(len(p) for p in layer_styles_config[k]["patterns"]),
+            reverse=True,
+        )
 
         for layer_key in sorted_layer_keys:
             config = self.layer_styles_config[layer_key]
@@ -87,7 +92,9 @@ class RegexStyleTagFilter(logging.Filter):
                 try:
                     self.compiled_patterns.append((re.compile(pattern_str), style_to_apply))
                 except re.error as e:
-                    logging.getLogger(__name__).error(f"Error compiling regex '{pattern_str}' for {layer_key}: {e}")
+                    logging.getLogger(__name__).error(
+                        f"Error compiling regex '{pattern_str}' for {layer_key}: {e}"
+                    )
 
     def filter(self, record):
         if not hasattr(record, "original_msg"):
@@ -109,7 +116,7 @@ class RegexStyleTagFilter(logging.Filter):
 def setup_logging():
     """Configures the root logger with RichHandler and RegexStyleTagFilter."""
 
-    regex_filter = RegexStyleTagFilter(LAYER_STYLES_CONFIG) # Use original filter
+    regex_filter = RegexStyleTagFilter(LAYER_STYLES_CONFIG)  # Use original filter
     # force_filter = ForceStyleFilter() # Commented out temporary filter
 
     root_logger = logging.getLogger()
@@ -126,10 +133,10 @@ def setup_logging():
         show_path=False,
         markup=True,
         log_time_format="[%X]",
-        show_level=True
+        show_level=True,
     )
 
-    rich_handler_instance.addFilter(regex_filter) # Add original filter
+    rich_handler_instance.addFilter(regex_filter)  # Add original filter
     # rich_handler_instance.addFilter(force_filter) # Commented out temporary filter
 
     root_logger.addHandler(rich_handler_instance)
@@ -143,4 +150,6 @@ def setup_logging():
         uv_logger = logging.getLogger(logger_name)
         uv_logger.handlers = [rich_handler_instance]
 
-    logging.getLogger("infrastructure.core.logging_config").info("Rich logging configured with RegexStyleTagFilter.")
+    logging.getLogger("infrastructure.core.logging_config").info(
+        "Rich logging configured with RegexStyleTagFilter."
+    )

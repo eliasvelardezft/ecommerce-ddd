@@ -1,4 +1,3 @@
-
 from .events.DomainEvent import DomainEvent
 
 
