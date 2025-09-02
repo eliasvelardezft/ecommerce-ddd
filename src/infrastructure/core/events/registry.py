@@ -198,20 +198,6 @@ def register_order_event_handlers(
 
     logger.info("[Registry] Internal Order event handlers registered with DomainEventDispatcher.")
 
-    # 2. (Example) Register handlers for PUBLIC INTEGRATION event contracts consumed by Order domain
-    # If Order domain needed to react to an external event (e.g., CustomerVerificationCompletedContractV1),
-    # it would be registered here with the integration_event_dispatcher.
-    # Example:
-    # from integration_contracts.events.customer_events import CustomerVerificationCompletedContractV1
-    # from domain.orders.events.handlers.integration.CustomerVerificationHandlers import UpdateOrderOnCustomerVerifiedHandler
-    #
-    # if integration_event_dispatcher: # Ensure it's provided
-    #     integration_event_dispatcher.register_handler(
-    #         CustomerVerificationCompletedContractV1,
-    #         UpdateOrderOnCustomerVerifiedHandler(container.get("some_order_dependency"))
-    #     )
-    #     logger.info("[Registry] Integration event handlers for Order domain registered with IntegrationEventDispatcher (if any).")
-
 
 def register_product_event_handlers(
     domain_event_dispatcher: DomainEventDispatcher,

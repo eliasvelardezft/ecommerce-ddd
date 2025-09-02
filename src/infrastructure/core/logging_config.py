@@ -53,7 +53,8 @@ LAYER_STYLES_CONFIG = {
         "style": "steel_blue3",
     },
     "INFRA_SERVICES_EXTERNAL": {
-        # Example: src.infrastructure.customers.services. If you add src.infrastructure.products.services, it will be caught.
+        # Example: src.infrastructure.customers.services.
+        # If you add src.infrastructure.products.services, it will be caught.
         "patterns": [r"^infrastructure\.(?:[^.]+)\.services(?:\..+)?"],  # Corrected
         "style": "light_slate_grey",
     },
