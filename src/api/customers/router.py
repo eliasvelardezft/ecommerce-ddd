@@ -57,7 +57,7 @@ async def register_customer(
     except Exception as e:
         import traceback
         logger.error(traceback.format_exc())
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.get("/profile/{email}")
 async def get_customer_profile(
@@ -85,4 +85,4 @@ async def get_customer_by_id(
         return customer
     except Exception as e:
         logger.error(f"Error fetching customer {customer_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

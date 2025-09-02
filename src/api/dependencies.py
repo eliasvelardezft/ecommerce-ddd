@@ -1,8 +1,9 @@
 """Core/infrastructure dependencies"""
 from collections.abc import AsyncGenerator
+from typing import Annotated
 
 from fastapi import Depends
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -58,7 +59,7 @@ def get_mongo_db():
     return mongo_db
 
 # Event System Dependencies
-def get_domain_event_dispatcher(mongo_db = Depends(get_mongo_db)) -> DomainEventDispatcher:
+def get_domain_event_dispatcher(mongo_db: Annotated[AsyncIOMotorDatabase, Depends(get_mongo_db)]) -> DomainEventDispatcher:
     """Create a fresh DomainEventDispatcher with all handlers registered."""
     from infrastructure.customers.persistence.CustomerReadRepository import (
         CustomerReadRepository,
@@ -104,7 +105,7 @@ def get_integration_event_dispatcher() -> IntegrationEventDispatcher:
     return create_integration_event_dispatcher()
 
 def get_order_integration_event_publisher(
-    integration_dispatcher: IntegrationEventDispatcher = Depends(get_integration_event_dispatcher)
+    integration_dispatcher: Annotated[IntegrationEventDispatcher, Depends(get_integration_event_dispatcher)]
 ) -> OrderIntegrationEventPublisher:
     """Create a fresh OrderIntegrationEventPublisher."""
     return OrderIntegrationEventPublisher(integration_dispatcher)

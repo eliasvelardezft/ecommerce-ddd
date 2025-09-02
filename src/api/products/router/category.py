@@ -78,7 +78,7 @@ async def create_category(
         }
     except Exception as e:
         logger.error(f"Error creating category: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.get("/{category_id}")
 async def get_category(
@@ -100,7 +100,7 @@ async def get_category(
         raise
     except Exception as e:
         logger.error(f"Error fetching category {category_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.get("/")
 async def list_categories(
@@ -119,7 +119,7 @@ async def list_categories(
         }
     except Exception as e:
         logger.error(f"Error listing categories: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.put("/{category_id}")
 async def update_category_details(
@@ -142,7 +142,7 @@ async def update_category_details(
         }
     except Exception as e:
         logger.error(f"Error updating category {category_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 # Business-oriented action
 @router.put("/{category_id}/parent")
@@ -167,4 +167,4 @@ async def change_category_parent(
         }
     except Exception as e:
         logger.error(f"Error changing parent for category {category_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

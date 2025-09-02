@@ -1,6 +1,6 @@
 import logging
-from uuid import UUID
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -60,7 +60,10 @@ async def place_order(
         logger.error(
             f"[API /orders POST] Error processing PlaceOrderCommand {command}: {e}", exc_info=True
         )
-        raise HTTPException(status_code=400, detail={"message": "Error placing order", "error_details": str(e)})
+        raise HTTPException(
+            status_code=400,
+            detail={"message": "Error placing order", "error_details": str(e)}
+        ) from e
 
     return {
         "message": "Order placed successfully",
@@ -87,6 +90,9 @@ async def get_order_details(
         logger.error(
             f"[router exception] error with query {query.__dict__}. error: {e!s}"
         )
-        raise HTTPException(status_code=400, detail={"message": "Error getting order details"})
+        raise HTTPException(
+            status_code=400,
+            detail={"message": "Error getting order details"}
+        ) from e
 
     return order_details

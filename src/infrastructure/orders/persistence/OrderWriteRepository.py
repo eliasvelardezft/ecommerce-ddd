@@ -79,7 +79,7 @@ class OrderWriteRepository(IOrderWriteRepository):
             created_at=db_order.created_at,
             updated_at=db_order.updated_at
         )
-    
+
     async def delete(self, order: Order) -> None:
         """Delete an order"""
         logger.info("[Write] Deleting order: %s", order.id)

@@ -1,6 +1,6 @@
 import logging
-from uuid import UUID
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -104,7 +104,7 @@ async def create_product(
         }
     except Exception as e:
         logger.error(f"Error creating product: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.get("/{product_id}")
 async def get_product(
@@ -124,7 +124,7 @@ async def get_product(
         raise
     except Exception as e:
         logger.error(f"Error fetching product {product_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.get("/")
 async def list_active_products(
@@ -142,7 +142,7 @@ async def list_active_products(
         }
     except Exception as e:
         logger.error(f"Error listing active products: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.delete("/{product_id}")
 async def delete_product(
@@ -157,7 +157,7 @@ async def delete_product(
         return {"message": "Product deleted successfully", "product_id": product_id}
     except Exception as e:
         logger.error(f"Error deleting product {product_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 # Business-oriented actions
 @router.put("/{product_id}/price")
@@ -185,7 +185,7 @@ async def update_product_price(
         }
     except Exception as e:
         logger.error(f"Error updating price for product {product_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.put("/{product_id}/stock")
 async def update_product_stock(
@@ -209,7 +209,7 @@ async def update_product_stock(
         }
     except Exception as e:
         logger.error(f"Error updating stock for product {product_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.post("/{product_id}/activate")
 async def activate_product(
@@ -231,7 +231,7 @@ async def activate_product(
         }
     except Exception as e:
         logger.error(f"Error activating product {product_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @router.post("/{product_id}/deactivate")
 async def deactivate_product(
