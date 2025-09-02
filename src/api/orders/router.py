@@ -1,5 +1,6 @@
 import logging
 from uuid import UUID
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -40,9 +41,9 @@ router = APIRouter(
 @router.post("/")
 async def place_order(
     command: PlaceOrderCommand,
-    write_repository: IOrderWriteRepository = Depends(get_order_write_repository),
-    domain_event_dispatcher: DomainEventDispatcher = Depends(get_domain_event_dispatcher),
-    order_integration_publisher: OrderIntegrationEventPublisher = Depends(get_order_integration_event_publisher)
+    write_repository: Annotated[IOrderWriteRepository, Depends(get_order_write_repository)],
+    domain_event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_domain_event_dispatcher)],
+    order_integration_publisher: Annotated[OrderIntegrationEventPublisher, Depends(get_order_integration_event_publisher)]
 ):
     logger.info(f"[API /orders POST] Received PlaceOrderCommand for customer {command.customer_id}")
 
@@ -73,7 +74,7 @@ async def place_order(
 @router.get("/{id}/details")
 async def get_order_details(
     id: UUID,
-    repository: IOrderReadRepository = Depends(get_order_read_repository),
+    repository: Annotated[IOrderReadRepository, Depends(get_order_read_repository)],
 ):
     logger.info("[get router] get_order_details")
 
@@ -84,7 +85,7 @@ async def get_order_details(
         order_details = await handler.handle(query=query)
     except Exception as e:
         logger.error(
-            f"[router exception] error with query {query.__dict__}. error: {str(e)}"
+            f"[router exception] error with query {query.__dict__}. error: {e!s}"
         )
         raise HTTPException(status_code=400, detail={"message": "Error getting order details"})
 

@@ -5,8 +5,8 @@ from functools import total_ordering
 @total_ordering
 class Money:
     def __init__(self, amount: str | float | int | Decimal, currency: str):
-        if currency is None or not isinstance(currency, str) or len(currency) != 3:
-            raise ValueError("Currency must be a 3-letter string (e.g., 'USD')")
+        if not isinstance(currency, str):
+            raise ValueError("Currency must be a string (e.g., 'USD')")
         self.currency = currency.upper()
 
         try:
@@ -38,7 +38,7 @@ class Money:
         return Money(self.amount - other.amount, self.currency)
 
     def __mul__(self, factor: int | float | Decimal | str) -> "Money":
-        if not isinstance(factor, (int, float, Decimal, str)):
+        if not isinstance(factor, (int | float | Decimal | str)):
             return NotImplemented
         try:
             factor_decimal = Decimal(str(factor))
@@ -48,7 +48,7 @@ class Money:
         return Money(self.amount * factor_decimal, self.currency)
 
     def __truediv__(self, divisor: int | float | Decimal | str) -> "Money":
-        if not isinstance(divisor, (int, float, Decimal, str)):
+        if not isinstance(divisor, (int | float | Decimal | str)):
             return NotImplemented
         try:
             divisor_decimal = Decimal(str(divisor))

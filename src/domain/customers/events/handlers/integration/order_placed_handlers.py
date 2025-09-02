@@ -19,7 +19,7 @@ class UpdateCustomerOnOrderPlaced:
     """
     def __init__(self, customer_read_repository: ICustomerReadRepository):
         self._customer_read_repository = customer_read_repository
-        logger.info(f"[UpdateCustomerOnOrderPlaced] Initialized.")
+        logger.info("[UpdateCustomerOnOrderPlaced] Initialized.")
 
     async def handle(self, event: OrderPlacedEventContractV1) -> None:
         # This handler now consumes a public Integration Event Contract (Pydantic model)

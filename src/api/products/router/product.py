@@ -1,5 +1,6 @@
 import logging
 from uuid import UUID
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -81,9 +82,9 @@ router = APIRouter(
 @router.post("/")
 async def create_product(
     command: CreateProductCommand,
-    product_write_repository: IProductWriteRepository = Depends(get_product_write_repository),
-    category_write_repository: ICategoryWriteRepository = Depends(get_category_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    product_write_repository: Annotated[IProductWriteRepository, Depends(get_product_write_repository)],
+    category_write_repository: Annotated[ICategoryWriteRepository, Depends(get_category_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Create a new product"""
     logger.info(f"Creating product with SKU '{command.sku}'")
@@ -108,7 +109,7 @@ async def create_product(
 @router.get("/{product_id}")
 async def get_product(
     product_id: str,
-    repository: IProductReadRepository = Depends(get_product_read_repository)
+    repository: Annotated[IProductReadRepository, Depends(get_product_read_repository)]
 ):
     """Get product by ID"""
     logger.info(f"Fetching product {product_id}")
@@ -127,7 +128,7 @@ async def get_product(
 
 @router.get("/")
 async def list_active_products(
-    repository: IProductReadRepository = Depends(get_product_read_repository)
+    repository: Annotated[IProductReadRepository, Depends(get_product_read_repository)]
 ):
     """List all active products"""
     logger.info("Fetching active products list")
@@ -146,7 +147,7 @@ async def list_active_products(
 @router.delete("/{product_id}")
 async def delete_product(
     product_id: UUID,
-    repository: IProductWriteRepository = Depends(get_product_write_repository)
+    repository: Annotated[IProductWriteRepository, Depends(get_product_write_repository)]
 ):
     """Delete a product"""
     logger.info(f"Deleting product {product_id}")
@@ -163,8 +164,8 @@ async def delete_product(
 async def update_product_price(
     product_id: UUID,
     command: UpdateProductPriceCommand,
-    repository: IProductWriteRepository = Depends(get_product_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    repository: Annotated[IProductWriteRepository, Depends(get_product_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Update product price - business action"""
     logger.info(f"Updating price for product {product_id}")
@@ -190,8 +191,8 @@ async def update_product_price(
 async def update_product_stock(
     product_id: UUID,
     command: UpdateProductStockCommand,
-    repository: IProductWriteRepository = Depends(get_product_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    repository: Annotated[IProductWriteRepository, Depends(get_product_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Update product stock - business action"""
     logger.info(f"Updating stock for product {product_id}")
@@ -213,8 +214,8 @@ async def update_product_stock(
 @router.post("/{product_id}/activate")
 async def activate_product(
     product_id: UUID,
-    repository: IProductWriteRepository = Depends(get_product_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    repository: Annotated[IProductWriteRepository, Depends(get_product_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Activate product - business action"""
     logger.info(f"Activating product {product_id}")
@@ -235,8 +236,8 @@ async def activate_product(
 @router.post("/{product_id}/deactivate")
 async def deactivate_product(
     product_id: UUID,
-    repository: IProductWriteRepository = Depends(get_product_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    repository: Annotated[IProductWriteRepository, Depends(get_product_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Deactivate product - business action"""
     logger.info(f"Deactivating product {product_id}")
@@ -252,4 +253,4 @@ async def deactivate_product(
         }
     except Exception as e:
         logger.error(f"Error deactivating product {product_id}: {e}", exc_info=True)
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

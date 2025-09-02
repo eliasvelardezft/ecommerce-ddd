@@ -14,4 +14,3 @@ class DomainEventHandler(Generic[TEvent], ABC):
     @abstractmethod
     async def handle(self, event: TEvent) -> None:
         """Handle the domain event"""
-        pass

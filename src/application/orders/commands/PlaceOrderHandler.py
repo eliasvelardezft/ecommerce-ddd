@@ -1,5 +1,7 @@
 import logging
+from typing import ClassVar
 
+from domain.core.events.DomainEvent import DomainEvent
 from domain.core.events.DomainEventDispatcher import DomainEventDispatcher
 from domain.core.value_objects.EntityId import EntityId
 from domain.orders.events.OrderPlacedEvent import OrderPlacedEvent
@@ -17,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class PlaceOrderHandler:
-    integration_events = [OrderPlacedEvent]
+    integration_events: ClassVar[list[type[DomainEvent]]] = [OrderPlacedEvent]
 
     def __init__(
         self,
@@ -44,7 +46,7 @@ class PlaceOrderHandler:
             customer_id=customer_entity_id,
             items_data=items_data_list,
             shipping_details_data=shipping_details_dict,
-            currency=command.currency, # PlaceOrderCommand now has these fields with defaults
+            currency=command.currency,
             shipping_cost_raw=command.shipping_cost_raw,
             tax_amount_raw=command.tax_amount_raw,
             notes=command.notes

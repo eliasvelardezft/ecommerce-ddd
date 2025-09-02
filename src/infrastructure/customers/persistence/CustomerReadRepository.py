@@ -41,7 +41,7 @@ class CustomerReadRepository(ICustomerReadRepository):
         logger.info(f"Customer profile found for id: {id}")
         return CustomerProfileDTO(**doc)
 
-    async def get_all_profiles(self) -> list[CustomerProfileDTO]:
+    async def get_all_customer_profiles(self) -> list[CustomerProfileDTO]:
         """Get all customer profiles"""
         cursor = self._collection.find()
         return [CustomerProfileDTO(**doc) async for doc in cursor]

@@ -1,5 +1,5 @@
 """Core/infrastructure dependencies"""
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -43,7 +43,7 @@ AsyncSessionLocal = sessionmaker(
     expire_on_commit=False
 )
 
-async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
+async def get_db_session() -> AsyncGenerator[AsyncSession]:
     async with AsyncSessionLocal() as session:
         try:
             yield session

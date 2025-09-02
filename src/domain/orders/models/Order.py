@@ -1,6 +1,6 @@
 import random
 import string
-from datetime import datetime, timezone, UTC
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from domain.core.AggregateRoot import AggregateRoot
@@ -44,9 +44,9 @@ class Order(AggregateRoot):
         self,
         _id: EntityId,
         customer_id: EntityId,
-        items: list[OrderItem], # List of Pydantic OrderItem models
+        items: list[OrderItem],
         shipping_details: ShippingDetails,
-        currency: str = "USD",
+        currency: str,
         order_number: str | None = None,
         shipping_cost_raw: Decimal | None = None,
         tax_amount_raw: Decimal | None = None,
@@ -59,11 +59,7 @@ class Order(AggregateRoot):
         super().__init__()
         self.id = _id
         self.customer_id = customer_id
-
-        if not currency or len(currency) != 3:
-            raise OrderValidationException("Order currency must be a 3-letter code.")
         self.currency = currency.upper()
-
         self.order_number = order_number if order_number else Order._generate_order_number()
         self.shipping_details = shipping_details
         self.notes = notes

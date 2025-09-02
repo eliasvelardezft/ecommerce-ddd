@@ -1,4 +1,5 @@
 import logging
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -61,8 +62,8 @@ router = APIRouter(
 @router.post("/")
 async def create_category(
     command: CreateCategoryCommand,
-    repository: ICategoryWriteRepository = Depends(get_category_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    repository: Annotated[ICategoryWriteRepository, Depends(get_category_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Create a new category"""
     logger.info(f"Creating category '{command.name}'")
@@ -82,7 +83,7 @@ async def create_category(
 @router.get("/{category_id}")
 async def get_category(
     category_id: str,
-    repository: ICategoryReadRepository = Depends(get_category_read_repository)
+    repository: Annotated[ICategoryReadRepository, Depends(get_category_read_repository)]
 ):
     """Get category by ID"""
     logger.info(f"Fetching category {category_id}")
@@ -103,8 +104,8 @@ async def get_category(
 
 @router.get("/")
 async def list_categories(
-    include_parent_id: bool = None,
-    repository: ICategoryReadRepository = Depends(get_category_read_repository)
+    repository: Annotated[ICategoryReadRepository, Depends(get_category_read_repository)],
+    include_parent_id: bool = False,
 ):
     """List categories with optional filtering"""
     logger.info("Fetching categories list")
@@ -124,8 +125,8 @@ async def list_categories(
 async def update_category_details(
     category_id: str,
     command: UpdateCategoryDetailsCommand,
-    repository: ICategoryWriteRepository = Depends(get_category_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    repository: Annotated[ICategoryWriteRepository, Depends(get_category_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Update category details"""
     logger.info(f"Updating details for category {category_id}")
@@ -148,8 +149,8 @@ async def update_category_details(
 async def change_category_parent(
     category_id: str,
     command: ChangeCategoryParentCommand,
-    repository: ICategoryWriteRepository = Depends(get_category_write_repository),
-    event_dispatcher: DomainEventDispatcher = Depends(get_products_event_dispatcher)
+    repository: Annotated[ICategoryWriteRepository, Depends(get_category_write_repository)],
+    event_dispatcher: Annotated[DomainEventDispatcher, Depends(get_products_event_dispatcher)]
 ):
     """Change category parent - business action"""
     logger.info(f"Changing parent for category {category_id}")

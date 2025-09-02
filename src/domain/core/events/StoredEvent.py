@@ -13,8 +13,8 @@ class StoredEvent:
         event_type: str,
         data: str,
         aggregate_id: str,
-        timestamp: datetime = None,
-        event_id: UUID = None
+        timestamp: datetime | None = None,
+        event_id: UUID | None = None
     ):
         self.event_id = event_id or uuid4()
         self.timestamp = timestamp or datetime.now()
