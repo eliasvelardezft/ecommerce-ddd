@@ -35,7 +35,26 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/customers", tags=["customers"])
 
 
-@router.post("/")
+@router.post(
+    "/",
+    summary="Register a new customer",
+    description="""
+    Register a new customer in the system.
+    
+    This endpoint creates a new customer with the provided information and triggers
+    domain events for customer lifecycle management.
+    
+    **Business Rules:**
+    - Email must be unique across the system
+    - Name must be at least 2 characters long
+    - Customer will be assigned a unique ID automatically
+    
+    **Events Triggered:**
+    - `CustomerRegisteredEvent`: Internal domain event for customer creation
+    """,
+    response_description="Customer created successfully with generated ID",
+    tags=["customers"],
+)
 async def register_customer(
     command: RegisterCustomerCommand,
     repository: Annotated[ICustomerWriteRepository, Depends(get_customer_write_repository)],
@@ -59,7 +78,22 @@ async def register_customer(
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
-@router.get("/profile/{email}")
+@router.get(
+    "/profile/{email}",
+    summary="Get customer profile by email",
+    description="""
+    Retrieve customer profile information using email address.
+    
+    This endpoint queries the read model (MongoDB) for optimized performance.
+    
+    **Use Cases:**
+    - Login/authentication flows
+    - Profile lookup by email
+    - Customer service operations
+    """,
+    response_description="Customer profile data or 404 if not found",
+    tags=["customers"],
+)
 async def get_customer_profile(
     email: str,
     repository: Annotated[ICustomerReadRepository, Depends(get_customer_read_repository)],
@@ -73,7 +107,25 @@ async def get_customer_profile(
     return customer
 
 
-@router.get("/{customer_id}")
+@router.get(
+    "/{customer_id}",
+    summary="Get customer profile by ID",
+    description="""
+    Retrieve customer profile information using customer ID.
+    
+    This endpoint queries the read model (MongoDB) for optimized performance.
+    
+    **Path Parameters:**
+    - `customer_id`: UUID string format (e.g., "123e4567-e89b-12d3-a456-426614174000")
+    
+    **Use Cases:**
+    - Direct customer lookup by ID
+    - Order processing customer validation
+    - Customer profile management
+    """,
+    response_description="Customer profile data or 404 if not found",
+    tags=["customers"],
+)
 async def get_customer_by_id(
     customer_id: str,
     repository: Annotated[ICustomerReadRepository, Depends(get_customer_read_repository)],
