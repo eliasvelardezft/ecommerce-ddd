@@ -6,9 +6,17 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     # API Settings
-    api_title: str
-    api_version: str
-    api_debug: bool
+    api_title: str = "E-Commerce DDD API"
+    api_version: str = "1.0.0"
+    api_debug: bool = False
+    api_description: str = "Domain-Driven Design e-commerce platform with CQRS and Event Sourcing"
+
+    # Additional API settings
+    api_contact_name: str = "Elias Velardez"
+    api_contact_email: str = "eliasvelardez38@gmail.com"
+    api_contact_url: str = "https://github.com/eliasvelardezft/ecommerce-ddd"
+    api_license_name: str = "MIT License"
+    api_license_url: str = "https://opensource.org/licenses/MIT"
 
     # Database Settings - PostgreSQL (primary)
     postgres_host: str
